@@ -944,7 +944,7 @@ export type AdminProfileCreateArgs<ExtArgs extends runtime.Types.Extensions.Inte
   /**
    * The data needed to create a AdminProfile.
    */
-  data?: Prisma.XOR<Prisma.AdminProfileCreateInput, Prisma.AdminProfileUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.AdminProfileCreateInput, Prisma.AdminProfileUncheckedCreateInput>
 }
 
 /**

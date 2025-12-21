@@ -53,6 +53,11 @@ export type Product = Prisma.ProductModel
  */
 export type ProductRequest = Prisma.ProductRequestModel
 /**
+ * Model OrderItem
+ * 
+ */
+export type OrderItem = Prisma.OrderItemModel
+/**
  * Model OrderRequest
  * 
  */
