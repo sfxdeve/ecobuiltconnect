@@ -5,5 +5,5 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-	return <h1>Welcome to EcobuiltConnect!</h1>;
+	return <main></main>;
 }

@@ -1,10 +1,11 @@
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
 } from "@tanstack/react-router";
+import { AppFooter } from "@/components/app/footer";
+import { AppHeader } from "@/components/app/header";
 import { AppClerkProvider } from "@/integrations/clerk";
 import appCss from "@/styles.css?url";
 
@@ -44,19 +45,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				<AppClerkProvider>
+					<AppHeader />
 					{children}
-					<TanStackDevtools
-						config={{
-							position: "bottom-left",
-						}}
-						plugins={
-							[
-								// TanStackRouterDevtools,
-								// TanStackQueryDevtools,
-								// TanStackStoreDevtools,
-							]
-						}
-					/>
+					<AppFooter />
 				</AppClerkProvider>
 				<Scripts />
 			</body>
