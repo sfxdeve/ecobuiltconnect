@@ -80,7 +80,7 @@ export function AppHeader() {
 
 			{/* Actions */}
 			<div className={"flex items-center gap-4"}>
-				<Button variant="outline" size="icon">
+				<Button variant={"outline"} size={"icon"}>
 					<ShoppingCartIcon className="size-4.5" />
 				</Button>
 				<SignedIn>

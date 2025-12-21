@@ -1,9 +1,99 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+} from "@/components/ui/card";
 
 export const Route = createFileRoute("/products/")({
 	component: ProductsPage,
 });
 
 function ProductsPage() {
-	return <div>Hello "/products/"!</div>;
+	return (
+		<main className={"min-h-screen"}>
+			<section className={"container mx-auto py-12"}>
+				<div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+					<Card className={"relative"}>
+						<Badge className="absolute top-4 right-4">EcoBuiltConnect</Badge>
+						<CardHeader>
+							<img
+								src="/test.jpg"
+								alt="Wooden Stable Door"
+								className="aspect-square object-contain"
+							/>
+						</CardHeader>
+						<CardContent>
+							<h3 className={"font-semibold text-primary text-xs uppercase"}>
+								EcoBuiltConnect Store
+							</h3>
+							<h2 className={"font-semibold text-xl"}>Wooden Stable Door</h2>
+						</CardContent>
+						<CardFooter className={"flex justify-between items-center"}>
+							<div className={"flex flex-col"}>
+								<span className={"font-bold text-xl"}>$19.99</span>
+								<span className={"text-xs"}>Excl. VAT</span>
+							</div>
+							<Button variant={"default"} size={"lg"}>
+								Purchase
+							</Button>
+						</CardFooter>
+					</Card>
+					<Card className={"relative"}>
+						<Badge className="absolute top-4 right-4">EcoBuiltConnect</Badge>
+						<CardHeader>
+							<img
+								src="/test.jpg"
+								alt="Wooden Stable Door"
+								className="aspect-square object-contain"
+							/>
+						</CardHeader>
+						<CardContent>
+							<h3 className={"font-semibold text-primary text-xs uppercase"}>
+								EcoBuiltConnect Store
+							</h3>
+							<h2 className={"font-semibold text-xl"}>Wooden Stable Door</h2>
+						</CardContent>
+						<CardFooter className={"flex justify-between items-center"}>
+							<div className={"flex flex-col"}>
+								<span className={"font-bold text-xl"}>$19.99</span>
+								<span className={"text-xs"}>Excl. VAT</span>
+							</div>
+							<Button variant={"default"} size={"lg"}>
+								Purchase
+							</Button>
+						</CardFooter>
+					</Card>
+					<Card className={"relative"}>
+						<Badge className="absolute top-4 right-4">EcoBuiltConnect</Badge>
+						<CardHeader>
+							<img
+								src="/test.jpg"
+								alt="Wooden Stable Door"
+								className="aspect-square object-contain"
+							/>
+						</CardHeader>
+						<CardContent>
+							<h3 className={"font-semibold text-primary text-xs uppercase"}>
+								EcoBuiltConnect Store
+							</h3>
+							<h2 className={"font-semibold text-xl"}>Wooden Stable Door</h2>
+						</CardContent>
+						<CardFooter className={"flex justify-between items-center"}>
+							<div className={"flex flex-col"}>
+								<span className={"font-bold text-xl"}>$19.99</span>
+								<span className={"text-xs"}>Excl. VAT</span>
+							</div>
+							<Button variant={"default"} size={"lg"}>
+								Purchase
+							</Button>
+						</CardFooter>
+					</Card>
+				</div>
+			</section>
+		</main>
+	);
 }
