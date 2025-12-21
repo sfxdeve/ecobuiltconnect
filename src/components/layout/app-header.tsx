@@ -7,14 +7,14 @@ import {
 import { Link, useLocation } from "@tanstack/react-router";
 import { ShoppingCartIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
 	Popover,
 	PopoverContent,
 	PopoverHeader,
 	PopoverTitle,
 	PopoverTrigger,
-} from "../ui/popover";
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 export function AppHeader() {
 	const location = useLocation();
@@ -27,7 +27,7 @@ export function AppHeader() {
 			<img className={"size-18"} src="/logo.webp" alt="Logo" />
 
 			{/* Links */}
-			<ul className={"flex gap-4 items-center"}>
+			<ul className={"hidden md:flex gap-4 items-center"}>
 				<li>
 					<Link
 						to="/"

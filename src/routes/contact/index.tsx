@@ -5,5 +5,9 @@ export const Route = createFileRoute("/contact/")({
 });
 
 function ContactPage() {
-	return <div>Hello "/contact/"!</div>;
+	return (
+		<main className={"min-h-screen"}>
+			<section className={"container mx-auto py-12 space-y-6"}></section>
+		</main>
+	);
 }

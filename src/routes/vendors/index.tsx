@@ -5,5 +5,9 @@ export const Route = createFileRoute("/vendors/")({
 });
 
 function VendorsPage() {
-	return <div>Hello "/vendors/"!</div>;
+	return (
+		<main className={"min-h-screen"}>
+			<section className={"container mx-auto py-12 space-y-6"}></section>
+		</main>
+	);
 }
