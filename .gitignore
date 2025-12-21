@@ -1,0 +1,6 @@
+.DS_Store
+.output
+.tanstack
+node_modules
+.env
+*.local
