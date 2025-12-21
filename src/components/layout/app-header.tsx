@@ -21,13 +21,15 @@ export function AppHeader() {
 
 	return (
 		<header
-			className={"container mx-auto flex items-center justify-between py-4"}
+			className={
+				"container mx-auto px-4 flex items-center justify-between py-4"
+			}
 		>
 			{/* Logo */}
 			<img className={"size-18"} src="/logo.webp" alt="Logo" />
 
 			{/* Links */}
-			<ul className={"hidden md:flex gap-4 items-center"}>
+			<ul className={"hidden md:flex lg:gap-4 gap-2 items-center"}>
 				<li>
 					<Link
 						to="/"

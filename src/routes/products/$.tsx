@@ -9,7 +9,7 @@ function ProductDetailsPage() {
 		<main className={"min-h-screen"}>
 			<section
 				className={
-					"container mx-auto py-12 space-y-6 flex flex-col lg:flex-row gap-8"
+					"container mx-auto py-12 px-4 space-y-6 flex flex-col lg:flex-row gap-8"
 				}
 			>
 				<div className={"flex-1"}></div>

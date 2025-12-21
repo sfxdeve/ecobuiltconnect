@@ -16,7 +16,7 @@ export const Route = createFileRoute("/products/")({
 function ProductsPage() {
 	return (
 		<main className={"min-h-screen"}>
-			<section className={"container mx-auto py-12 space-y-6"}>
+			<section className={"container mx-auto py-12 px-4 space-y-6"}>
 				<div>
 					<Input placeholder="Search Products" />
 				</div>
