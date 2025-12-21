@@ -203,6 +203,7 @@ export const LogisticRequestScalarFieldEnum = {
   requestedPrice: 'requestedPrice',
   acceptedPrice: 'acceptedPrice',
   status: 'status',
+  orderId: 'orderId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

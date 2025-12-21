@@ -41,6 +41,7 @@ export type LogisticRequestMinAggregateOutputType = {
   requestedPrice: number | null
   acceptedPrice: number | null
   status: $Enums.LogisticStatus | null
+  orderId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +51,7 @@ export type LogisticRequestMaxAggregateOutputType = {
   requestedPrice: number | null
   acceptedPrice: number | null
   status: $Enums.LogisticStatus | null
+  orderId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +61,7 @@ export type LogisticRequestCountAggregateOutputType = {
   requestedPrice: number
   acceptedPrice: number
   status: number
+  orderId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -80,6 +83,7 @@ export type LogisticRequestMinAggregateInputType = {
   requestedPrice?: true
   acceptedPrice?: true
   status?: true
+  orderId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -89,6 +93,7 @@ export type LogisticRequestMaxAggregateInputType = {
   requestedPrice?: true
   acceptedPrice?: true
   status?: true
+  orderId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -98,6 +103,7 @@ export type LogisticRequestCountAggregateInputType = {
   requestedPrice?: true
   acceptedPrice?: true
   status?: true
+  orderId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -194,6 +200,7 @@ export type LogisticRequestGroupByOutputType = {
   requestedPrice: number
   acceptedPrice: number | null
   status: $Enums.LogisticStatus
+  orderId: string
   createdAt: Date
   updatedAt: Date
   _count: LogisticRequestCountAggregateOutputType | null
@@ -226,8 +233,10 @@ export type LogisticRequestWhereInput = {
   requestedPrice?: Prisma.FloatFilter<"LogisticRequest"> | number
   acceptedPrice?: Prisma.FloatNullableFilter<"LogisticRequest"> | number | null
   status?: Prisma.EnumLogisticStatusFilter<"LogisticRequest"> | $Enums.LogisticStatus
+  orderId?: Prisma.StringFilter<"LogisticRequest"> | string
   createdAt?: Prisma.DateTimeFilter<"LogisticRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LogisticRequest"> | Date | string
+  order?: Prisma.XOR<Prisma.OrderRequestScalarRelationFilter, Prisma.OrderRequestWhereInput>
   logisticResponses?: Prisma.LogisticResponseListRelationFilter
 }
 
@@ -236,13 +245,16 @@ export type LogisticRequestOrderByWithRelationInput = {
   requestedPrice?: Prisma.SortOrder
   acceptedPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  order?: Prisma.OrderRequestOrderByWithRelationInput
   logisticResponses?: Prisma.LogisticResponseOrderByRelationAggregateInput
 }
 
 export type LogisticRequestWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  orderId?: string
   AND?: Prisma.LogisticRequestWhereInput | Prisma.LogisticRequestWhereInput[]
   OR?: Prisma.LogisticRequestWhereInput[]
   NOT?: Prisma.LogisticRequestWhereInput | Prisma.LogisticRequestWhereInput[]
@@ -251,14 +263,16 @@ export type LogisticRequestWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumLogisticStatusFilter<"LogisticRequest"> | $Enums.LogisticStatus
   createdAt?: Prisma.DateTimeFilter<"LogisticRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LogisticRequest"> | Date | string
+  order?: Prisma.XOR<Prisma.OrderRequestScalarRelationFilter, Prisma.OrderRequestWhereInput>
   logisticResponses?: Prisma.LogisticResponseListRelationFilter
-}, "id">
+}, "id" | "orderId">
 
 export type LogisticRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   requestedPrice?: Prisma.SortOrder
   acceptedPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.LogisticRequestCountOrderByAggregateInput
@@ -276,6 +290,7 @@ export type LogisticRequestScalarWhereWithAggregatesInput = {
   requestedPrice?: Prisma.FloatWithAggregatesFilter<"LogisticRequest"> | number
   acceptedPrice?: Prisma.FloatNullableWithAggregatesFilter<"LogisticRequest"> | number | null
   status?: Prisma.EnumLogisticStatusWithAggregatesFilter<"LogisticRequest"> | $Enums.LogisticStatus
+  orderId?: Prisma.StringWithAggregatesFilter<"LogisticRequest"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LogisticRequest"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LogisticRequest"> | Date | string
 }
@@ -287,6 +302,7 @@ export type LogisticRequestCreateInput = {
   status?: $Enums.LogisticStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  order: Prisma.OrderRequestCreateNestedOneWithoutLogisticRequestInput
   logisticResponses?: Prisma.LogisticResponseCreateNestedManyWithoutRequestInput
 }
 
@@ -295,6 +311,7 @@ export type LogisticRequestUncheckedCreateInput = {
   requestedPrice: number
   acceptedPrice?: number | null
   status?: $Enums.LogisticStatus
+  orderId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   logisticResponses?: Prisma.LogisticResponseUncheckedCreateNestedManyWithoutRequestInput
@@ -307,6 +324,7 @@ export type LogisticRequestUpdateInput = {
   status?: Prisma.EnumLogisticStatusFieldUpdateOperationsInput | $Enums.LogisticStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderRequestUpdateOneRequiredWithoutLogisticRequestNestedInput
   logisticResponses?: Prisma.LogisticResponseUpdateManyWithoutRequestNestedInput
 }
 
@@ -315,6 +333,7 @@ export type LogisticRequestUncheckedUpdateInput = {
   requestedPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   acceptedPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumLogisticStatusFieldUpdateOperationsInput | $Enums.LogisticStatus
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   logisticResponses?: Prisma.LogisticResponseUncheckedUpdateManyWithoutRequestNestedInput
@@ -325,6 +344,7 @@ export type LogisticRequestCreateManyInput = {
   requestedPrice: number
   acceptedPrice?: number | null
   status?: $Enums.LogisticStatus
+  orderId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -343,8 +363,14 @@ export type LogisticRequestUncheckedUpdateManyInput = {
   requestedPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   acceptedPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumLogisticStatusFieldUpdateOperationsInput | $Enums.LogisticStatus
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LogisticRequestNullableScalarRelationFilter = {
+  is?: Prisma.LogisticRequestWhereInput | null
+  isNot?: Prisma.LogisticRequestWhereInput | null
 }
 
 export type LogisticRequestCountOrderByAggregateInput = {
@@ -352,6 +378,7 @@ export type LogisticRequestCountOrderByAggregateInput = {
   requestedPrice?: Prisma.SortOrder
   acceptedPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -366,6 +393,7 @@ export type LogisticRequestMaxOrderByAggregateInput = {
   requestedPrice?: Prisma.SortOrder
   acceptedPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -375,6 +403,7 @@ export type LogisticRequestMinOrderByAggregateInput = {
   requestedPrice?: Prisma.SortOrder
   acceptedPrice?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  orderId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -387,6 +416,38 @@ export type LogisticRequestSumOrderByAggregateInput = {
 export type LogisticRequestScalarRelationFilter = {
   is?: Prisma.LogisticRequestWhereInput
   isNot?: Prisma.LogisticRequestWhereInput
+}
+
+export type LogisticRequestCreateNestedOneWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.LogisticRequestCreateWithoutOrderInput, Prisma.LogisticRequestUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.LogisticRequestCreateOrConnectWithoutOrderInput
+  connect?: Prisma.LogisticRequestWhereUniqueInput
+}
+
+export type LogisticRequestUncheckedCreateNestedOneWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.LogisticRequestCreateWithoutOrderInput, Prisma.LogisticRequestUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.LogisticRequestCreateOrConnectWithoutOrderInput
+  connect?: Prisma.LogisticRequestWhereUniqueInput
+}
+
+export type LogisticRequestUpdateOneWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.LogisticRequestCreateWithoutOrderInput, Prisma.LogisticRequestUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.LogisticRequestCreateOrConnectWithoutOrderInput
+  upsert?: Prisma.LogisticRequestUpsertWithoutOrderInput
+  disconnect?: Prisma.LogisticRequestWhereInput | boolean
+  delete?: Prisma.LogisticRequestWhereInput | boolean
+  connect?: Prisma.LogisticRequestWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LogisticRequestUpdateToOneWithWhereWithoutOrderInput, Prisma.LogisticRequestUpdateWithoutOrderInput>, Prisma.LogisticRequestUncheckedUpdateWithoutOrderInput>
+}
+
+export type LogisticRequestUncheckedUpdateOneWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.LogisticRequestCreateWithoutOrderInput, Prisma.LogisticRequestUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.LogisticRequestCreateOrConnectWithoutOrderInput
+  upsert?: Prisma.LogisticRequestUpsertWithoutOrderInput
+  disconnect?: Prisma.LogisticRequestWhereInput | boolean
+  delete?: Prisma.LogisticRequestWhereInput | boolean
+  connect?: Prisma.LogisticRequestWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LogisticRequestUpdateToOneWithWhereWithoutOrderInput, Prisma.LogisticRequestUpdateWithoutOrderInput>, Prisma.LogisticRequestUncheckedUpdateWithoutOrderInput>
 }
 
 export type EnumLogisticStatusFieldUpdateOperationsInput = {
@@ -407,6 +468,62 @@ export type LogisticRequestUpdateOneRequiredWithoutLogisticResponsesNestedInput 
   update?: Prisma.XOR<Prisma.XOR<Prisma.LogisticRequestUpdateToOneWithWhereWithoutLogisticResponsesInput, Prisma.LogisticRequestUpdateWithoutLogisticResponsesInput>, Prisma.LogisticRequestUncheckedUpdateWithoutLogisticResponsesInput>
 }
 
+export type LogisticRequestCreateWithoutOrderInput = {
+  id?: string
+  requestedPrice: number
+  acceptedPrice?: number | null
+  status?: $Enums.LogisticStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  logisticResponses?: Prisma.LogisticResponseCreateNestedManyWithoutRequestInput
+}
+
+export type LogisticRequestUncheckedCreateWithoutOrderInput = {
+  id?: string
+  requestedPrice: number
+  acceptedPrice?: number | null
+  status?: $Enums.LogisticStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  logisticResponses?: Prisma.LogisticResponseUncheckedCreateNestedManyWithoutRequestInput
+}
+
+export type LogisticRequestCreateOrConnectWithoutOrderInput = {
+  where: Prisma.LogisticRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.LogisticRequestCreateWithoutOrderInput, Prisma.LogisticRequestUncheckedCreateWithoutOrderInput>
+}
+
+export type LogisticRequestUpsertWithoutOrderInput = {
+  update: Prisma.XOR<Prisma.LogisticRequestUpdateWithoutOrderInput, Prisma.LogisticRequestUncheckedUpdateWithoutOrderInput>
+  create: Prisma.XOR<Prisma.LogisticRequestCreateWithoutOrderInput, Prisma.LogisticRequestUncheckedCreateWithoutOrderInput>
+  where?: Prisma.LogisticRequestWhereInput
+}
+
+export type LogisticRequestUpdateToOneWithWhereWithoutOrderInput = {
+  where?: Prisma.LogisticRequestWhereInput
+  data: Prisma.XOR<Prisma.LogisticRequestUpdateWithoutOrderInput, Prisma.LogisticRequestUncheckedUpdateWithoutOrderInput>
+}
+
+export type LogisticRequestUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  requestedPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptedPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLogisticStatusFieldUpdateOperationsInput | $Enums.LogisticStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  logisticResponses?: Prisma.LogisticResponseUpdateManyWithoutRequestNestedInput
+}
+
+export type LogisticRequestUncheckedUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  requestedPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  acceptedPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumLogisticStatusFieldUpdateOperationsInput | $Enums.LogisticStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  logisticResponses?: Prisma.LogisticResponseUncheckedUpdateManyWithoutRequestNestedInput
+}
+
 export type LogisticRequestCreateWithoutLogisticResponsesInput = {
   id?: string
   requestedPrice: number
@@ -414,6 +531,7 @@ export type LogisticRequestCreateWithoutLogisticResponsesInput = {
   status?: $Enums.LogisticStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  order: Prisma.OrderRequestCreateNestedOneWithoutLogisticRequestInput
 }
 
 export type LogisticRequestUncheckedCreateWithoutLogisticResponsesInput = {
@@ -421,6 +539,7 @@ export type LogisticRequestUncheckedCreateWithoutLogisticResponsesInput = {
   requestedPrice: number
   acceptedPrice?: number | null
   status?: $Enums.LogisticStatus
+  orderId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -448,6 +567,7 @@ export type LogisticRequestUpdateWithoutLogisticResponsesInput = {
   status?: Prisma.EnumLogisticStatusFieldUpdateOperationsInput | $Enums.LogisticStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderRequestUpdateOneRequiredWithoutLogisticRequestNestedInput
 }
 
 export type LogisticRequestUncheckedUpdateWithoutLogisticResponsesInput = {
@@ -455,6 +575,7 @@ export type LogisticRequestUncheckedUpdateWithoutLogisticResponsesInput = {
   requestedPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   acceptedPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumLogisticStatusFieldUpdateOperationsInput | $Enums.LogisticStatus
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -495,8 +616,10 @@ export type LogisticRequestSelect<ExtArgs extends runtime.Types.Extensions.Inter
   requestedPrice?: boolean
   acceptedPrice?: boolean
   status?: boolean
+  orderId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  order?: boolean | Prisma.OrderRequestDefaultArgs<ExtArgs>
   logisticResponses?: boolean | Prisma.LogisticRequest$logisticResponsesArgs<ExtArgs>
   _count?: boolean | Prisma.LogisticRequestCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["logisticRequest"]>
@@ -506,8 +629,10 @@ export type LogisticRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   requestedPrice?: boolean
   acceptedPrice?: boolean
   status?: boolean
+  orderId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  order?: boolean | Prisma.OrderRequestDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["logisticRequest"]>
 
 export type LogisticRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -515,8 +640,10 @@ export type LogisticRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   requestedPrice?: boolean
   acceptedPrice?: boolean
   status?: boolean
+  orderId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  order?: boolean | Prisma.OrderRequestDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["logisticRequest"]>
 
 export type LogisticRequestSelectScalar = {
@@ -524,21 +651,28 @@ export type LogisticRequestSelectScalar = {
   requestedPrice?: boolean
   acceptedPrice?: boolean
   status?: boolean
+  orderId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LogisticRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "requestedPrice" | "acceptedPrice" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["logisticRequest"]>
+export type LogisticRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "requestedPrice" | "acceptedPrice" | "status" | "orderId" | "createdAt" | "updatedAt", ExtArgs["result"]["logisticRequest"]>
 export type LogisticRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  order?: boolean | Prisma.OrderRequestDefaultArgs<ExtArgs>
   logisticResponses?: boolean | Prisma.LogisticRequest$logisticResponsesArgs<ExtArgs>
   _count?: boolean | Prisma.LogisticRequestCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type LogisticRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type LogisticRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type LogisticRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  order?: boolean | Prisma.OrderRequestDefaultArgs<ExtArgs>
+}
+export type LogisticRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  order?: boolean | Prisma.OrderRequestDefaultArgs<ExtArgs>
+}
 
 export type $LogisticRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LogisticRequest"
   objects: {
+    order: Prisma.$OrderRequestPayload<ExtArgs>
     logisticResponses: Prisma.$LogisticResponsePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -546,6 +680,7 @@ export type $LogisticRequestPayload<ExtArgs extends runtime.Types.Extensions.Int
     requestedPrice: number
     acceptedPrice: number | null
     status: $Enums.LogisticStatus
+    orderId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["logisticRequest"]>
@@ -942,6 +1077,7 @@ readonly fields: LogisticRequestFieldRefs;
  */
 export interface Prisma__LogisticRequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  order<T extends Prisma.OrderRequestDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderRequestDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderRequestClient<runtime.Types.Result.GetResult<Prisma.$OrderRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   logisticResponses<T extends Prisma.LogisticRequest$logisticResponsesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LogisticRequest$logisticResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LogisticResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -976,6 +1112,7 @@ export interface LogisticRequestFieldRefs {
   readonly requestedPrice: Prisma.FieldRef<"LogisticRequest", 'Float'>
   readonly acceptedPrice: Prisma.FieldRef<"LogisticRequest", 'Float'>
   readonly status: Prisma.FieldRef<"LogisticRequest", 'LogisticStatus'>
+  readonly orderId: Prisma.FieldRef<"LogisticRequest", 'String'>
   readonly createdAt: Prisma.FieldRef<"LogisticRequest", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LogisticRequest", 'DateTime'>
 }
@@ -1227,6 +1364,10 @@ export type LogisticRequestCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    */
   data: Prisma.LogisticRequestCreateManyInput | Prisma.LogisticRequestCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LogisticRequestIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1297,6 +1438,10 @@ export type LogisticRequestUpdateManyAndReturnArgs<ExtArgs extends runtime.Types
    * Limit how many LogisticRequests to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LogisticRequestIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -170,7 +170,9 @@ model OrderRequest {
   userId String      @map("user_id")
   user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  reviews Review[]
+  logisticRequest LogisticRequest?
+
+  review Review?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -192,6 +194,9 @@ model LogisticRequest {
   requestedPrice Float
   acceptedPrice  Float?         @map("accepted_price")
   status         LogisticStatus @default(PENDING)
+
+  orderId String       @unique @map("order_id")
+  order   OrderRequest @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   logisticResponses LogisticResponse[]
 
@@ -223,7 +228,7 @@ model Review {
   userId String      @map("user_id")
   user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  orderId String       @map("order_id")
+  orderId String       @unique @map("order_id")
   order   OrderRequest @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
