@@ -8,6 +8,13 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { ShoppingCartIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+	Popover,
+	PopoverContent,
+	PopoverHeader,
+	PopoverTitle,
+	PopoverTrigger,
+} from "../ui/popover";
 
 export function AppHeader() {
 	const location = useLocation();
@@ -17,7 +24,7 @@ export function AppHeader() {
 			className={"container mx-auto flex items-center justify-between py-4"}
 		>
 			{/* Logo */}
-			<h1>EcobuiltConnect</h1>
+			<img className={"size-18"} src="/logo.webp" alt="Logo" />
 
 			{/* Links */}
 			<ul className={"flex gap-4 items-center"}>
@@ -37,7 +44,7 @@ export function AppHeader() {
 						to="/products"
 						className={cn(
 							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname === "/products" && "bg-muted",
+							location.pathname.startsWith("/products") && "bg-muted",
 						)}
 					>
 						Marketplace
@@ -48,7 +55,7 @@ export function AppHeader() {
 						to="/vendors"
 						className={cn(
 							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname === "/vendors" && "bg-muted",
+							location.pathname.startsWith("/vendors") && "bg-muted",
 						)}
 					>
 						Vendors
@@ -59,7 +66,7 @@ export function AppHeader() {
 						to="/community"
 						className={cn(
 							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname === "/community" && "bg-muted",
+							location.pathname.startsWith("/community") && "bg-muted",
 						)}
 					>
 						Community
@@ -70,7 +77,7 @@ export function AppHeader() {
 						to="/contact"
 						className={cn(
 							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname === "/contact" && "bg-muted",
+							location.pathname.startsWith("/contact") && "bg-muted",
 						)}
 					>
 						Contact
@@ -80,18 +87,38 @@ export function AppHeader() {
 
 			{/* Actions */}
 			<div className={"flex items-center gap-4"}>
-				<Button variant={"outline"} size={"icon"}>
-					<ShoppingCartIcon className="size-4.5" />
-				</Button>
+				<Popover>
+					<PopoverTrigger
+						className={cn(
+							buttonVariants({
+								variant: "outline",
+								size: "icon",
+							}),
+						)}
+					>
+						<ShoppingCartIcon className="size-4.5" />
+					</PopoverTrigger>
+					<PopoverContent align="end">
+						<PopoverHeader>
+							<PopoverTitle>Shopping Cart</PopoverTitle>
+						</PopoverHeader>
+					</PopoverContent>
+				</Popover>
 				<SignedIn>
-					<UserButton />
+					<UserButton
+						appearance={{
+							elements: {
+								userButtonAvatarBox: "!size-9",
+							},
+						}}
+					/>
 				</SignedIn>
 				<SignedOut>
-					<div
-						className={cn(buttonVariants({ variant: "default", size: "lg" }))}
-					>
-						<SignInButton />
-					</div>
+					<SignInButton mode="modal">
+						<Button variant="default" size="lg">
+							Sign In
+						</Button>
+					</SignInButton>
 				</SignedOut>
 			</div>
 		</header>

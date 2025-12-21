@@ -115,7 +115,7 @@ model Product {
   salePrice     Float?           @map("sale_price")
   condition     ProductCondition @default(GOOD)
   status        ProductStatus    @default(PENDING)
-  isVerified    Boolean          @default(false) @map("is_ecobuilt_verified")
+  isVerified    Boolean          @default(false) @map("is_verified")
   isDeleted     Boolean          @default(false) @map("is_deleted")
 
   categoryId String   @map("category_id")

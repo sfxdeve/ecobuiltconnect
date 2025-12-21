@@ -5,7 +5,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { AppFooter } from "@/components/layout/app-footer";
-// import { AppHeader } from "@/components/layout/app-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { AppClerkProvider } from "@/integrations/clerk";
 import appCss from "@/styles.css?url";
 
@@ -45,7 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				<AppClerkProvider>
-					{/* <AppHeader /> */}
+					<AppHeader />
 					{children}
 					<AppFooter />
 				</AppClerkProvider>
