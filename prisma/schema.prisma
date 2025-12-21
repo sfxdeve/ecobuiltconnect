@@ -7,6 +7,69 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ProfileStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model UserProfile {
+  id String @id @default(uuid())
+
+  postcode String
+  city     String
+  address  String
+  status   ProfileStatus @default(APPROVED)
+
+  productRequests ProductRequest[]
+  orderRequests   OrderRequest[]
+  reviews         Review[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model VendorProfile {
+  id String @id @default(uuid())
+
+  pictureId   String        @map("picture_id")
+  description String
+  postcode    String
+  city        String
+  address     String
+  status      ProfileStatus @default(PENDING)
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model LogisticProfile {
+  id String @id @default(uuid())
+
+  pictureId   String        @map("picture_id")
+  description String
+  postcode    String
+  city        String
+  address     String
+  status      ProfileStatus @default(PENDING)
+
+  logisticResponses LogisticResponse[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model AdminProfile {
+  id String @id @default(uuid())
+
+  status ProfileStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
 enum CategoryStatus {
   REQUESTED
   APPROVED
@@ -20,7 +83,8 @@ model Category {
   status    CategoryStatus @default(REQUESTED)
   isDeleted Boolean        @default(false) @map("is_deleted")
 
-  products Product[]
+  products        Product[]
+  productRequests ProductRequest[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -30,6 +94,12 @@ enum ProductCondition {
   EXCELLENT
   GOOD
   FAIR
+}
+
+enum ProductStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Product {
@@ -44,11 +114,117 @@ model Product {
   price         Float
   salePrice     Float?           @map("sale_price")
   condition     ProductCondition @default(GOOD)
+  status        ProductStatus    @default(PENDING)
   isVerified    Boolean          @default(false) @map("is_ecobuilt_verified")
   isDeleted     Boolean          @default(false) @map("is_deleted")
 
   categoryId String   @map("category_id")
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  vendorId String        @map("vendor_id")
+  vendor   VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  productRequestId String?         @map("product_request_id")
+  productRequest   ProductRequest? @relation(fields: [productRequestId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model ProductRequest {
+  id String @id @default(uuid())
+
+  pictureIds  String[] @map("picture_ids")
+  name        String
+  description String
+  quantity    Int
+  price       Float
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+
+  categoryId String   @map("category_id")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  userId String      @map("user_id")
+  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  READY
+  COMPLETED
+}
+
+model OrderRequest {
+  id String @id @default(uuid())
+
+  total  Float
+  status OrderStatus @default(PENDING)
+
+  userId String      @map("user_id")
+  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  reviews Review[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum LogisticStatus {
+  PENDING
+  PROPOSED
+  ACCEPTED
+  PAID
+  PROCESSING
+  IN_TRANSIT
+  DELIVERED
+}
+
+model LogisticRequest {
+  id String @id @default(uuid())
+
+  requestedPrice Float
+  acceptedPrice  Float?         @map("accepted_price")
+  status         LogisticStatus @default(PENDING)
+
+  logisticResponses LogisticResponse[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model LogisticResponse {
+  id String @id @default(uuid())
+
+  price Float
+
+  logisticId String          @map("logistic_id")
+  logistic   LogisticProfile @relation(fields: [logisticId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  requestId String          @map("request_id")
+  request   LogisticRequest @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Review {
+  id String @id @default(uuid())
+
+  rating  Int
+  comment String
+
+  userId String      @map("user_id")
+  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  orderId String       @map("order_id")
+  order   OrderRequest @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
