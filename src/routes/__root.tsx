@@ -23,7 +23,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "EcobuiltConnect",
 			},
 		],
 		links: [
@@ -33,7 +33,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 			},
 		],
 	}),
-
 	shellComponent: RootDocument,
 });
 
@@ -48,7 +47,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					{children}
 					<TanStackDevtools
 						config={{
-							position: "bottom-right",
+							position: "bottom-left",
 						}}
 						plugins={
 							[
