@@ -1,5 +1,5 @@
 import { ClerkProvider } from "@clerk/clerk-react";
-import { env } from "@/env";
+import { env } from "@/env/client";
 
 export function AppClerkProvider({ children }: { children: React.ReactNode }) {
 	return (

@@ -5,7 +5,7 @@ import {
 	HeadContent,
 	Scripts,
 } from "@tanstack/react-router";
-import { AppClerkProvider } from "@/providers/clerk";
+import { AppClerkProvider } from "@/integrations/clerk";
 import appCss from "@/styles.css?url";
 
 interface RouterContext {
