@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/vendors/")({
+export const Route = createFileRoute("/(public)/vendors/")({
 	head: () => ({
 		meta: [
 			{
@@ -13,8 +13,6 @@ export const Route = createFileRoute("/vendors/")({
 
 function VendorsPage() {
 	return (
-		<main className={"min-h-screen"}>
-			<section className={"container mx-auto py-12 px-4 space-y-6"}></section>
-		</main>
+		<section className={"container mx-auto py-12 px-4 space-y-6"}></section>
 	);
 }

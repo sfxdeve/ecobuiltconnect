@@ -9,73 +9,106 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as VendorsIndexRouteImport } from './routes/vendors/index'
-import { Route as ProductsIndexRouteImport } from './routes/products/index'
-import { Route as ContactIndexRouteImport } from './routes/contact/index'
-import { Route as CommunityIndexRouteImport } from './routes/community/index'
-import { Route as ProductsProductIdIndexRouteImport } from './routes/products/$productId/index'
+import { Route as publicRouteRouteImport } from './routes/(public)/route'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as publicIndexRouteImport } from './routes/(public)/index'
+import { Route as publicVendorsIndexRouteImport } from './routes/(public)/vendors/index'
+import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
+import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
+import { Route as publicCommunityIndexRouteImport } from './routes/(public)/community/index'
+import { Route as authSignUpSplatRouteImport } from './routes/(auth)/sign-up/$'
+import { Route as authSignInSplatRouteImport } from './routes/(auth)/sign-in/$'
+import { Route as publicProductsProductIdIndexRouteImport } from './routes/(public)/products/$productId/index'
 
-const IndexRoute = IndexRouteImport.update({
+const publicRouteRoute = publicRouteRouteImport.update({
+  id: '/(public)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicIndexRoute = publicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
-const VendorsIndexRoute = VendorsIndexRouteImport.update({
+const publicVendorsIndexRoute = publicVendorsIndexRouteImport.update({
   id: '/vendors/',
   path: '/vendors/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
-const ProductsIndexRoute = ProductsIndexRouteImport.update({
+const publicProductsIndexRoute = publicProductsIndexRouteImport.update({
   id: '/products/',
   path: '/products/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
-const ContactIndexRoute = ContactIndexRouteImport.update({
+const publicContactIndexRoute = publicContactIndexRouteImport.update({
   id: '/contact/',
   path: '/contact/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
-const CommunityIndexRoute = CommunityIndexRouteImport.update({
+const publicCommunityIndexRoute = publicCommunityIndexRouteImport.update({
   id: '/community/',
   path: '/community/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
-const ProductsProductIdIndexRoute = ProductsProductIdIndexRouteImport.update({
-  id: '/products/$productId/',
-  path: '/products/$productId/',
-  getParentRoute: () => rootRouteImport,
+const authSignUpSplatRoute = authSignUpSplatRouteImport.update({
+  id: '/sign-up/$',
+  path: '/sign-up/$',
+  getParentRoute: () => authRouteRoute,
 } as any)
+const authSignInSplatRoute = authSignInSplatRouteImport.update({
+  id: '/sign-in/$',
+  path: '/sign-in/$',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const publicProductsProductIdIndexRoute =
+  publicProductsProductIdIndexRouteImport.update({
+    id: '/products/$productId/',
+    path: '/products/$productId/',
+    getParentRoute: () => publicRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/community': typeof CommunityIndexRoute
-  '/contact': typeof ContactIndexRoute
-  '/products': typeof ProductsIndexRoute
-  '/vendors': typeof VendorsIndexRoute
-  '/products/$productId': typeof ProductsProductIdIndexRoute
+  '/': typeof publicIndexRoute
+  '/sign-in/$': typeof authSignInSplatRoute
+  '/sign-up/$': typeof authSignUpSplatRoute
+  '/community': typeof publicCommunityIndexRoute
+  '/contact': typeof publicContactIndexRoute
+  '/products': typeof publicProductsIndexRoute
+  '/vendors': typeof publicVendorsIndexRoute
+  '/products/$productId': typeof publicProductsProductIdIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/community': typeof CommunityIndexRoute
-  '/contact': typeof ContactIndexRoute
-  '/products': typeof ProductsIndexRoute
-  '/vendors': typeof VendorsIndexRoute
-  '/products/$productId': typeof ProductsProductIdIndexRoute
+  '/': typeof publicIndexRoute
+  '/sign-in/$': typeof authSignInSplatRoute
+  '/sign-up/$': typeof authSignUpSplatRoute
+  '/community': typeof publicCommunityIndexRoute
+  '/contact': typeof publicContactIndexRoute
+  '/products': typeof publicProductsIndexRoute
+  '/vendors': typeof publicVendorsIndexRoute
+  '/products/$productId': typeof publicProductsProductIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/community/': typeof CommunityIndexRoute
-  '/contact/': typeof ContactIndexRoute
-  '/products/': typeof ProductsIndexRoute
-  '/vendors/': typeof VendorsIndexRoute
-  '/products/$productId/': typeof ProductsProductIdIndexRoute
+  '/(auth)': typeof authRouteRouteWithChildren
+  '/(public)': typeof publicRouteRouteWithChildren
+  '/(public)/': typeof publicIndexRoute
+  '/(auth)/sign-in/$': typeof authSignInSplatRoute
+  '/(auth)/sign-up/$': typeof authSignUpSplatRoute
+  '/(public)/community/': typeof publicCommunityIndexRoute
+  '/(public)/contact/': typeof publicContactIndexRoute
+  '/(public)/products/': typeof publicProductsIndexRoute
+  '/(public)/vendors/': typeof publicVendorsIndexRoute
+  '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sign-in/$'
+    | '/sign-up/$'
     | '/community'
     | '/contact'
     | '/products'
@@ -84,6 +117,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/sign-in/$'
+    | '/sign-up/$'
     | '/community'
     | '/contact'
     | '/products'
@@ -91,77 +126,137 @@ export interface FileRouteTypes {
     | '/products/$productId'
   id:
     | '__root__'
-    | '/'
-    | '/community/'
-    | '/contact/'
-    | '/products/'
-    | '/vendors/'
-    | '/products/$productId/'
+    | '/(auth)'
+    | '/(public)'
+    | '/(public)/'
+    | '/(auth)/sign-in/$'
+    | '/(auth)/sign-up/$'
+    | '/(public)/community/'
+    | '/(public)/contact/'
+    | '/(public)/products/'
+    | '/(public)/vendors/'
+    | '/(public)/products/$productId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CommunityIndexRoute: typeof CommunityIndexRoute
-  ContactIndexRoute: typeof ContactIndexRoute
-  ProductsIndexRoute: typeof ProductsIndexRoute
-  VendorsIndexRoute: typeof VendorsIndexRoute
-  ProductsProductIdIndexRoute: typeof ProductsProductIdIndexRoute
+  authRouteRoute: typeof authRouteRouteWithChildren
+  publicRouteRoute: typeof publicRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/(public)': {
+      id: '/(public)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof publicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/': {
+      id: '/(public)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof publicIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
-    '/vendors/': {
-      id: '/vendors/'
+    '/(public)/vendors/': {
+      id: '/(public)/vendors/'
       path: '/vendors'
       fullPath: '/vendors'
-      preLoaderRoute: typeof VendorsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof publicVendorsIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
-    '/products/': {
-      id: '/products/'
+    '/(public)/products/': {
+      id: '/(public)/products/'
       path: '/products'
       fullPath: '/products'
-      preLoaderRoute: typeof ProductsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof publicProductsIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
-    '/contact/': {
-      id: '/contact/'
+    '/(public)/contact/': {
+      id: '/(public)/contact/'
       path: '/contact'
       fullPath: '/contact'
-      preLoaderRoute: typeof ContactIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof publicContactIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
-    '/community/': {
-      id: '/community/'
+    '/(public)/community/': {
+      id: '/(public)/community/'
       path: '/community'
       fullPath: '/community'
-      preLoaderRoute: typeof CommunityIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof publicCommunityIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
-    '/products/$productId/': {
-      id: '/products/$productId/'
+    '/(auth)/sign-up/$': {
+      id: '/(auth)/sign-up/$'
+      path: '/sign-up/$'
+      fullPath: '/sign-up/$'
+      preLoaderRoute: typeof authSignUpSplatRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/sign-in/$': {
+      id: '/(auth)/sign-in/$'
+      path: '/sign-in/$'
+      fullPath: '/sign-in/$'
+      preLoaderRoute: typeof authSignInSplatRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(public)/products/$productId/': {
+      id: '/(public)/products/$productId/'
       path: '/products/$productId'
       fullPath: '/products/$productId'
-      preLoaderRoute: typeof ProductsProductIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof publicProductsProductIdIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
   }
 }
 
+interface authRouteRouteChildren {
+  authSignInSplatRoute: typeof authSignInSplatRoute
+  authSignUpSplatRoute: typeof authSignUpSplatRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authSignInSplatRoute: authSignInSplatRoute,
+  authSignUpSplatRoute: authSignUpSplatRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
+
+interface publicRouteRouteChildren {
+  publicIndexRoute: typeof publicIndexRoute
+  publicCommunityIndexRoute: typeof publicCommunityIndexRoute
+  publicContactIndexRoute: typeof publicContactIndexRoute
+  publicProductsIndexRoute: typeof publicProductsIndexRoute
+  publicVendorsIndexRoute: typeof publicVendorsIndexRoute
+  publicProductsProductIdIndexRoute: typeof publicProductsProductIdIndexRoute
+}
+
+const publicRouteRouteChildren: publicRouteRouteChildren = {
+  publicIndexRoute: publicIndexRoute,
+  publicCommunityIndexRoute: publicCommunityIndexRoute,
+  publicContactIndexRoute: publicContactIndexRoute,
+  publicProductsIndexRoute: publicProductsIndexRoute,
+  publicVendorsIndexRoute: publicVendorsIndexRoute,
+  publicProductsProductIdIndexRoute: publicProductsProductIdIndexRoute,
+}
+
+const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
+  publicRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  CommunityIndexRoute: CommunityIndexRoute,
-  ContactIndexRoute: ContactIndexRoute,
-  ProductsIndexRoute: ProductsIndexRoute,
-  VendorsIndexRoute: VendorsIndexRoute,
-  ProductsProductIdIndexRoute: ProductsProductIdIndexRoute,
+  authRouteRoute: authRouteRouteWithChildren,
+  publicRouteRoute: publicRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

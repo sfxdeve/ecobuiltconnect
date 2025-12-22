@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/products/")({
+export const Route = createFileRoute("/(public)/products/")({
 	head: () => ({
 		meta: [
 			{
@@ -22,20 +22,18 @@ export const Route = createFileRoute("/products/")({
 
 function ProductsPage() {
 	return (
-		<main className={"min-h-screen"}>
-			<section className={"container mx-auto py-12 px-4 space-y-6"}>
-				<div>
-					<Input placeholder="Search Products" />
-				</div>
-				<div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-					<ProductCard />
-					<ProductCard />
-					<ProductCard />
-					<ProductCard />
-					<ProductCard />
-				</div>
-			</section>
-		</main>
+		<section className={"container mx-auto py-12 px-4 space-y-6"}>
+			<div>
+				<Input placeholder="Search Products" />
+			</div>
+			<div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+				<ProductCard />
+				<ProductCard />
+				<ProductCard />
+				<ProductCard />
+				<ProductCard />
+			</div>
+		</section>
 	);
 }
 

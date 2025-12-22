@@ -104,7 +104,7 @@ export function AppHeader() {
 					/>
 				</SignedIn>
 				<SignedOut>
-					<SignInButton mode="modal">
+					<SignInButton>
 						<Button variant="default" size="lg">
 							Sign In
 						</Button>
