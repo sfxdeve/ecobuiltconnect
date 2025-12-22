@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/tanstack-react-start";
 import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
@@ -6,7 +7,6 @@ import {
 } from "@tanstack/react-router";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { AppHeader } from "@/components/blocks/app-header";
-import { AppClerkProvider } from "@/integrations/clerk";
 import appCss from "@/styles.css?url";
 
 interface RouterContext {
@@ -44,11 +44,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<AppClerkProvider>
+				<ClerkProvider>
 					<AppHeader />
 					{children}
 					<AppFooter />
-				</AppClerkProvider>
+				</ClerkProvider>
 				<Scripts />
 			</body>
 		</html>
