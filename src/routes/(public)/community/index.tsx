@@ -12,5 +12,5 @@ export const Route = createFileRoute("/(public)/community/")({
 });
 
 function CommunityPage() {
-	return <section className={"container mx-auto py-12 px-4"}></section>;
+	return <section className="container mx-auto py-12 px-4"></section>;
 }

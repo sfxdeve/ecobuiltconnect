@@ -18,8 +18,8 @@ function ProductDetailsPage() {
 				"container mx-auto py-12 px-4 space-y-6 flex flex-col lg:flex-row gap-8"
 			}
 		>
-			<div className={"flex-1"}></div>
-			<div className={"flex-1"}></div>
+			<div className="flex-1"></div>
+			<div className="flex-1"></div>
 		</section>
 	);
 }

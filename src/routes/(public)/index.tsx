@@ -12,5 +12,5 @@ export const Route = createFileRoute("/(public)/")({
 });
 
 function HomePage() {
-	return <section className={"container mx-auto py-12 px-4"}></section>;
+	return <section className="container mx-auto py-12 px-4"></section>;
 }

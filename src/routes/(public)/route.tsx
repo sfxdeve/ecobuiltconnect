@@ -6,7 +6,7 @@ export const Route = createFileRoute("/(public)")({
 
 function PublicLayout() {
 	return (
-		<main className={"min-h-screen"}>
+		<main className="min-h-screen">
 			<Outlet />
 		</main>
 	);

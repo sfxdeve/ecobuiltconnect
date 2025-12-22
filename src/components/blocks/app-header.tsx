@@ -24,10 +24,10 @@ export function AppHeader() {
 			}
 		>
 			{/* Logo */}
-			<img className={"size-18"} src="/logo.webp" alt="Logo" />
+			<img className="size-18" src="/logo.webp" alt="Logo" />
 
 			{/* Links */}
-			<ul className={"hidden md:flex lg:gap-4 gap-2 items-center"}>
+			<ul className="hidden md:flex lg:gap-4 gap-2 items-center">
 				<li>
 					<Link
 						to="/"
@@ -76,7 +76,7 @@ export function AppHeader() {
 			</ul>
 
 			{/* Actions */}
-			<div className={"flex items-center gap-4"}>
+			<div className="flex items-center gap-4">
 				<Popover>
 					<PopoverTrigger
 						className={cn(
