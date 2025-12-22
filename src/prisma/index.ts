@@ -7,11 +7,11 @@ const adapter = new PrismaPg({
 });
 
 declare global {
-	var __db: PrismaClient | undefined;
+	var __prisma: PrismaClient | undefined;
 }
 
-export const db = globalThis.__db || new PrismaClient({ adapter });
+export const prisma = globalThis.__prisma || new PrismaClient({ adapter });
 
 if (env.NODE_ENV !== "production") {
-	globalThis.__db = db;
+	globalThis.__prisma = prisma;
 }
