@@ -2,5 +2,6 @@
 .output
 .tanstack
 node_modules
+src/prisma/generated
 .env
 *.local
