@@ -10,6 +10,13 @@ import {
 import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/products/")({
+	head: () => ({
+		meta: [
+			{
+				title: "EcobuiltConnect - Products",
+			},
+		],
+	}),
 	component: ProductsPage,
 });
 
@@ -35,7 +42,7 @@ function ProductsPage() {
 function ProductCard() {
 	return (
 		<Card className={"relative"}>
-			<Badge className="absolute top-4 right-4">EcoBuiltConnect</Badge>
+			<Badge className="absolute top-4 right-4">EcobuiltConnect</Badge>
 			<CardHeader>
 				<img
 					className="aspect-square object-contain"
@@ -45,7 +52,7 @@ function ProductCard() {
 			</CardHeader>
 			<CardContent>
 				<h3 className={"font-semibold text-primary text-xs uppercase"}>
-					EcoBuiltConnect Store
+					EcobuiltConnect Store
 				</h3>
 				<h2 className={"font-semibold text-xl"}>Wooden Stable Door</h2>
 			</CardContent>

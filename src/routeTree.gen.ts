@@ -14,7 +14,7 @@ import { Route as VendorsIndexRouteImport } from './routes/vendors/index'
 import { Route as ProductsIndexRouteImport } from './routes/products/index'
 import { Route as ContactIndexRouteImport } from './routes/contact/index'
 import { Route as CommunityIndexRouteImport } from './routes/community/index'
-import { Route as ProductsSplatRouteImport } from './routes/products/$'
+import { Route as ProductsProductIdIndexRouteImport } from './routes/products/$productId/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,65 +41,71 @@ const CommunityIndexRoute = CommunityIndexRouteImport.update({
   path: '/community/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProductsSplatRoute = ProductsSplatRouteImport.update({
-  id: '/products/$',
-  path: '/products/$',
+const ProductsProductIdIndexRoute = ProductsProductIdIndexRouteImport.update({
+  id: '/products/$productId/',
+  path: '/products/$productId/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/products/$': typeof ProductsSplatRoute
   '/community': typeof CommunityIndexRoute
   '/contact': typeof ContactIndexRoute
   '/products': typeof ProductsIndexRoute
   '/vendors': typeof VendorsIndexRoute
+  '/products/$productId': typeof ProductsProductIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/products/$': typeof ProductsSplatRoute
   '/community': typeof CommunityIndexRoute
   '/contact': typeof ContactIndexRoute
   '/products': typeof ProductsIndexRoute
   '/vendors': typeof VendorsIndexRoute
+  '/products/$productId': typeof ProductsProductIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/products/$': typeof ProductsSplatRoute
   '/community/': typeof CommunityIndexRoute
   '/contact/': typeof ContactIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/vendors/': typeof VendorsIndexRoute
+  '/products/$productId/': typeof ProductsProductIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/products/$'
     | '/community'
     | '/contact'
     | '/products'
     | '/vendors'
+    | '/products/$productId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/products/$' | '/community' | '/contact' | '/products' | '/vendors'
+  to:
+    | '/'
+    | '/community'
+    | '/contact'
+    | '/products'
+    | '/vendors'
+    | '/products/$productId'
   id:
     | '__root__'
     | '/'
-    | '/products/$'
     | '/community/'
     | '/contact/'
     | '/products/'
     | '/vendors/'
+    | '/products/$productId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ProductsSplatRoute: typeof ProductsSplatRoute
   CommunityIndexRoute: typeof CommunityIndexRoute
   ContactIndexRoute: typeof ContactIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   VendorsIndexRoute: typeof VendorsIndexRoute
+  ProductsProductIdIndexRoute: typeof ProductsProductIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -139,11 +145,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/products/$': {
-      id: '/products/$'
-      path: '/products/$'
-      fullPath: '/products/$'
-      preLoaderRoute: typeof ProductsSplatRouteImport
+    '/products/$productId/': {
+      id: '/products/$productId/'
+      path: '/products/$productId'
+      fullPath: '/products/$productId'
+      preLoaderRoute: typeof ProductsProductIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -151,11 +157,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ProductsSplatRoute: ProductsSplatRoute,
   CommunityIndexRoute: CommunityIndexRoute,
   ContactIndexRoute: ContactIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   VendorsIndexRoute: VendorsIndexRoute,
+  ProductsProductIdIndexRoute: ProductsProductIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/vendors/")({
+	head: () => ({
+		meta: [
+			{
+				title: "EcobuiltConnect - Vendors",
+			},
+		],
+	}),
 	component: VendorsPage,
 });
 

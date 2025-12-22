@@ -162,7 +162,7 @@ export const ProductScalarFieldEnum = {
   isDeleted: 'isDeleted',
   categoryId: 'categoryId',
   vendorId: 'vendorId',
-  productRequestId: 'productRequestId',
+  requestId: 'requestId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -242,7 +242,7 @@ export const ReviewScalarFieldEnum = {
   rating: 'rating',
   comment: 'comment',
   userId: 'userId',
-  orderId: 'orderId',
+  itemId: 'itemId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

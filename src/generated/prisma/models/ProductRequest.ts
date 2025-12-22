@@ -354,7 +354,7 @@ export type ProductRequestCreateInput = {
   updatedAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutProductRequestsInput
   user: Prisma.UserProfileCreateNestedOneWithoutProductRequestsInput
-  products?: Prisma.ProductCreateNestedManyWithoutProductRequestInput
+  products?: Prisma.ProductCreateNestedManyWithoutRequestInput
 }
 
 export type ProductRequestUncheckedCreateInput = {
@@ -369,7 +369,7 @@ export type ProductRequestUncheckedCreateInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutProductRequestInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutRequestInput
 }
 
 export type ProductRequestUpdateInput = {
@@ -384,7 +384,7 @@ export type ProductRequestUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductRequestsNestedInput
   user?: Prisma.UserProfileUpdateOneRequiredWithoutProductRequestsNestedInput
-  products?: Prisma.ProductUpdateManyWithoutProductRequestNestedInput
+  products?: Prisma.ProductUpdateManyWithoutRequestNestedInput
 }
 
 export type ProductRequestUncheckedUpdateInput = {
@@ -399,7 +399,7 @@ export type ProductRequestUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  products?: Prisma.ProductUncheckedUpdateManyWithoutProductRequestNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutRequestNestedInput
 }
 
 export type ProductRequestCreateManyInput = {
@@ -627,7 +627,7 @@ export type ProductRequestCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutProductRequestsInput
-  products?: Prisma.ProductCreateNestedManyWithoutProductRequestInput
+  products?: Prisma.ProductCreateNestedManyWithoutRequestInput
 }
 
 export type ProductRequestUncheckedCreateWithoutUserInput = {
@@ -641,7 +641,7 @@ export type ProductRequestUncheckedCreateWithoutUserInput = {
   categoryId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutProductRequestInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutRequestInput
 }
 
 export type ProductRequestCreateOrConnectWithoutUserInput = {
@@ -698,7 +698,7 @@ export type ProductRequestCreateWithoutCategoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserProfileCreateNestedOneWithoutProductRequestsInput
-  products?: Prisma.ProductCreateNestedManyWithoutProductRequestInput
+  products?: Prisma.ProductCreateNestedManyWithoutRequestInput
 }
 
 export type ProductRequestUncheckedCreateWithoutCategoryInput = {
@@ -712,7 +712,7 @@ export type ProductRequestUncheckedCreateWithoutCategoryInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutProductRequestInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutRequestInput
 }
 
 export type ProductRequestCreateOrConnectWithoutCategoryInput = {
@@ -837,7 +837,7 @@ export type ProductRequestUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductRequestsNestedInput
-  products?: Prisma.ProductUpdateManyWithoutProductRequestNestedInput
+  products?: Prisma.ProductUpdateManyWithoutRequestNestedInput
 }
 
 export type ProductRequestUncheckedUpdateWithoutUserInput = {
@@ -851,7 +851,7 @@ export type ProductRequestUncheckedUpdateWithoutUserInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  products?: Prisma.ProductUncheckedUpdateManyWithoutProductRequestNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutRequestNestedInput
 }
 
 export type ProductRequestUncheckedUpdateManyWithoutUserInput = {
@@ -891,7 +891,7 @@ export type ProductRequestUpdateWithoutCategoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserProfileUpdateOneRequiredWithoutProductRequestsNestedInput
-  products?: Prisma.ProductUpdateManyWithoutProductRequestNestedInput
+  products?: Prisma.ProductUpdateManyWithoutRequestNestedInput
 }
 
 export type ProductRequestUncheckedUpdateWithoutCategoryInput = {
@@ -905,7 +905,7 @@ export type ProductRequestUncheckedUpdateWithoutCategoryInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  products?: Prisma.ProductUncheckedUpdateManyWithoutProductRequestNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutRequestNestedInput
 }
 
 export type ProductRequestUncheckedUpdateManyWithoutCategoryInput = {

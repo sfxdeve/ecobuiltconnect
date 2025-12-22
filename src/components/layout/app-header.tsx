@@ -4,7 +4,7 @@ import {
 	SignInButton,
 	UserButton,
 } from "@clerk/clerk-react";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ShoppingCartIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -17,8 +17,6 @@ import {
 import { cn } from "@/lib/utils";
 
 export function AppHeader() {
-	const location = useLocation();
-
 	return (
 		<header
 			className={
@@ -33,10 +31,8 @@ export function AppHeader() {
 				<li>
 					<Link
 						to="/"
-						className={cn(
-							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname === "/" && "bg-muted",
-						)}
+						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+						activeProps={{ className: "bg-muted" }}
 					>
 						Home
 					</Link>
@@ -44,10 +40,8 @@ export function AppHeader() {
 				<li>
 					<Link
 						to="/products"
-						className={cn(
-							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname.startsWith("/products") && "bg-muted",
-						)}
+						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+						activeProps={{ className: "bg-muted" }}
 					>
 						Marketplace
 					</Link>
@@ -55,10 +49,8 @@ export function AppHeader() {
 				<li>
 					<Link
 						to="/vendors"
-						className={cn(
-							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname.startsWith("/vendors") && "bg-muted",
-						)}
+						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+						activeProps={{ className: "bg-muted" }}
 					>
 						Vendors
 					</Link>
@@ -66,10 +58,8 @@ export function AppHeader() {
 				<li>
 					<Link
 						to="/community"
-						className={cn(
-							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname.startsWith("/community") && "bg-muted",
-						)}
+						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+						activeProps={{ className: "bg-muted" }}
 					>
 						Community
 					</Link>
@@ -77,10 +67,8 @@ export function AppHeader() {
 				<li>
 					<Link
 						to="/contact"
-						className={cn(
-							buttonVariants({ variant: "ghost", size: "lg" }),
-							location.pathname.startsWith("/contact") && "bg-muted",
-						)}
+						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+						activeProps={{ className: "bg-muted" }}
 					>
 						Contact
 					</Link>
