@@ -7,7 +7,7 @@ export const Route = createFileRoute("/(auth)")({
 function AuthLayout() {
 	return (
 		<main>
-			<section className={"container mx-auto py-12 px-4 space-y-6"}>
+			<section className={"container mx-auto py-12 px-4"}>
 				<div className="flex justify-center">
 					<Outlet />
 				</div>

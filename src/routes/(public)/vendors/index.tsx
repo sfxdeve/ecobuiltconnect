@@ -12,7 +12,5 @@ export const Route = createFileRoute("/(public)/vendors/")({
 });
 
 function VendorsPage() {
-	return (
-		<section className={"container mx-auto py-12 px-4 space-y-6"}></section>
-	);
+	return <section className={"container mx-auto py-12 px-4"}></section>;
 }
