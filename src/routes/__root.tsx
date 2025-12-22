@@ -4,8 +4,8 @@ import {
 	HeadContent,
 	Scripts,
 } from "@tanstack/react-router";
-import { AppFooter } from "@/components/layout/app-footer";
-import { AppHeader } from "@/components/layout/app-header";
+import { AppFooter } from "@/components/blocks/app-footer";
+import { AppHeader } from "@/components/blocks/app-header";
 import { AppClerkProvider } from "@/integrations/clerk";
 import appCss from "@/styles.css?url";
 
