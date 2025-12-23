@@ -148,6 +148,14 @@ function ProductsPageSearch() {
 	const [isProductsFiltersDialogOpen, setIsProductsFiltersDialogOpen] =
 		useState(false);
 
+	const areProductsFiltersActive =
+		search.sortBy !== "createdAt" ||
+		search.sortOrder !== "desc" ||
+		search.minStock !== undefined ||
+		search.minPrice !== undefined ||
+		search.maxPrice !== undefined ||
+		search.isVerified !== undefined;
+
 	const debouncedSearch = debounce(
 		(searchTerm: string) => {
 			navigate({
@@ -168,7 +176,13 @@ function ProductsPageSearch() {
 				open={isProductsFiltersDialogOpen}
 				onOpenChange={setIsProductsFiltersDialogOpen}
 			>
-				<DialogTrigger render={<Button variant="outline" />}>
+				<DialogTrigger
+					render={
+						<Button
+							variant={areProductsFiltersActive ? "default" : "outline"}
+						/>
+					}
+				>
 					<FilterIcon />
 				</DialogTrigger>
 				<DialogContent>
