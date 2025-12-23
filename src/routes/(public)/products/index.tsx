@@ -1,16 +1,28 @@
 import { debounce } from "@tanstack/pacer";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useId } from "react";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { formatMoney } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
 import { getPublicProducts } from "@/server/public/products";
 
 export const Route = createFileRoute("/(public)/products/")({
@@ -54,8 +66,8 @@ export const Route = createFileRoute("/(public)/products/")({
 
 function ProductsPage() {
 	const loaderData = Route.useLoaderData();
-	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
+	const selectLimitId = useId();
 
 	const debouncedSearch = debounce(
 		(searchTerm: string) => {
@@ -76,7 +88,7 @@ function ProductsPage() {
 			<div>
 				<Input
 					placeholder="Search Products"
-					defaultValue={search.searchTerm ?? ""}
+					defaultValue={Route.useSearch().searchTerm ?? ""}
 					onChange={(event) => debouncedSearch(event.target.value)}
 				/>
 			</div>
@@ -118,6 +130,73 @@ function ProductsPage() {
 						</CardFooter>
 					</Card>
 				))}
+			</div>
+			<div className="flex items-center justify-between gap-4">
+				<Field orientation="horizontal" className="w-fit">
+					<FieldLabel htmlFor={selectLimitId}>
+						Showing {loaderData.products.length} of {loaderData.total} products
+					</FieldLabel>
+					<Select
+						defaultValue={loaderData.limit.toString()}
+						onValueChange={(value) =>
+							navigate({
+								search: (prev) => ({
+									...prev,
+									limit: Number(value),
+								}),
+								replace: true,
+							})
+						}
+					>
+						<SelectTrigger className="w-20" id={selectLimitId}>
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent align="start">
+							<SelectGroup>
+								<SelectItem value="5">5</SelectItem>
+								<SelectItem value="10">10</SelectItem>
+								<SelectItem value="25">25</SelectItem>
+								<SelectItem value="50">50</SelectItem>
+							</SelectGroup>
+						</SelectContent>
+					</Select>
+				</Field>
+				<div className="flex items-center gap-1">
+					{loaderData.page <= 1 ? (
+						<span
+							className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
+						>
+							<ChevronLeft />
+							<span>Previous</span>
+						</span>
+					) : (
+						<Link
+							from={Route.fullPath}
+							search={(prev) => ({ ...prev, page: loaderData.page - 1 })}
+							className={cn(buttonVariants({ variant: "ghost" }))}
+						>
+							<ChevronLeft />
+							<span>Previous</span>
+						</Link>
+					)}
+					{loaderData.page >= loaderData.pages ? (
+						<span
+							className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
+						>
+							<span>Next</span>
+							<ChevronRight />
+						</span>
+					) : (
+						<Link
+							from={Route.fullPath}
+							search={(prev) => ({ ...prev, page: loaderData.page + 1 })}
+							className={cn(buttonVariants({ variant: "ghost" }))}
+						>
+							<span>Next</span>
+							<ChevronRight />
+						</Link>
+					)}
+				</div>
 			</div>
 		</section>
 	);

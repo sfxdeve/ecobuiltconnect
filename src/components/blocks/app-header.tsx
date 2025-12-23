@@ -98,7 +98,7 @@ export function AppHeader() {
 					<UserButton
 						appearance={{
 							elements: {
-								userButtonAvatarBox: "!size-9",
+								userButtonAvatarBox: "size-9!",
 							},
 						}}
 					/>
