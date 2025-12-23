@@ -17,10 +17,7 @@ export const getPublicProducts = createServerFn({
 			limit: z.number().default(10),
 			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
 			sortOrder: z.enum(["asc", "desc"]).default("desc"),
-			name: z.string().optional(),
-			description: z.string().optional(),
-			previousUsage: z.string().optional(),
-			sku: z.string().optional(),
+			searchTerm: z.string().optional(),
 			minStock: z.number().optional(),
 			minPrice: z.number().optional(),
 			maxPrice: z.number().optional(),
@@ -58,11 +55,13 @@ export const getPublicProducts = createServerFn({
 			"sku",
 		] as const;
 
-		searchFields.forEach((field) => {
-			if (data[field]) {
-				where[field] = { contains: data[field], mode: "insensitive" };
-			}
-		});
+		if (data.searchTerm) {
+			(where.AND as ProductWhereInput[]).push({
+				OR: searchFields.map((field) => ({
+					[field]: { contains: data.searchTerm, mode: "insensitive" },
+				})),
+			});
+		}
 
 		if (data.minStock !== undefined) {
 			where.stock = { gte: data.minStock };

@@ -1,3 +1,4 @@
+import { debounce } from "@tanstack/pacer";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
@@ -17,10 +18,7 @@ export const Route = createFileRoute("/(public)/products/")({
 		limit: z.number().default(10),
 		sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
 		sortOrder: z.enum(["asc", "desc"]).default("desc"),
-		name: z.string().optional(),
-		description: z.string().optional(),
-		previousUsage: z.string().optional(),
-		sku: z.string().optional(),
+		searchTerm: z.string().optional(),
 		minStock: z.number().optional(),
 		minPrice: z.number().optional(),
 		maxPrice: z.number().optional(),
@@ -49,15 +47,35 @@ export const Route = createFileRoute("/(public)/products/")({
 });
 
 function ProductsPage() {
-	const { products } = Route.useLoaderData();
+	const loaderData = Route.useLoaderData();
+	const search = Route.useSearch();
+	const navigate = Route.useNavigate();
+
+	const debouncedSearch = debounce(
+		(searchTerm: string) => {
+			navigate({
+				search: (prev) => ({
+					...prev,
+					page: 1,
+					searchTerm: searchTerm.trim() ? searchTerm : undefined,
+				}),
+				replace: true,
+			});
+		},
+		{ wait: 500 },
+	);
 
 	return (
 		<section className="container mx-auto py-12 px-4 space-y-6">
 			<div>
-				<Input placeholder="Search Products" />
+				<Input
+					placeholder="Search Products"
+					defaultValue={search.searchTerm ?? ""}
+					onChange={(event) => debouncedSearch(event.target.value)}
+				/>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{products.map((product) => (
+				{loaderData.products.map((product) => (
 					<Card key={product.id} className="relative">
 						{product.isVerified && (
 							<Badge className="absolute top-4 right-4">EcobuiltConnect</Badge>
