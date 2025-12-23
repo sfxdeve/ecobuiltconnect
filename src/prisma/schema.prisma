@@ -100,12 +100,6 @@ enum ProductCondition {
   FAIR
 }
 
-enum ProductStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
 model Product {
   id String @id @default(uuid())
 
@@ -118,7 +112,6 @@ model Product {
   price         Float
   salePrice     Float?           @map("sale_price")
   condition     ProductCondition @default(GOOD)
-  status        ProductStatus    @default(PENDING)
   isVerified    Boolean          @default(false) @map("is_verified")
   isDeleted     Boolean          @default(false) @map("is_deleted")
 
