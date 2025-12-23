@@ -1,11 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
+import { prisma } from "@/prisma";
+import type { ProductWhereInput } from "@/prisma/generated/models";
 import {
 	categorySelector,
 	productSelector,
 	vendorProfileSelector,
-} from "@/lib/selectors";
-import { prisma } from "@/prisma";
-import type { ProductWhereInput } from "@/prisma/generated/models";
+} from "@/prisma/selectors";
 
 export const getPuclicProducts = createServerFn({ method: "GET" }).handler(
 	async () => {
