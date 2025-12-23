@@ -228,19 +228,25 @@ function ProductsPagePagination() {
 
 	const limitSelectId = useId();
 
+	const start = (loaderData.page - 1) * loaderData.limit + 1;
+	const end = Math.min(loaderData.page * loaderData.limit, loaderData.total);
+
 	return (
 		<div className="flex items-center justify-between gap-4">
 			<Field orientation="horizontal" className="w-fit">
 				<FieldLabel htmlFor={limitSelectId}>
-					Showing {loaderData.products.length} of {loaderData.total} products
+					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
+					{loaderData.total} products
 				</FieldLabel>
 				<Select
-					defaultValue={loaderData.limit.toString()}
+					key={loaderData.limit}
+					defaultValue={String(loaderData.limit)}
 					onValueChange={(value) =>
 						navigate({
 							search: (prev) => ({
 								...prev,
 								limit: Number(value),
+								page: 1,
 							}),
 							replace: true,
 						})
@@ -262,6 +268,8 @@ function ProductsPagePagination() {
 			<div className="flex items-center gap-1">
 				{loaderData.page <= 1 ? (
 					<span
+						aria-disabled="true"
+						tabIndex={-1}
 						className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
 					>
 						<ChevronLeft />
@@ -279,6 +287,8 @@ function ProductsPagePagination() {
 				)}
 				{loaderData.page >= loaderData.pages ? (
 					<span
+						aria-disabled="true"
+						tabIndex={-1}
 						className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
 					>
 						<span>Next</span>
