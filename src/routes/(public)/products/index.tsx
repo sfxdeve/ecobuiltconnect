@@ -246,7 +246,7 @@ function ProductsPagePagination() {
 						})
 					}
 				>
-					<SelectTrigger className="w-20" id={limitSelectId}>
+					<SelectTrigger className="w-20 hidden md:block" id={limitSelectId}>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent align="start">
