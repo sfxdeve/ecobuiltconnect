@@ -9,7 +9,7 @@ import {
 	CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { getPuclicProducts } from "@/server/public/products";
+import { getPublicProducts } from "@/server/public/products";
 
 export const Route = createFileRoute("/(public)/products/")({
 	validateSearch: z.object({
@@ -17,20 +17,25 @@ export const Route = createFileRoute("/(public)/products/")({
 		limit: z.number().default(10),
 		sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
 		sortOrder: z.enum(["asc", "desc"]).default("desc"),
+		name: z.string().optional(),
+		description: z.string().optional(),
+		previousUsage: z.string().optional(),
+		sku: z.string().optional(),
+		minStock: z.number().optional(),
+		minPrice: z.number().optional(),
+		maxPrice: z.number().optional(),
+		condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),
+		isVerified: z.boolean().optional(),
+		categoryId: z.string().optional(),
+		vendorId: z.string().optional(),
 	}),
-	loaderDeps: ({ search: { limit, page, sortBy, sortOrder } }) => ({
-		limit,
-		page,
-		sortBy,
-		sortOrder,
+	loaderDeps: ({ search }) => ({
+		search,
 	}),
-	loader: ({ deps: { limit, page, sortBy, sortOrder } }) =>
-		getPuclicProducts({
+	loader: ({ deps: { search } }) =>
+		getPublicProducts({
 			data: {
-				limit,
-				page,
-				sortBy,
-				sortOrder,
+				...search,
 			},
 		}),
 	head: () => ({

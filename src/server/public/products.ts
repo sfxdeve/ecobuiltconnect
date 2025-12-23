@@ -8,7 +8,7 @@ import {
 	vendorProfileSelector,
 } from "@/prisma/selectors";
 
-export const getPuclicProducts = createServerFn({
+export const getPublicProducts = createServerFn({
 	method: "GET",
 })
 	.inputValidator(
@@ -17,45 +17,85 @@ export const getPuclicProducts = createServerFn({
 			limit: z.number().default(10),
 			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
 			sortOrder: z.enum(["asc", "desc"]).default("desc"),
-			// product: z.object({}).optional(),
-			// category: z.object({}).optional(),
-			// vendor: z.object({}).optional(),
+			name: z.string().optional(),
+			description: z.string().optional(),
+			previousUsage: z.string().optional(),
+			sku: z.string().optional(),
+			minStock: z.number().optional(),
+			minPrice: z.number().optional(),
+			maxPrice: z.number().optional(),
+			condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),
+			isVerified: z.boolean().optional(),
+			categoryId: z.string().optional(),
+			vendorId: z.string().optional(),
 		}),
 	)
-	.handler(async ({ data: { page, limit, sortBy, sortOrder } }) => {
-		const where = {
+	.handler(async ({ data }) => {
+		const where: ProductWhereInput = {
 			isDeleted: false,
-			category: {
-				status: "APPROVED",
-				isDeleted: false,
-			},
-			vendor: {
-				status: "APPROVED",
-			},
-		} satisfies ProductWhereInput;
+			category: { status: "APPROVED", isDeleted: false },
+			vendor: { status: "APPROVED" },
+			AND: [],
+		};
 
-		const products = await prisma.product.findMany({
-			where,
-			take: limit,
-			skip: (page - 1) * limit,
-			orderBy: {
-				[sortBy]: sortOrder,
-			},
-			select: {
-				...productSelector,
-				category: { select: categorySelector },
-				vendor: { select: vendorProfileSelector },
-			},
+		const eqFields = [
+			"condition",
+			"isVerified",
+			"categoryId",
+			"vendorId",
+		] as const;
+
+		eqFields.forEach((field) => {
+			if (data[field] !== undefined) {
+				where[field] = data[field];
+			}
 		});
 
-		const total = await prisma.product.count({ where });
-		const pages = Math.ceil(total / limit);
+		const searchFields = [
+			"name",
+			"description",
+			"previousUsage",
+			"sku",
+		] as const;
+
+		searchFields.forEach((field) => {
+			if (data[field]) {
+				where[field] = { contains: data[field], mode: "insensitive" };
+			}
+		});
+
+		if (data.minStock !== undefined) {
+			where.stock = { gte: data.minStock };
+		}
+
+		if (data.minPrice !== undefined || data.maxPrice !== undefined) {
+			const priceRange = { gte: data.minPrice, lte: data.maxPrice };
+
+			(where.AND as ProductWhereInput[]).push({
+				OR: [{ salePrice: priceRange }, { salePrice: null, price: priceRange }],
+			});
+		}
+
+		const [products, total] = await Promise.all([
+			prisma.product.findMany({
+				where,
+				take: data.limit,
+				skip: (data.page - 1) * data.limit,
+				orderBy: { [data.sortBy]: data.sortOrder },
+				select: {
+					...productSelector,
+					category: { select: categorySelector },
+					vendor: { select: vendorProfileSelector },
+				},
+			}),
+			prisma.product.count({ where }),
+		]);
 
 		return {
 			products,
 			total,
-			pages,
-			limit,
-			page,
+			pages: Math.ceil(total / data.limit),
+			limit: data.limit,
+			page: data.page,
 		};
 	});
