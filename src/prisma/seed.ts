@@ -32,7 +32,8 @@ async function main() {
 	const vendorsData = Array.from({ length: 5 }, () => ({
 		clerkId: faker.string.uuid(),
 		pictureId: "/test.jpg",
-		description: faker.lorem.sentence(),
+		name: faker.company.name(),
+		description: faker.company.catchPhrase(),
 		postcode: faker.location.zipCode(),
 		city: faker.location.city(),
 		address: faker.location.streetAddress(),

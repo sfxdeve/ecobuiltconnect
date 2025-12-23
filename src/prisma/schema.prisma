@@ -17,9 +17,9 @@ model UserProfile {
   id String @id @default(uuid())
 
   clerkId  String        @unique @map("clerk_id")
-  postcode String
-  city     String
   address  String
+  city     String
+  postcode String
   status   ProfileStatus @default(APPROVED)
 
   productRequests ProductRequest[]
@@ -35,10 +35,11 @@ model VendorProfile {
 
   clerkId     String        @unique @map("clerk_id")
   pictureId   String        @map("picture_id")
+  name        String
   description String
-  postcode    String
-  city        String
   address     String
+  city        String
+  postcode    String
   status      ProfileStatus @default(PENDING)
 
   products Product[]
@@ -52,10 +53,11 @@ model LogisticProfile {
 
   clerkId     String        @unique @map("clerk_id")
   pictureId   String        @map("picture_id")
+  name        String
   description String
-  postcode    String
-  city        String
   address     String
+  city        String
+  postcode    String
   status      ProfileStatus @default(PENDING)
 
   logisticResponses LogisticResponse[]
