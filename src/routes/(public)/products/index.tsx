@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,27 @@ import { Input } from "@/components/ui/input";
 import { getPuclicProducts } from "@/server/public/products";
 
 export const Route = createFileRoute("/(public)/products/")({
-	loader: () => getPuclicProducts(),
+	validateSearch: z.object({
+		page: z.number().default(1),
+		limit: z.number().default(10),
+		sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
+		sortOrder: z.enum(["asc", "desc"]).default("desc"),
+	}),
+	loaderDeps: ({ search: { limit, page, sortBy, sortOrder } }) => ({
+		limit,
+		page,
+		sortBy,
+		sortOrder,
+	}),
+	loader: ({ deps: { limit, page, sortBy, sortOrder } }) =>
+		getPuclicProducts({
+			data: {
+				limit,
+				page,
+				sortBy,
+				sortOrder,
+			},
+		}),
 	head: () => ({
 		meta: [
 			{

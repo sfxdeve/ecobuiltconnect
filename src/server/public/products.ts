@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { ProductWhereInput } from "@/prisma/generated/models";
 import {
@@ -7,11 +8,21 @@ import {
 	vendorProfileSelector,
 } from "@/prisma/selectors";
 
-export const getPuclicProducts = createServerFn({ method: "GET" }).handler(
-	async () => {
-		const page = 1;
-		const limit = 10;
-
+export const getPuclicProducts = createServerFn({
+	method: "GET",
+})
+	.inputValidator(
+		z.object({
+			page: z.number().default(1),
+			limit: z.number().default(10),
+			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
+			sortOrder: z.enum(["asc", "desc"]).default("desc"),
+			// product: z.object({}).optional(),
+			// category: z.object({}).optional(),
+			// vendor: z.object({}).optional(),
+		}),
+	)
+	.handler(async ({ data: { page, limit, sortBy, sortOrder } }) => {
 		const where = {
 			isDeleted: false,
 			category: {
@@ -27,7 +38,9 @@ export const getPuclicProducts = createServerFn({ method: "GET" }).handler(
 			where,
 			take: limit,
 			skip: (page - 1) * limit,
-			// orderBy: {},
+			orderBy: {
+				[sortBy]: sortOrder,
+			},
 			select: {
 				...productSelector,
 				category: { select: categorySelector },
@@ -45,5 +58,4 @@ export const getPuclicProducts = createServerFn({ method: "GET" }).handler(
 			limit,
 			page,
 		};
-	},
-);
+	});
