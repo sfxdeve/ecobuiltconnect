@@ -231,6 +231,9 @@ function ProductsPagePagination() {
 	const start = (loaderData.page - 1) * loaderData.limit + 1;
 	const end = Math.min(loaderData.page * loaderData.limit, loaderData.total);
 
+	const prevDisabled = loaderData.page <= 1;
+	const nextDisabled = loaderData.page >= loaderData.pages;
+
 	return (
 		<div className="flex items-center justify-between gap-4">
 			<Field orientation="horizontal" className="w-fit">
@@ -266,44 +269,43 @@ function ProductsPagePagination() {
 				</Select>
 			</Field>
 			<div className="flex items-center gap-1">
-				{loaderData.page <= 1 ? (
-					<span
-						aria-disabled="true"
-						tabIndex={-1}
-						className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
-					>
-						<ChevronLeft />
-						<span>Previous</span>
-					</span>
-				) : (
-					<Link
-						from={Route.fullPath}
-						search={(prev) => ({ ...prev, page: loaderData.page - 1 })}
-						className={cn(buttonVariants({ variant: "ghost" }))}
-					>
-						<ChevronLeft />
-						<span>Previous</span>
-					</Link>
-				)}
-				{loaderData.page >= loaderData.pages ? (
-					<span
-						aria-disabled="true"
-						tabIndex={-1}
-						className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
-					>
-						<span>Next</span>
-						<ChevronRight />
-					</span>
-				) : (
-					<Link
-						from={Route.fullPath}
-						search={(prev) => ({ ...prev, page: loaderData.page + 1 })}
-						className={cn(buttonVariants({ variant: "ghost" }))}
-					>
-						<span>Next</span>
-						<ChevronRight />
-					</Link>
-				)}
+				<Link
+					from={Route.fullPath}
+					aria-disabled={prevDisabled}
+					tabIndex={prevDisabled ? -1 : 0}
+					onClick={(e) => {
+						if (prevDisabled) e.preventDefault();
+					}}
+					search={(prev) =>
+						prevDisabled ? prev : { ...prev, page: prev.page - 1 }
+					}
+					className={cn(
+						buttonVariants({ variant: "ghost" }),
+						prevDisabled && "opacity-50 pointer-events-none",
+					)}
+				>
+					<ChevronLeft />
+					<span>Previous</span>
+				</Link>
+
+				<Link
+					from={Route.fullPath}
+					aria-disabled={nextDisabled}
+					tabIndex={nextDisabled ? -1 : 0}
+					onClick={(e) => {
+						if (nextDisabled) e.preventDefault();
+					}}
+					search={(prev) =>
+						nextDisabled ? prev : { ...prev, page: prev.page + 1 }
+					}
+					className={cn(
+						buttonVariants({ variant: "ghost" }),
+						nextDisabled && "opacity-50 pointer-events-none",
+					)}
+				>
+					<span>Next</span>
+					<ChevronRight />
+				</Link>
 			</div>
 		</div>
 	);
