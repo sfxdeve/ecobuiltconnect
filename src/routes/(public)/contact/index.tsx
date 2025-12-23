@@ -18,30 +18,30 @@ export const Route = createFileRoute("/(public)/contact/")({
 	component: ContactPage,
 });
 
-const contactSchema = z.object({
+const contactFormSchema = z.object({
 	name: z
-		.string("Name is required")
+		.string("Name must be string")
 		.min(3, "Name must be at least 3 characters"),
 	email: z.email("Please enter a valid email address"),
 	subject: z
-		.string("Subject is required")
+		.string("Subject must be string")
 		.min(3, "Subject must be at least 3 characters"),
 	message: z
-		.string("Message is required")
+		.string("Message must be string")
 		.min(10, "Message must be at least 10 characters"),
 });
 
 function ContactPage() {
 	const form = useForm({
 		validators: {
-			onChange: contactSchema,
+			onChange: contactFormSchema,
 		},
 		defaultValues: {
 			name: "",
 			email: "",
 			subject: "",
 			message: "",
-		},
+		} as z.infer<typeof contactFormSchema>,
 		onSubmit: async ({ value }) => {
 			console.log(value);
 		},
@@ -77,7 +77,6 @@ function ContactPage() {
 							);
 						}}
 					</form.Field>
-
 					<form.Field name="email">
 						{(field) => {
 							const isInvalid =
@@ -100,7 +99,6 @@ function ContactPage() {
 							);
 						}}
 					</form.Field>
-
 					<form.Field name="subject">
 						{(field) => {
 							const isInvalid =
@@ -122,7 +120,6 @@ function ContactPage() {
 							);
 						}}
 					</form.Field>
-
 					<form.Field name="message">
 						{(field) => {
 							const isInvalid =
@@ -144,8 +141,7 @@ function ContactPage() {
 							);
 						}}
 					</form.Field>
-
-					<form.Subscribe selector={(state) => [state.isSubmitting]}>
+					<form.Subscribe selector={({ isSubmitting }) => [isSubmitting]}>
 						{([isSubmitting]) => (
 							<Field orientation="horizontal">
 								<Button

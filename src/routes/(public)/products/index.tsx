@@ -1,8 +1,9 @@
 import { debounce } from "@tanstack/pacer";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useId } from "react";
+import { ChevronLeft, ChevronRight, FilterIcon } from "lucide-react";
+import { useId, useState } from "react";
 import { z } from "zod";
+import { ProductsFiltersForm } from "@/components/forms/products-filter-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -11,6 +12,19 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "@/components/ui/empty";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -66,8 +80,73 @@ export const Route = createFileRoute("/(public)/products/")({
 
 function ProductsPage() {
 	const loaderData = Route.useLoaderData();
+
+	return (
+		<section className="container mx-auto py-12 px-4 space-y-6">
+			<ProductsPageSearch />
+			{loaderData.products.length > 0 ? (
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					{loaderData.products.map((product) => (
+						<Card key={product.id} className="relative">
+							{product.isVerified && (
+								<Badge className="absolute top-4 right-4">
+									EcobuiltConnect
+								</Badge>
+							)}
+							<CardHeader>
+								<img
+									className="aspect-square object-contain"
+									src={product.pictureIds[0]}
+									alt={product.name}
+								/>
+							</CardHeader>
+							<CardContent>
+								<h3 className="font-semibold text-primary text-xs uppercase">
+									{product.vendor.clerkId}
+								</h3>
+								<h2 className="font-semibold text-xl">{product.name}</h2>
+							</CardContent>
+							<CardFooter className="flex justify-between items-center">
+								<div className="flex flex-col">
+									<span className="font-bold text-xl">
+										{formatMoney(
+											product.salePrice ? product.salePrice : product.price,
+											{
+												locale: "en-ZA",
+												currency: "ZAR",
+											},
+										)}
+									</span>
+									<span className="text-xs">Excl. VAT</span>
+								</div>
+								<Button variant="default" size="lg">
+									Purchase
+								</Button>
+							</CardFooter>
+						</Card>
+					))}
+				</div>
+			) : (
+				<Empty className="bg-muted">
+					<EmptyHeader>
+						<EmptyTitle>No results found</EmptyTitle>
+						<EmptyDescription>
+							No results found for your search. Try adjusting your search terms.
+						</EmptyDescription>
+					</EmptyHeader>
+				</Empty>
+			)}
+			<ProductsPagePagination />
+		</section>
+	);
+}
+
+function ProductsPageSearch() {
+	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
-	const selectLimitId = useId();
+
+	const [isProductsFiltersDialogOpen, setIsProductsFiltersDialogOpen] =
+		useState(false);
 
 	const debouncedSearch = debounce(
 		(searchTerm: string) => {
@@ -84,120 +163,134 @@ function ProductsPage() {
 	);
 
 	return (
-		<section className="container mx-auto py-12 px-4 space-y-6">
-			<div>
-				<Input
-					placeholder="Search Products"
-					defaultValue={Route.useSearch().searchTerm ?? ""}
-					onChange={(event) => debouncedSearch(event.target.value)}
-				/>
-			</div>
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{loaderData.products.map((product) => (
-					<Card key={product.id} className="relative">
-						{product.isVerified && (
-							<Badge className="absolute top-4 right-4">EcobuiltConnect</Badge>
-						)}
-						<CardHeader>
-							<img
-								className="aspect-square object-contain"
-								src={product.pictureIds[0]}
-								alt={product.name}
-							/>
-						</CardHeader>
-						<CardContent>
-							<h3 className="font-semibold text-primary text-xs uppercase">
-								{product.vendor.clerkId}
-							</h3>
-							<h2 className="font-semibold text-xl">{product.name}</h2>
-						</CardContent>
-						<CardFooter className="flex justify-between items-center">
-							<div className="flex flex-col">
-								<span className="font-bold text-xl">
-									{formatMoney(
-										product.salePrice ? product.salePrice : product.price,
-										{
-											locale: "en-ZA",
-											currency: "ZAR",
-										},
-									)}
-								</span>
-								<span className="text-xs">Excl. VAT</span>
-							</div>
-							<Button variant="default" size="lg">
-								Purchase
-							</Button>
-						</CardFooter>
-					</Card>
-				))}
-			</div>
-			<div className="flex items-center justify-between gap-4">
-				<Field orientation="horizontal" className="w-fit">
-					<FieldLabel htmlFor={selectLimitId}>
-						Showing {loaderData.products.length} of {loaderData.total} products
-					</FieldLabel>
-					<Select
-						defaultValue={loaderData.limit.toString()}
-						onValueChange={(value) =>
+		<div className="flex gap-2 items-center justify-between">
+			<Dialog
+				open={isProductsFiltersDialogOpen}
+				onOpenChange={setIsProductsFiltersDialogOpen}
+			>
+				<DialogTrigger render={<Button variant="outline" />}>
+					<FilterIcon />
+				</DialogTrigger>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle className="text-xl font-semibold">
+							Filter Products
+						</DialogTitle>
+					</DialogHeader>
+					<ProductsFiltersForm
+						defaultValues={{
+							minPrice: search.minPrice,
+							maxPrice: search.maxPrice,
+						}}
+						submitHandler={(data) => {
 							navigate({
 								search: (prev) => ({
 									...prev,
-									limit: Number(value),
+									...data,
+									page: 1,
 								}),
 								replace: true,
-							})
-						}
+							});
+
+							setIsProductsFiltersDialogOpen(false);
+						}}
+						resetHandler={(data) => {
+							navigate({
+								search: (prev) => ({
+									...prev,
+									...data,
+									page: 1,
+								}),
+								replace: true,
+							});
+
+							setIsProductsFiltersDialogOpen(false);
+						}}
+					/>
+				</DialogContent>
+			</Dialog>
+			<Input
+				placeholder="Search Products"
+				defaultValue={Route.useSearch().searchTerm ?? ""}
+				onChange={(event) => debouncedSearch(event.target.value)}
+			/>
+		</div>
+	);
+}
+
+function ProductsPagePagination() {
+	const loaderData = Route.useLoaderData();
+	const navigate = Route.useNavigate();
+
+	const limitSelectId = useId();
+
+	return (
+		<div className="flex items-center justify-between gap-4">
+			<Field orientation="horizontal" className="w-fit">
+				<FieldLabel htmlFor={limitSelectId}>
+					Showing {loaderData.products.length} of {loaderData.total} products
+				</FieldLabel>
+				<Select
+					defaultValue={loaderData.limit.toString()}
+					onValueChange={(value) =>
+						navigate({
+							search: (prev) => ({
+								...prev,
+								limit: Number(value),
+							}),
+							replace: true,
+						})
+					}
+				>
+					<SelectTrigger className="w-20" id={limitSelectId}>
+						<SelectValue />
+					</SelectTrigger>
+					<SelectContent align="start">
+						<SelectGroup>
+							<SelectItem value="5">5</SelectItem>
+							<SelectItem value="10">10</SelectItem>
+							<SelectItem value="25">25</SelectItem>
+							<SelectItem value="50">50</SelectItem>
+						</SelectGroup>
+					</SelectContent>
+				</Select>
+			</Field>
+			<div className="flex items-center gap-1">
+				{loaderData.page <= 1 ? (
+					<span
+						className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
 					>
-						<SelectTrigger className="w-20" id={selectLimitId}>
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent align="start">
-							<SelectGroup>
-								<SelectItem value="5">5</SelectItem>
-								<SelectItem value="10">10</SelectItem>
-								<SelectItem value="25">25</SelectItem>
-								<SelectItem value="50">50</SelectItem>
-							</SelectGroup>
-						</SelectContent>
-					</Select>
-				</Field>
-				<div className="flex items-center gap-1">
-					{loaderData.page <= 1 ? (
-						<span
-							className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
-						>
-							<ChevronLeft />
-							<span>Previous</span>
-						</span>
-					) : (
-						<Link
-							from={Route.fullPath}
-							search={(prev) => ({ ...prev, page: loaderData.page - 1 })}
-							className={cn(buttonVariants({ variant: "ghost" }))}
-						>
-							<ChevronLeft />
-							<span>Previous</span>
-						</Link>
-					)}
-					{loaderData.page >= loaderData.pages ? (
-						<span
-							className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
-						>
-							<span>Next</span>
-							<ChevronRight />
-						</span>
-					) : (
-						<Link
-							from={Route.fullPath}
-							search={(prev) => ({ ...prev, page: loaderData.page + 1 })}
-							className={cn(buttonVariants({ variant: "ghost" }))}
-						>
-							<span>Next</span>
-							<ChevronRight />
-						</Link>
-					)}
-				</div>
+						<ChevronLeft />
+						<span>Previous</span>
+					</span>
+				) : (
+					<Link
+						from={Route.fullPath}
+						search={(prev) => ({ ...prev, page: loaderData.page - 1 })}
+						className={cn(buttonVariants({ variant: "ghost" }))}
+					>
+						<ChevronLeft />
+						<span>Previous</span>
+					</Link>
+				)}
+				{loaderData.page >= loaderData.pages ? (
+					<span
+						className={cn(buttonVariants({ variant: "ghost" }), "opacity-50")}
+					>
+						<span>Next</span>
+						<ChevronRight />
+					</span>
+				) : (
+					<Link
+						from={Route.fullPath}
+						search={(prev) => ({ ...prev, page: loaderData.page + 1 })}
+						className={cn(buttonVariants({ variant: "ghost" }))}
+					>
+						<span>Next</span>
+						<ChevronRight />
+					</Link>
+				)}
 			</div>
-		</section>
+		</div>
 	);
 }

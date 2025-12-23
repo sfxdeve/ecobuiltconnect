@@ -35,27 +35,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 		],
 	}),
 	shellComponent: RootDocument,
-	notFoundComponent: () => {
-		return (
-			<main>
-				<section className="container mx-auto py-12 px-4"></section>
-			</main>
-		);
-	},
-	pendingComponent: () => {
-		return (
-			<main>
-				<section className="container mx-auto py-12 px-4"></section>
-			</main>
-		);
-	},
-	errorComponent: () => {
-		return (
-			<main>
-				<section className="container mx-auto py-12 px-4"></section>
-			</main>
-		);
-	},
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

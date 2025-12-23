@@ -78,14 +78,7 @@ export function AppHeader() {
 			{/* Actions */}
 			<div className="flex items-center gap-4">
 				<Popover>
-					<PopoverTrigger
-						className={cn(
-							buttonVariants({
-								variant: "outline",
-								size: "icon",
-							}),
-						)}
-					>
+					<PopoverTrigger render={<Button variant="outline" size="icon" />}>
 						<ShoppingCartIcon className="size-4.5" />
 					</PopoverTrigger>
 					<PopoverContent align="end">
