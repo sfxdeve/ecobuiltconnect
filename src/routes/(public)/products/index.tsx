@@ -179,8 +179,12 @@ function ProductsPageSearch() {
 					</DialogHeader>
 					<ProductsFiltersForm
 						defaultValues={{
+							sortBy: search.sortBy,
+							sortOrder: search.sortOrder,
+							minStock: search.minStock,
 							minPrice: search.minPrice,
 							maxPrice: search.maxPrice,
+							isVerified: search.isVerified,
 						}}
 						submitHandler={(data) => {
 							navigate({
