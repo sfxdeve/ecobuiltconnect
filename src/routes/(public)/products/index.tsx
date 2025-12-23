@@ -10,6 +10,7 @@ import {
 	CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { formatMoney } from "@/lib/formatters";
 import { getPublicProducts } from "@/server/public/products";
 
 export const Route = createFileRoute("/(public)/products/")({
@@ -101,9 +102,13 @@ function ProductsPage() {
 						<CardFooter className="flex justify-between items-center">
 							<div className="flex flex-col">
 								<span className="font-bold text-xl">
-									{product.salePrice
-										? `$${product.salePrice.toFixed(2)}`
-										: `$${product.price.toFixed(2)}`}
+									{formatMoney(
+										product.salePrice ? product.salePrice : product.price,
+										{
+											locale: "en-ZA",
+											currency: "ZAR",
+										},
+									)}
 								</span>
 								<span className="text-xs">Excl. VAT</span>
 							</div>
