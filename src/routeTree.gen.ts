@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
+import { Route as userOrdersIndexRouteImport } from './routes/(user)/orders/index'
+import { Route as userCheckoutIndexRouteImport } from './routes/(user)/checkout/index'
 import { Route as publicVendorsIndexRouteImport } from './routes/(public)/vendors/index'
 import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
@@ -33,6 +35,16 @@ const publicIndexRoute = publicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => publicRouteRoute,
+} as any)
+const userOrdersIndexRoute = userOrdersIndexRouteImport.update({
+  id: '/(user)/orders/',
+  path: '/orders/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const userCheckoutIndexRoute = userCheckoutIndexRouteImport.update({
+  id: '/(user)/checkout/',
+  path: '/checkout/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const publicVendorsIndexRoute = publicVendorsIndexRouteImport.update({
   id: '/vendors/',
@@ -85,6 +97,8 @@ export interface FileRoutesByFullPath {
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
   '/vendors': typeof publicVendorsIndexRoute
+  '/checkout': typeof userCheckoutIndexRoute
+  '/orders': typeof userOrdersIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/vendors/$vendorId': typeof publicVendorsVendorIdIndexRoute
 }
@@ -96,6 +110,8 @@ export interface FileRoutesByTo {
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
   '/vendors': typeof publicVendorsIndexRoute
+  '/checkout': typeof userCheckoutIndexRoute
+  '/orders': typeof userOrdersIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/vendors/$vendorId': typeof publicVendorsVendorIdIndexRoute
 }
@@ -110,6 +126,8 @@ export interface FileRoutesById {
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/products/': typeof publicProductsIndexRoute
   '/(public)/vendors/': typeof publicVendorsIndexRoute
+  '/(user)/checkout/': typeof userCheckoutIndexRoute
+  '/(user)/orders/': typeof userOrdersIndexRoute
   '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
   '/(public)/vendors/$vendorId/': typeof publicVendorsVendorIdIndexRoute
 }
@@ -123,6 +141,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/vendors'
+    | '/checkout'
+    | '/orders'
     | '/products/$productId'
     | '/vendors/$vendorId'
   fileRoutesByTo: FileRoutesByTo
@@ -134,6 +154,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/vendors'
+    | '/checkout'
+    | '/orders'
     | '/products/$productId'
     | '/vendors/$vendorId'
   id:
@@ -147,6 +169,8 @@ export interface FileRouteTypes {
     | '/(public)/contact/'
     | '/(public)/products/'
     | '/(public)/vendors/'
+    | '/(user)/checkout/'
+    | '/(user)/orders/'
     | '/(public)/products/$productId/'
     | '/(public)/vendors/$vendorId/'
   fileRoutesById: FileRoutesById
@@ -154,6 +178,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
+  userCheckoutIndexRoute: typeof userCheckoutIndexRoute
+  userOrdersIndexRoute: typeof userOrdersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,6 +204,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof publicIndexRouteImport
       parentRoute: typeof publicRouteRoute
+    }
+    '/(user)/orders/': {
+      id: '/(user)/orders/'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof userOrdersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(user)/checkout/': {
+      id: '/(user)/checkout/'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof userCheckoutIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(public)/vendors/': {
       id: '/(public)/vendors/'
@@ -279,6 +319,8 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
+  userCheckoutIndexRoute: userCheckoutIndexRoute,
+  userOrdersIndexRoute: userOrdersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

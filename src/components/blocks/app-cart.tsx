@@ -1,3 +1,4 @@
+import { useUser } from "@clerk/tanstack-react-start";
 import { useQueries } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
@@ -21,6 +22,8 @@ import { Separator } from "../ui/separator";
 import { Spinner } from "../ui/spinner";
 
 export function AppCart() {
+	const { isSignedIn } = useUser();
+
 	const cartState = useStore(cartStore);
 
 	const cartItemsCount = useStore(cartStore, ({ items }) =>
@@ -108,7 +111,7 @@ export function AppCart() {
 							<Separator />
 							<div>
 								<Link
-									to="/community"
+									to={isSignedIn ? "/checkout" : "/sign-in/$"}
 									onClick={() => {
 										cartActions.toggleIsOpen();
 									}}

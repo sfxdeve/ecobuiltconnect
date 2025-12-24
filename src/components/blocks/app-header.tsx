@@ -8,6 +8,7 @@ import { Link } from "@tanstack/react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AppCart } from "./app-cart";
+import { AppUserOptionsMenu } from "./app-user-options-menu";
 
 export function AppHeader() {
 	return (
@@ -71,6 +72,7 @@ export function AppHeader() {
 			{/* Actions */}
 			<div className="flex items-center gap-4">
 				<AppCart />
+				<AppUserOptionsMenu />
 				<SignedIn>
 					<UserButton
 						appearance={{
