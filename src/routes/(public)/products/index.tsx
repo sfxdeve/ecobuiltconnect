@@ -107,7 +107,7 @@ function ProductsPage() {
 							</CardHeader>
 							<CardContent>
 								<h3 className="font-semibold text-primary text-xs uppercase">
-									{product.vendor.clerkId}
+									{product.vendor.name}
 								</h3>
 								<h2 className="font-semibold text-xl">{product.name}</h2>
 							</CardContent>
