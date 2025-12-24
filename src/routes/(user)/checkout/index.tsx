@@ -1,13 +1,15 @@
 import { useUser } from "@clerk/tanstack-react-start";
-import { useQueries } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@tanstack/react-store";
-import { UserIcon } from "lucide-react";
+import { MapPinIcon, UserIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -23,6 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { formatMoney } from "@/lib/formatters";
 import { getPublicProductByIdServerFn } from "@/server/public/products";
+import { getUserProfileServerFn } from "@/server/user/profile";
 import { cartStore } from "@/stores/cart";
 
 export const Route = createFileRoute("/(user)/checkout/")({
@@ -41,9 +44,16 @@ function CheckoutPage() {
 
 	const cartState = useStore(cartStore);
 
+	const getUserProfile = useServerFn(getUserProfileServerFn);
+
+	const userProfileResult = useQuery({
+		queryKey: ["profile", user?.id],
+		queryFn: () => getUserProfile(),
+	});
+
 	const getPublicProductById = useServerFn(getPublicProductByIdServerFn);
 
-	const productResults = useQueries({
+	const productsResults = useQueries({
 		queries: cartState.items.map((item) => ({
 			queryKey: ["product", item.productId],
 			queryFn: () => getPublicProductById({ data: { id: item.productId } }),
@@ -51,7 +61,7 @@ function CheckoutPage() {
 	});
 
 	const cartTotal = cartState.items.reduce((acc, item, index) => {
-		const product = productResults[index].data?.product;
+		const product = productsResults[index].data?.product;
 
 		if (!product) {
 			return acc;
@@ -77,7 +87,7 @@ function CheckoutPage() {
 						</CardHeader>
 						<CardContent className="space-y-4">
 							{cartState.items.map((item, index) => {
-								const result = productResults[index];
+								const result = productsResults[index];
 
 								if (result.isPending) {
 									return <Spinner />;
@@ -157,10 +167,9 @@ function CheckoutPage() {
 										Personal Details
 									</ItemTitle>
 									<ItemDescription>
-										<div className="grid grid-cols-[min-content_1fr] gap-x-4 gap-y-1">
+										<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
 											<span className="font-medium">Name:</span>
 											<span>{user.fullName}</span>
-
 											<span className="font-medium">Email:</span>
 											<span className="break-all">
 												{user.primaryEmailAddress?.emailAddress}
@@ -169,7 +178,47 @@ function CheckoutPage() {
 									</ItemDescription>
 								</ItemContent>
 							</Item>
+							<Item variant="muted" className="flex gap-3">
+								<ItemMedia variant="icon">
+									<MapPinIcon className="size-5" />
+								</ItemMedia>
+								<ItemContent>
+									<ItemTitle className="text-lg font-bold">
+										Address Details
+									</ItemTitle>
+									<ItemDescription>
+										{(() => {
+											if (userProfileResult.isPending) {
+												return <Spinner />;
+											}
+
+											if (!userProfileResult.data?.profile) {
+												return null;
+											}
+
+											const profile = userProfileResult.data.profile;
+
+											return (
+												<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
+													<span className="font-medium">Address:</span>
+													<span className="break-all">{profile.address}</span>
+													<span className="font-medium">City:</span>
+													<span>{profile.city}</span>
+													<span className="font-medium">Postal Code:</span>
+													<span>{profile.postcode}</span>
+												</div>
+											);
+										})()}
+									</ItemDescription>
+								</ItemContent>
+							</Item>
+							<Separator />
 						</CardContent>
+						<CardFooter>
+							<Button variant="default" size="lg" className="w-full">
+								Confirm Order
+							</Button>
+						</CardFooter>
 					</Card>
 				</div>
 			) : (
