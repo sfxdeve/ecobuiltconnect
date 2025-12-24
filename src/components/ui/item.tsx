@@ -138,9 +138,9 @@ function ItemTitle({ className, ...props }: React.ComponentProps<"div">) {
 	);
 }
 
-function ItemDescription({ className, ...props }: React.ComponentProps<"p">) {
+function ItemDescription({ className, ...props }: React.ComponentProps<"div">) {
 	return (
-		<p
+		<div
 			data-slot="item-description"
 			className={cn(
 				"text-muted-foreground text-left text-sm [&>a:hover]:text-primary line-clamp-2 font-normal [&>a]:underline [&>a]:underline-offset-4",
