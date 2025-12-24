@@ -153,7 +153,7 @@ export function ProductsFiltersForm({
 								field.state.meta.isTouched && !field.state.meta.isValid;
 							return (
 								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Min Price</FieldLabel>
+									<FieldLabel htmlFor={field.name}>Min Stock</FieldLabel>
 									<Input
 										id={field.name}
 										type="number"
