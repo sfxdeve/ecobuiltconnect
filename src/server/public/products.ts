@@ -8,7 +8,7 @@ import {
 	vendorProfileSelector,
 } from "@/prisma/selectors";
 
-export const getPublicProducts = createServerFn({
+export const getPublicProductsServerFn = createServerFn({
 	method: "GET",
 })
 	.inputValidator(
@@ -99,7 +99,7 @@ export const getPublicProducts = createServerFn({
 		};
 	});
 
-export const getPublicProductById = createServerFn({ method: "GET" })
+export const getPublicProductByIdServerFn = createServerFn({ method: "GET" })
 	.inputValidator(
 		z.object({
 			id: z.uuid(),

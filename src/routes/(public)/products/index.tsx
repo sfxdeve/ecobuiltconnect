@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/select";
 import { formatMoney } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { getPublicProducts } from "@/server/public/products";
+import { getPublicProductsServerFn } from "@/server/public/products";
 import { cartActions } from "@/stores/cart";
 
 export const Route = createFileRoute("/(public)/products/")({
@@ -63,7 +63,7 @@ export const Route = createFileRoute("/(public)/products/")({
 		search,
 	}),
 	loader: ({ deps: { search } }) =>
-		getPublicProducts({
+		getPublicProductsServerFn({
 			data: {
 				...search,
 			},
