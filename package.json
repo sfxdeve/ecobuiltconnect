@@ -30,6 +30,7 @@
 		"@tanstack/react-router": "^1.142.8",
 		"@tanstack/react-router-ssr-query": "^1.142.8",
 		"@tanstack/react-start": "^1.142.8",
+		"@tanstack/react-store": "^0.8.0",
 		"@tanstack/router-plugin": "^1.142.8",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",

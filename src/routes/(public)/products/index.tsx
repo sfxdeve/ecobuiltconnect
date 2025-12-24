@@ -26,7 +26,11 @@ import {
 	EmptyTitle,
 } from "@/components/ui/empty";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from "@/components/ui/input-group";
 import {
 	Select,
 	SelectContent,
@@ -227,11 +231,18 @@ function ProductsPageSearch() {
 					/>
 				</DialogContent>
 			</Dialog>
-			<Input
-				placeholder="Search Products"
-				defaultValue={Route.useSearch().searchTerm ?? ""}
-				onChange={(event) => debouncedSearch(event.target.value)}
-			/>
+			<InputGroup>
+				<InputGroupInput
+					placeholder="Search Products"
+					defaultValue={Route.useSearch().searchTerm ?? ""}
+					onChange={(event) => debouncedSearch(event.target.value)}
+				/>
+				<InputGroupAddon align="inline-end" className="pr-1">
+					<Button variant="default" size="sm">
+						Search
+					</Button>
+				</InputGroupAddon>
+			</InputGroup>
 		</div>
 	);
 }
