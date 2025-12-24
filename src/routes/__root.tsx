@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { AppHeader } from "@/components/blocks/app-header";
+import { Toaster } from "@/components/ui/sonner";
 import appCss from "@/styles.css?url";
 
 interface RouterContext {
@@ -49,6 +50,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					{children}
 					<AppFooter />
 				</ClerkProvider>
+				<Toaster />
 				<Scripts />
 			</body>
 		</html>

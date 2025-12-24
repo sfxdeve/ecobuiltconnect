@@ -1,9 +1,15 @@
 import { useUser } from "@clerk/tanstack-react-start";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import {
+	useMutation,
+	useQueries,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@tanstack/react-store";
 import { MapPinIcon, UserIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -25,8 +31,9 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { formatMoney } from "@/lib/formatters";
 import { getPublicProductByIdServerFn } from "@/server/public/products";
+import { createUserOrderServerFn } from "@/server/user/orders";
 import { getUserProfileServerFn } from "@/server/user/profile";
-import { cartStore } from "@/stores/cart";
+import { cartActions, cartStore } from "@/stores/cart";
 
 export const Route = createFileRoute("/(user)/checkout/")({
 	head: () => ({
@@ -45,19 +52,36 @@ function CheckoutPage() {
 	const cartState = useStore(cartStore);
 
 	const getUserProfile = useServerFn(getUserProfileServerFn);
+	const getPublicProductById = useServerFn(getPublicProductByIdServerFn);
+	const createUserOrder = useServerFn(createUserOrderServerFn);
+
+	const queryClient = useQueryClient();
 
 	const userProfileResult = useQuery({
 		queryKey: ["profile", user?.id],
 		queryFn: () => getUserProfile(),
 	});
 
-	const getPublicProductById = useServerFn(getPublicProductByIdServerFn);
-
 	const productsResults = useQueries({
 		queries: cartState.items.map((item) => ({
 			queryKey: ["product", item.productId],
 			queryFn: () => getPublicProductById({ data: { id: item.productId } }),
 		})),
+	});
+
+	const createUserOrderMutation = useMutation({
+		mutationFn: (items: typeof cartState.items) =>
+			createUserOrder({ data: { items } }),
+		onSuccess() {
+			queryClient.invalidateQueries({ queryKey: ["orders", user?.id] });
+
+			cartActions.clearCart();
+
+			toast.success("Order placed successfully!");
+		},
+		onError(error) {
+			toast.error(error.message || "Failed to create order");
+		},
 	});
 
 	const cartTotal = cartState.items.reduce((acc, item, index) => {
@@ -215,8 +239,21 @@ function CheckoutPage() {
 							<Separator />
 						</CardContent>
 						<CardFooter>
-							<Button variant="default" size="lg" className="w-full">
-								Confirm Order
+							<Button
+								onClick={() => {
+									createUserOrderMutation.mutate(cartState.items);
+								}}
+								disabled={
+									createUserOrderMutation.isPending ||
+									cartState.items.length === 0
+								}
+								variant="default"
+								size="lg"
+								className="w-full"
+							>
+								{createUserOrderMutation.isPending
+									? "Processing..."
+									: "Confirm Order"}
 							</Button>
 						</CardFooter>
 					</Card>

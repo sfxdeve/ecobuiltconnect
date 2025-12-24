@@ -1,5 +1,5 @@
 import { auth } from "@clerk/tanstack-react-start/server";
-import { redirect } from "@tanstack/react-router";
+import { notFound, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
@@ -20,6 +20,10 @@ export const getUserProfileServerFn = createServerFn({
 		},
 		select: userProfileSelector,
 	});
+
+	if (!profile) {
+		throw notFound();
+	}
 
 	return { profile };
 });
