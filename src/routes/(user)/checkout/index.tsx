@@ -102,7 +102,7 @@ function CheckoutPage() {
 		<section className="container mx-auto py-12 px-4">
 			{cartState.items.length > 0 ? (
 				<div className="flex gap-4 items-start">
-					<Card className="flex-1">
+					<Card className="flex-1 hidden md:block">
 						<CardHeader>
 							<CardTitle className="text-3xl">Cart Items</CardTitle>
 							<CardDescription className="text-base">

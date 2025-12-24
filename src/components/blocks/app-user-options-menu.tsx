@@ -1,5 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { BoxIcon, HistoryIcon, ShoppingCartIcon } from "lucide-react";
+import {
+	BoxIcon,
+	GitPullRequestArrowIcon,
+	HistoryIcon,
+	ShoppingCartIcon,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import {
 	DropdownMenu,
@@ -15,6 +20,14 @@ export function AppUserOptionsMenu() {
 				<HistoryIcon />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="space-y-1">
+				<DropdownMenuItem
+					render={
+						<Link to="/requests" activeProps={{ className: "bg-muted" }} />
+					}
+				>
+					<GitPullRequestArrowIcon />
+					<span>Requests</span>
+				</DropdownMenuItem>
 				<DropdownMenuItem
 					render={<Link to="/orders" activeProps={{ className: "bg-muted" }} />}
 				>
