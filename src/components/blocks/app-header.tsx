@@ -5,16 +5,9 @@ import {
 	UserButton,
 } from "@clerk/tanstack-react-start";
 import { Link } from "@tanstack/react-router";
-import { ShoppingCartIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-	Popover,
-	PopoverContent,
-	PopoverHeader,
-	PopoverTitle,
-	PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { AppCart } from "./app-cart";
 
 export function AppHeader() {
 	return (
@@ -77,16 +70,7 @@ export function AppHeader() {
 
 			{/* Actions */}
 			<div className="flex items-center gap-4">
-				<Popover>
-					<PopoverTrigger render={<Button variant="outline" size="icon" />}>
-						<ShoppingCartIcon className="size-4.5" />
-					</PopoverTrigger>
-					<PopoverContent align="end">
-						<PopoverHeader>
-							<PopoverTitle>Shopping Cart</PopoverTitle>
-						</PopoverHeader>
-					</PopoverContent>
-				</Popover>
+				<AppCart />
 				<SignedIn>
 					<UserButton
 						appearance={{

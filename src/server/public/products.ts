@@ -23,8 +23,8 @@ export const getPublicProducts = createServerFn({
 			maxPrice: z.number().optional(),
 			condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),
 			isVerified: z.boolean().optional(),
-			categoryId: z.string().optional(),
-			vendorId: z.string().optional(),
+			categoryId: z.uuid().optional(),
+			vendorId: z.uuid().optional(),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -97,4 +97,28 @@ export const getPublicProducts = createServerFn({
 			limit: data.limit,
 			page: data.page,
 		};
+	});
+
+export const getPublicProductById = createServerFn({ method: "GET" })
+	.inputValidator(
+		z.object({
+			id: z.uuid(),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const product = await prisma.product.findUnique({
+			where: {
+				id: data.id,
+				isDeleted: false,
+				category: { status: "APPROVED", isDeleted: false },
+				vendor: { status: "APPROVED" },
+			},
+			select: {
+				...productSelector,
+				category: { select: categorySelector },
+				vendor: { select: vendorProfileSelector },
+			},
+		});
+
+		return { product };
 	});

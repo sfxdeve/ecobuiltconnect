@@ -42,6 +42,7 @@ import {
 import { formatMoney } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { getPublicProducts } from "@/server/public/products";
+import { cartActions } from "@/stores/cart";
 
 export const Route = createFileRoute("/(public)/products/")({
 	validateSearch: z.object({
@@ -55,8 +56,8 @@ export const Route = createFileRoute("/(public)/products/")({
 		maxPrice: z.number().optional(),
 		condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),
 		isVerified: z.boolean().optional(),
-		categoryId: z.string().optional(),
-		vendorId: z.string().optional(),
+		categoryId: z.uuid().optional(),
+		vendorId: z.uuid().optional(),
 	}),
 	loaderDeps: ({ search }) => ({
 		search,
@@ -123,7 +124,13 @@ function ProductsPage() {
 									</span>
 									<span className="text-xs">Excl. VAT</span>
 								</div>
-								<Button variant="default" size="lg">
+								<Button
+									variant="default"
+									size="lg"
+									onClick={() => {
+										cartActions.addItem({ productId: product.id });
+									}}
+								>
 									Purchase
 								</Button>
 							</CardFooter>
@@ -296,14 +303,14 @@ function ProductsPagePagination() {
 			<div className="flex items-center gap-1">
 				<Link
 					from={Route.fullPath}
-					aria-disabled={prevDisabled}
-					tabIndex={prevDisabled ? -1 : 0}
-					onClick={(e) => {
-						if (prevDisabled) e.preventDefault();
-					}}
 					search={(prev) =>
 						prevDisabled ? prev : { ...prev, page: prev.page - 1 }
 					}
+					onClick={(event) => {
+						if (prevDisabled) event.preventDefault();
+					}}
+					aria-disabled={prevDisabled}
+					tabIndex={prevDisabled ? -1 : 0}
 					className={cn(
 						buttonVariants({ variant: "ghost" }),
 						prevDisabled && "opacity-50 pointer-events-none",
@@ -312,17 +319,16 @@ function ProductsPagePagination() {
 					<ChevronLeft />
 					<span>Previous</span>
 				</Link>
-
 				<Link
 					from={Route.fullPath}
-					aria-disabled={nextDisabled}
-					tabIndex={nextDisabled ? -1 : 0}
-					onClick={(e) => {
-						if (nextDisabled) e.preventDefault();
-					}}
 					search={(prev) =>
 						nextDisabled ? prev : { ...prev, page: prev.page + 1 }
 					}
+					onClick={(event) => {
+						if (nextDisabled) event.preventDefault();
+					}}
+					aria-disabled={nextDisabled}
+					tabIndex={nextDisabled ? -1 : 0}
 					className={cn(
 						buttonVariants({ variant: "ghost" }),
 						nextDisabled && "opacity-50 pointer-events-none",
