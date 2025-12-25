@@ -4,8 +4,18 @@ import { z } from "zod";
 export const env = createEnv({
 	server: {
 		NODE_ENV: z.enum(["development", "production", "test"]),
+		APP_URL: z.url(),
 		DATABASE_URL: z.url(),
 		CLERK_SECRET_KEY: z.string(),
+		CLERK_SIGN_IN_URL: z.string(),
+		CLERK_SIGN_UP_URL: z.string(),
+		OZOW_SITE_CODE: z.string(),
+		OZOW_PRIVATE_KEY: z.string(),
+		OZOW_IS_TEST: z.coerce.boolean(),
+		OZOW_API_URL: z.url(),
+		OZOW_NOTIFY_URL: z.url(),
+		OZOW_CANCEL_URL: z.url(),
+		OZOW_SUCCESS_URL: z.url(),
 	},
 
 	/**

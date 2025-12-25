@@ -19,7 +19,7 @@ import { Route as publicVendorsIndexRouteImport } from './routes/(public)/vendor
 import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
 import { Route as publicCommunityIndexRouteImport } from './routes/(public)/community/index'
-import { Route as ApiOzowInitializeRouteImport } from './routes/api/ozow/initialize'
+import { Route as ApiOzowNotifyRouteImport } from './routes/api/ozow/notify'
 import { Route as authSignUpSplatRouteImport } from './routes/(auth)/sign-up/$'
 import { Route as authSignInSplatRouteImport } from './routes/(auth)/sign-in/$'
 import { Route as publicVendorsVendorIdIndexRouteImport } from './routes/(public)/vendors/$vendorId/index'
@@ -73,9 +73,9 @@ const publicCommunityIndexRoute = publicCommunityIndexRouteImport.update({
   path: '/community/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const ApiOzowInitializeRoute = ApiOzowInitializeRouteImport.update({
-  id: '/api/ozow/initialize',
-  path: '/api/ozow/initialize',
+const ApiOzowNotifyRoute = ApiOzowNotifyRouteImport.update({
+  id: '/api/ozow/notify',
+  path: '/api/ozow/notify',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authSignUpSplatRoute = authSignUpSplatRouteImport.update({
@@ -105,7 +105,7 @@ export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
   '/sign-in/$': typeof authSignInSplatRoute
   '/sign-up/$': typeof authSignUpSplatRoute
-  '/api/ozow/initialize': typeof ApiOzowInitializeRoute
+  '/api/ozow/notify': typeof ApiOzowNotifyRoute
   '/community': typeof publicCommunityIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
@@ -120,7 +120,7 @@ export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
   '/sign-in/$': typeof authSignInSplatRoute
   '/sign-up/$': typeof authSignUpSplatRoute
-  '/api/ozow/initialize': typeof ApiOzowInitializeRoute
+  '/api/ozow/notify': typeof ApiOzowNotifyRoute
   '/community': typeof publicCommunityIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
@@ -138,7 +138,7 @@ export interface FileRoutesById {
   '/(public)/': typeof publicIndexRoute
   '/(auth)/sign-in/$': typeof authSignInSplatRoute
   '/(auth)/sign-up/$': typeof authSignUpSplatRoute
-  '/api/ozow/initialize': typeof ApiOzowInitializeRoute
+  '/api/ozow/notify': typeof ApiOzowNotifyRoute
   '/(public)/community/': typeof publicCommunityIndexRoute
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/products/': typeof publicProductsIndexRoute
@@ -155,7 +155,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in/$'
     | '/sign-up/$'
-    | '/api/ozow/initialize'
+    | '/api/ozow/notify'
     | '/community'
     | '/contact'
     | '/products'
@@ -170,7 +170,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in/$'
     | '/sign-up/$'
-    | '/api/ozow/initialize'
+    | '/api/ozow/notify'
     | '/community'
     | '/contact'
     | '/products'
@@ -187,7 +187,7 @@ export interface FileRouteTypes {
     | '/(public)/'
     | '/(auth)/sign-in/$'
     | '/(auth)/sign-up/$'
-    | '/api/ozow/initialize'
+    | '/api/ozow/notify'
     | '/(public)/community/'
     | '/(public)/contact/'
     | '/(public)/products/'
@@ -202,7 +202,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
-  ApiOzowInitializeRoute: typeof ApiOzowInitializeRoute
+  ApiOzowNotifyRoute: typeof ApiOzowNotifyRoute
   userCheckoutIndexRoute: typeof userCheckoutIndexRoute
   userOrdersIndexRoute: typeof userOrdersIndexRoute
   userRequestsIndexRoute: typeof userRequestsIndexRoute
@@ -280,11 +280,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicCommunityIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/api/ozow/initialize': {
-      id: '/api/ozow/initialize'
-      path: '/api/ozow/initialize'
-      fullPath: '/api/ozow/initialize'
-      preLoaderRoute: typeof ApiOzowInitializeRouteImport
+    '/api/ozow/notify': {
+      id: '/api/ozow/notify'
+      path: '/api/ozow/notify'
+      fullPath: '/api/ozow/notify'
+      preLoaderRoute: typeof ApiOzowNotifyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/sign-up/$': {
@@ -359,7 +359,7 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
-  ApiOzowInitializeRoute: ApiOzowInitializeRoute,
+  ApiOzowNotifyRoute: ApiOzowNotifyRoute,
   userCheckoutIndexRoute: userCheckoutIndexRoute,
   userOrdersIndexRoute: userOrdersIndexRoute,
   userRequestsIndexRoute: userRequestsIndexRoute,
