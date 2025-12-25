@@ -120,11 +120,11 @@ model Product {
   categoryId String   @map("category_id")
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  vendorId String        @map("vendor_id")
-  vendor   VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vendorProfileId String        @map("vendor_profile_id")
+  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  requestId String?         @map("request_id")
-  request   ProductRequest? @relation(fields: [requestId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  productRequestId String?         @map("product_request_id")
+  productRequest   ProductRequest? @relation(fields: [productRequestId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
   orderItems OrderItem[]
 
@@ -145,8 +145,8 @@ model ProductRequest {
   categoryId String   @map("category_id")
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  userId String      @map("user_id")
-  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userProfileId String      @map("user_profile_id")
+  userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   products Product[]
 
@@ -159,8 +159,8 @@ model OrderItem {
   quantity Int
   price    Float
 
-  orderId String       @map("order_id")
-  order   OrderRequest @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderRequestId String       @map("order_request_id")
+  orderRequest   OrderRequest @relation(fields: [orderRequestId], references: [id], onDelete: Cascade)
 
   productId String  @map("product_id")
   product   Product @relation(fields: [productId], references: [id])
@@ -185,8 +185,8 @@ model OrderRequest {
   total  Float
   status OrderStatus @default(PENDING)
 
-  userId String      @map("user_id")
-  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userProfileId String      @map("user_profile_id")
+  userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   logisticRequest LogisticRequest?
 
@@ -213,8 +213,8 @@ model LogisticRequest {
   acceptedPrice  Float?         @map("accepted_price")
   status         LogisticStatus @default(PENDING)
 
-  orderId String       @unique @map("order_id")
-  order   OrderRequest @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  orderRequestId String       @unique @map("order_request_id")
+  orderRequest   OrderRequest @relation(fields: [orderRequestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   logisticResponses LogisticResponse[]
 
@@ -227,11 +227,11 @@ model LogisticResponse {
 
   price Float
 
-  logisticId String          @map("logistic_id")
-  logistic   LogisticProfile @relation(fields: [logisticId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  logisticProfileId String          @map("logistic_profile_id")
+  logisticProfile   LogisticProfile @relation(fields: [logisticProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  requestId String          @map("request_id")
-  request   LogisticRequest @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  logisticRequestId String          @map("logistic_request_id")
+  logisticRequest   LogisticRequest @relation(fields: [logisticRequestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -243,11 +243,11 @@ model Review {
   rating  Int
   comment String
 
-  userId String      @map("user_id")
-  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userProfileId String      @map("user_profile_id")
+  userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  itemId String    @unique @map("item_id")
-  item   OrderItem @relation(fields: [itemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  orderItemId String    @unique @map("order_item_id")
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

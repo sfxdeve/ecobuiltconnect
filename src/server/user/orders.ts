@@ -1,14 +1,41 @@
+import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
 import { orderRequestSelector, productSelector } from "@/prisma/selectors";
 import { getUserProfileServerFn } from "./profile";
 
-export const getUserOrdersServerFn = createServerFn({
+export const getUserOrderRequestsServerFn = createServerFn({
 	method: "GET",
 }).handler(async () => {});
 
-export const createUserOrderServerFn = createServerFn({
+export const getUserOrderRequestServerFn = createServerFn({
+	method: "GET",
+})
+	.inputValidator(
+		z.object({
+			orderRequestId: z.uuid(),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { profile } = await getUserProfileServerFn();
+
+		const orderRequest = await prisma.orderRequest.findUnique({
+			where: {
+				id: data.orderRequestId,
+				userProfileId: profile.id,
+			},
+			select: orderRequestSelector,
+		});
+
+		if (!orderRequest) {
+			throw notFound();
+		}
+
+		return { orderRequest };
+	});
+
+export const createUserOrderRequestServerFn = createServerFn({
 	method: "POST",
 })
 	.inputValidator(
@@ -88,10 +115,10 @@ export const createUserOrderServerFn = createServerFn({
 			return acc + (product.salePrice ?? product.price) * quantity;
 		}, 0);
 
-		const orderRequest = await prisma.$transaction(async (tx) => {
-			const order = await tx.orderRequest.create({
+		const { orderRequest } = await prisma.$transaction(async (tx) => {
+			const orderRequest = await tx.orderRequest.create({
 				data: {
-					userId: profile.id,
+					userProfileId: profile.id,
 					total,
 				},
 				select: orderRequestSelector,
@@ -101,7 +128,7 @@ export const createUserOrderServerFn = createServerFn({
 				// biome-ignore lint/style/noNonNullAssertion: ik
 				quantity: quantityMapByProductId.get(product.id)!,
 				price: product.salePrice ?? product.price,
-				orderId: order.id,
+				orderRequestId: orderRequest.id,
 				productId: product.id,
 			}));
 
@@ -123,7 +150,7 @@ export const createUserOrderServerFn = createServerFn({
 				),
 			);
 
-			return order;
+			return { orderRequest };
 		});
 
 		return { orderRequest };

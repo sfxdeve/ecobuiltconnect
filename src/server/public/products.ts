@@ -24,14 +24,14 @@ export const getPublicProductsServerFn = createServerFn({
 			condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),
 			isVerified: z.boolean().optional(),
 			categoryId: z.uuid().optional(),
-			vendorId: z.uuid().optional(),
+			vendorProfileId: z.uuid().optional(),
 		}),
 	)
 	.handler(async ({ data }) => {
 		const where: ProductWhereInput = {
 			isDeleted: false,
 			category: { status: "APPROVED", isDeleted: false },
-			vendor: { status: "APPROVED" },
+			vendorProfile: { status: "APPROVED" },
 			AND: [],
 		};
 
@@ -39,7 +39,7 @@ export const getPublicProductsServerFn = createServerFn({
 			"condition",
 			"isVerified",
 			"categoryId",
-			"vendorId",
+			"vendorProfileId",
 		] as const;
 
 		eqFields.forEach((field) => {
@@ -84,7 +84,7 @@ export const getPublicProductsServerFn = createServerFn({
 				select: {
 					...productSelector,
 					category: { select: categorySelector },
-					vendor: { select: vendorProfileSelector },
+					vendorProfile: { select: vendorProfileSelector },
 				},
 			}),
 			prisma.product.count({ where }),
@@ -111,12 +111,12 @@ export const getPublicProductByIdServerFn = createServerFn({ method: "GET" })
 				id: data.id,
 				isDeleted: false,
 				category: { status: "APPROVED", isDeleted: false },
-				vendor: { status: "APPROVED" },
+				vendorProfile: { status: "APPROVED" },
 			},
 			select: {
 				...productSelector,
 				category: { select: categorySelector },
-				vendor: { select: vendorProfileSelector },
+				vendorProfile: { select: vendorProfileSelector },
 			},
 		});
 

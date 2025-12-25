@@ -58,7 +58,7 @@ async function main() {
 		price: parseFloat(faker.commerce.price({ min: 10, max: 500 })),
 		condition: faker.helpers.enumValue(ProductCondition),
 		categoryId: faker.helpers.arrayElement(categories).id,
-		vendorId: faker.helpers.arrayElement(vendors).id,
+		vendorProfileId: faker.helpers.arrayElement(vendors).id,
 	}));
 	await prisma.product.createMany({ data: products });
 

@@ -31,7 +31,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { formatMoney } from "@/lib/formatters";
 import { getPublicProductByIdServerFn } from "@/server/public/products";
-import { createUserOrderServerFn } from "@/server/user/orders";
+import { createUserOrderRequestServerFn } from "@/server/user/orders";
 import { getUserProfileServerFn } from "@/server/user/profile";
 import { cartActions, cartStore } from "@/stores/cart";
 
@@ -53,7 +53,7 @@ function CheckoutPage() {
 
 	const getUserProfile = useServerFn(getUserProfileServerFn);
 	const getPublicProductById = useServerFn(getPublicProductByIdServerFn);
-	const createUserOrder = useServerFn(createUserOrderServerFn);
+	const createUserOrder = useServerFn(createUserOrderRequestServerFn);
 
 	const queryClient = useQueryClient();
 
@@ -236,7 +236,6 @@ function CheckoutPage() {
 									</ItemDescription>
 								</ItemContent>
 							</Item>
-							<Separator />
 						</CardContent>
 						<CardFooter>
 							<Button
