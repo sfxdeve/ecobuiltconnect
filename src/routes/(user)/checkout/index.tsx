@@ -32,6 +32,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { formatMoney } from "@/lib/formatters";
 import { getPublicProductByIdServerFn } from "@/server/public/products";
 import { createUserOrderRequestServerFn } from "@/server/user/orders";
+import { createOzowPaymentRequestServerFn } from "@/server/user/ozow";
 import { getUserProfileServerFn } from "@/server/user/profile";
 import { cartActions, cartStore } from "@/stores/cart";
 
@@ -54,6 +55,9 @@ function CheckoutPage() {
 	const getUserProfile = useServerFn(getUserProfileServerFn);
 	const getPublicProductById = useServerFn(getPublicProductByIdServerFn);
 	const createUserOrder = useServerFn(createUserOrderRequestServerFn);
+	const createOzowPaymentRequest = useServerFn(
+		createOzowPaymentRequestServerFn,
+	);
 
 	const queryClient = useQueryClient();
 
@@ -72,14 +76,18 @@ function CheckoutPage() {
 	const createUserOrderMutation = useMutation({
 		mutationFn: (items: typeof cartState.items) =>
 			createUserOrder({ data: { items } }),
-		onSuccess() {
+		onSuccess: async ({ orderRequest }) => {
 			queryClient.invalidateQueries({ queryKey: ["orders", user?.id] });
 
 			cartActions.clearCart();
 
-			toast.success("Order placed successfully!");
+			const { redirectUrl } = await createOzowPaymentRequest({
+				data: { orderId: orderRequest.id },
+			});
+
+			location.assign(redirectUrl);
 		},
-		onError(error) {
+		onError: (error) => {
 			toast.error(error.message || "Failed to create order");
 		},
 	});

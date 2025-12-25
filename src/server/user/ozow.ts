@@ -4,7 +4,7 @@ import { env } from "@/env/server";
 import { generateOzowHash } from "@/lib/ozow";
 import { getUserOrderRequestServerFn } from "./orders";
 
-export default createServerFn({
+export const createOzowPaymentRequestServerFn = createServerFn({
 	method: "POST",
 })
 	.inputValidator(
@@ -23,12 +23,12 @@ export default createServerFn({
 			currencyCode: "ZAR",
 			amount: orderRequest.total,
 			transactionReference: orderRequest.id,
-			bankReference: orderRequest.id,
+			bankReference: orderRequest.id.slice(0, 18),
 			cancelUrl: env.OZOW_CANCEL_URL,
 			errorUrl: env.OZOW_ERROR_URL,
 			successUrl: env.OZOW_SUCCESS_URL,
 			notifyUrl: env.OZOW_NOTIFY_URL,
-			isTest: env.OZOW_IS_TEST,
+			isTest: env.OZOW_IS_TEST === "true",
 		};
 
 		const hashCheck = generateOzowHash(payload, env.OZOW_PRIVATE_KEY);
@@ -52,7 +52,7 @@ export default createServerFn({
 			throw new Error(`Ozow API error: ${response.status} - ${errorText}`);
 		}
 
-		const { url } = await response.json();
+		const { url } = (await response.json()) as { url: string };
 
 		return { redirectUrl: url };
 	});

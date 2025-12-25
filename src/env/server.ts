@@ -12,7 +12,7 @@ export const env = createEnv({
 		OZOW_SITE_CODE: z.string(),
 		OZOW_PRIVATE_KEY: z.string(),
 		OZOW_API_KEY: z.string(),
-		OZOW_IS_TEST: z.coerce.boolean(),
+		OZOW_IS_TEST: z.enum(["true", "false"]),
 		OZOW_API_URL: z.url(),
 		OZOW_NOTIFY_URL: z.url(),
 		OZOW_CANCEL_URL: z.url(),
