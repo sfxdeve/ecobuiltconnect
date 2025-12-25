@@ -4,7 +4,7 @@ import { env } from "@/env/server";
 import { generateOzowHash } from "@/lib/ozow";
 import { getUserOrderRequestServerFn } from "./orders";
 
-export const createUserOzowPaymentUrlServerFn = createServerFn({
+export default createServerFn({
 	method: "POST",
 })
 	.inputValidator(
@@ -13,49 +13,46 @@ export const createUserOzowPaymentUrlServerFn = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { orderRequest: order } = await getUserOrderRequestServerFn({
+		const { orderRequest } = await getUserOrderRequestServerFn({
 			data: { orderRequestId: data.orderId },
 		});
 
-		const hashCheck = generateOzowHash({
+		const payload = {
 			siteCode: env.OZOW_SITE_CODE,
 			countryCode: "ZA",
 			currencyCode: "ZAR",
-			amount: order.total.toFixed(2),
-			transactionReference: order.id,
-			bankReference: order.id,
+			amount: orderRequest.total,
+			transactionReference: orderRequest.id,
+			bankReference: orderRequest.id,
 			cancelUrl: env.OZOW_CANCEL_URL,
+			errorUrl: env.OZOW_ERROR_URL,
 			successUrl: env.OZOW_SUCCESS_URL,
 			notifyUrl: env.OZOW_NOTIFY_URL,
 			isTest: env.OZOW_IS_TEST,
-			privateKey: env.OZOW_PRIVATE_KEY,
-		});
-
-		const payload = {
-			SiteCode: env.OZOW_SITE_CODE,
-			CountryCode: "ZA",
-			CurrencyCode: "ZAR",
-			Amount: order.total.toFixed(2),
-			TransactionReference: order.id,
-			BankReference: order.id,
-			CancelUrl: env.OZOW_CANCEL_URL,
-			SuccessUrl: env.OZOW_SUCCESS_URL,
-			NotifyUrl: env.OZOW_NOTIFY_URL,
-			IsTest: env.OZOW_IS_TEST,
-			HashCheck: hashCheck,
 		};
+
+		const hashCheck = generateOzowHash(payload, env.OZOW_PRIVATE_KEY);
 
 		const response = await fetch(`${env.OZOW_API_URL}/postpaymentrequest`, {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload),
+			headers: {
+				ApiKey: env.OZOW_API_KEY,
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				...payload,
+				hashCheck,
+			}),
 		});
 
-		const result = await response.json();
+		if (!response.ok) {
+			const errorText = await response.text();
 
-		if (!result.RedirectUrl) {
-			throw new Error("No redirect URL received from Ozow");
+			throw new Error(`Ozow API error: ${response.status} - ${errorText}`);
 		}
 
-		return { redirectUrl: result.RedirectUrl };
+		const { url } = await response.json();
+
+		return { redirectUrl: url };
 	});

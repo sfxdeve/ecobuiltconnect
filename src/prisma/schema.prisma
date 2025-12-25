@@ -173,6 +173,7 @@ model OrderItem {
 
 enum OrderStatus {
   PENDING
+  FAILED
   PAID
   PROCESSING
   READY

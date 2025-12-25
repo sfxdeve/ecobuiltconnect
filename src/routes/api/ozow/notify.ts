@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { env } from "@/env/server";
-import { verifyOzowCallbackHash } from "@/lib/ozow";
 import { prisma } from "@/prisma";
+import {
+	orderItemSelector,
+	orderRequestSelector,
+	productRequestSelector,
+} from "@/prisma/selectors";
 
 export const Route = createFileRoute("/api/ozow/notify")({
 	server: {
@@ -11,25 +14,83 @@ export const Route = createFileRoute("/api/ozow/notify")({
 
 				const data = Object.fromEntries(formData.entries());
 
-				if (!data.TransactionReference || !data.HashCheck) {
+				if (!data.TransactionReference || !data.Status) {
 					return new Response("Invalid data", { status: 400 });
 				}
 
-				const isValid = verifyOzowCallbackHash(
-					data.HashCheck as string,
-					data as Record<string, unknown>,
-					env.OZOW_PRIVATE_KEY,
-				);
+				switch (data.Status.toString()) {
+					case "Complete": {
+						try {
+							await prisma.orderRequest.update({
+								where: { id: data.TransactionReference.toString() },
+								data: { status: "PAID" },
+							});
+						} catch (_error) {
+							return new Response("Failed to update order request", {
+								status: 500,
+							});
+						}
+						break;
+					}
+					case "Cancelled":
+					case "Error":
+					case "Abandoned":
+					case "PendingInvestigation": {
+						try {
+							const orderRequest = await prisma.orderRequest.findUnique({
+								where: {
+									id: data.TransactionReference.toString(),
+									status: "PENDING",
+								},
+								select: {
+									...orderRequestSelector,
+									orderItems: {
+										select: {
+											...orderItemSelector,
+											product: {
+												select: productRequestSelector,
+											},
+										},
+									},
+								},
+							});
 
-				if (!isValid) {
-					return new Response("Invalid Hash", { status: 403 });
-				}
+							if (!orderRequest) {
+								return new Response("Order request not found", {
+									status: 404,
+								});
+							}
 
-				if (data.Status === "Complete" || data.Status === "Paid") {
-					await prisma.orderRequest.update({
-						where: { id: data.TransactionReference as string },
-						data: { status: "PAID" },
-					});
+							await prisma.$transaction(async (tx) => {
+								await Promise.all(
+									orderRequest.orderItems.map((item) =>
+										tx.product.update({
+											where: { id: item.product.id },
+											data: {
+												stock: {
+													increment: item.quantity,
+												},
+											},
+										}),
+									),
+								);
+
+								await tx.orderRequest.update({
+									where: { id: orderRequest.id },
+									data: {
+										status: "FAILED",
+									},
+								});
+							});
+						} catch (_error) {
+							return new Response("Failed to update order request", {
+								status: 500,
+							});
+						}
+						break;
+					}
+					default:
+						break;
 				}
 
 				return new Response("Success", { status: 200 });
