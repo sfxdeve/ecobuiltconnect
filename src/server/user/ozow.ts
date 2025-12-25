@@ -4,8 +4,8 @@ import { env } from "@/env/server";
 import { generateOzowHash } from "@/lib/ozow";
 import { getUserOrderRequestServerFn } from "./orders";
 
-export const getUserOzowPaymentUrlServerFn = createServerFn({
-	method: "GET",
+export const createUserOzowPaymentUrlServerFn = createServerFn({
+	method: "POST",
 })
 	.inputValidator(
 		z.object({
@@ -21,11 +21,13 @@ export const getUserOzowPaymentUrlServerFn = createServerFn({
 			siteCode: env.OZOW_SITE_CODE,
 			countryCode: "ZA",
 			currencyCode: "ZAR",
-			amount: order.total,
+			amount: order.total.toFixed(2),
 			transactionReference: order.id,
 			bankReference: order.id,
+			cancelUrl: env.OZOW_CANCEL_URL,
+			successUrl: env.OZOW_SUCCESS_URL,
 			notifyUrl: env.OZOW_NOTIFY_URL,
-			isTest: env.OZOW_IS_TEST,
+			isTest: env.OZOW_IS_TEST ? "true" : "false",
 			privateKey: env.OZOW_PRIVATE_KEY,
 		});
 
@@ -33,7 +35,7 @@ export const getUserOzowPaymentUrlServerFn = createServerFn({
 			SiteCode: env.OZOW_SITE_CODE,
 			CountryCode: "ZA",
 			CurrencyCode: "ZAR",
-			Amount: order.total,
+			Amount: order.total.toFixed(2),
 			TransactionReference: order.id,
 			BankReference: order.id,
 			CancelUrl: env.OZOW_CANCEL_URL,

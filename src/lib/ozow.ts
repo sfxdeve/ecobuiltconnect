@@ -7,6 +7,8 @@ export function generateOzowHash({
 	amount,
 	transactionReference,
 	bankReference,
+	cancelUrl,
+	successUrl,
 	notifyUrl,
 	isTest,
 	privateKey,
@@ -14,20 +16,33 @@ export function generateOzowHash({
 	siteCode: string;
 	countryCode: string;
 	currencyCode: string;
-	amount: number;
+	amount: string;
 	transactionReference: string;
 	bankReference: string;
+	cancelUrl: string;
+	successUrl: string;
 	notifyUrl: string;
-	isTest: boolean;
+	isTest: string;
 	privateKey: string;
 }): string {
-	const rawString = `${siteCode}${countryCode}${currencyCode}${amount}${transactionReference}${bankReference}${notifyUrl}${isTest}`;
+	const rawString =
+		siteCode +
+		countryCode +
+		currencyCode +
+		amount +
+		transactionReference +
+		bankReference +
+		cancelUrl +
+		successUrl +
+		notifyUrl +
+		isTest;
 
 	const stringToHash = rawString + privateKey;
 
-	const lowercaseString = stringToHash.toLowerCase();
-
-	return crypto.createHash("sha512").update(lowercaseString).digest("hex");
+	return crypto
+		.createHash("sha512")
+		.update(stringToHash.toLowerCase())
+		.digest("hex");
 }
 
 export function verifyOzowCallbackHash(
