@@ -27,7 +27,7 @@ export const createUserOzowPaymentUrlServerFn = createServerFn({
 			cancelUrl: env.OZOW_CANCEL_URL,
 			successUrl: env.OZOW_SUCCESS_URL,
 			notifyUrl: env.OZOW_NOTIFY_URL,
-			isTest: env.OZOW_IS_TEST ? "true" : "false",
+			isTest: env.OZOW_IS_TEST,
 			privateKey: env.OZOW_PRIVATE_KEY,
 		});
 

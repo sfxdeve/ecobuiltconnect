@@ -47,8 +47,7 @@ export function generateOzowHash({
 
 export function verifyOzowCallbackHash(
 	receivedHash: string,
-	// biome-ignore lint/suspicious/noExplicitAny: ik
-	data: Record<string, any>,
+	data: Record<string, unknown>,
 	privateKey: string,
 ): boolean {
 	const rawString = `${data.SiteCode}${data.CountryCode}${data.CurrencyCode}${data.Amount}${data.TransactionReference}${data.BankReference}${data.Status}${privateKey}`;

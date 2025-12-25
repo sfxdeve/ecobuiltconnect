@@ -17,7 +17,7 @@ export const Route = createFileRoute("/api/ozow/notify")({
 
 				const isValid = verifyOzowCallbackHash(
 					data.HashCheck as string,
-					data,
+					data as Record<string, unknown>,
 					env.OZOW_PRIVATE_KEY,
 				);
 
