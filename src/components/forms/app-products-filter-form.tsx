@@ -90,7 +90,9 @@ export function AppProductsFiltersForm({
 											onBlur={field.handleBlur}
 											aria-invalid={isInvalid}
 										>
-											<SelectValue className="capitalize" />
+											<SelectValue className="capitalize">
+												{field.state.value || "Select sort by"}
+											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>
@@ -127,7 +129,9 @@ export function AppProductsFiltersForm({
 											onBlur={field.handleBlur}
 											aria-invalid={isInvalid}
 										>
-											<SelectValue className="capitalize" />
+											<SelectValue className="capitalize">
+												{field.state.value || "Select sort order"}
+											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>

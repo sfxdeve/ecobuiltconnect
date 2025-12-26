@@ -112,7 +112,9 @@ export function AppProfileForm({
 											onBlur={field.handleBlur}
 											aria-invalid={isInvalid}
 										>
-											<SelectValue />
+											<SelectValue>
+												{field.state.value || "Select city"}
+											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>

@@ -145,7 +145,7 @@ export function AppProductRequestForm({
 											<SelectValue>
 												{categories.data.categories.find(
 													(category) => category.id === field.state.value,
-												)?.name ?? "Select Category"}
+												)?.name ?? "Select category"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
