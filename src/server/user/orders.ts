@@ -198,8 +198,8 @@ export const createOrderRequest = createServerFn({
 		const { orderRequest } = await prisma.$transaction(async (tx) => {
 			const orderRequest = await tx.orderRequest.create({
 				data: {
-					userProfileId: profile.id,
 					total,
+					userProfileId: profile.id,
 				},
 				select: orderRequestSelector,
 			});

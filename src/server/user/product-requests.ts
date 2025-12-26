@@ -23,9 +23,12 @@ export const getProductRequests = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
+		const { profile } = await getUserProfile();
+
 		const where: ProductRequestWhereInput = {
 			isDeleted: false,
 			category: { status: "APPROVED", isDeleted: false },
+			userProfile: { id: profile.id },
 			AND: [],
 		};
 
@@ -95,11 +98,14 @@ export const getProductRequestById = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(async ({ data }) => {
+		const { profile } = await getUserProfile();
+
 		const productRequest = await prisma.productRequest.findUnique({
 			where: {
 				id: data.id,
 				isDeleted: false,
 				category: { status: "APPROVED", isDeleted: false },
+				userProfile: { id: profile.id },
 			},
 			select: {
 				...productRequestSelector,

@@ -17,6 +17,7 @@ export const getUserProfile = createServerFn({
 	const profile = await prisma.userProfile.findUnique({
 		where: {
 			clerkId,
+			status: "APPROVED",
 		},
 		select: userProfileSelector,
 	});
