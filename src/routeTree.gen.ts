@@ -12,9 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
-import { Route as userRequestsIndexRouteImport } from './routes/(user)/requests/index'
-import { Route as userOrdersIndexRouteImport } from './routes/(user)/orders/index'
-import { Route as userCheckoutIndexRouteImport } from './routes/(user)/checkout/index'
+import { Route as UserRequestsIndexRouteImport } from './routes/user/requests/index'
+import { Route as UserOrdersIndexRouteImport } from './routes/user/orders/index'
+import { Route as UserCheckoutIndexRouteImport } from './routes/user/checkout/index'
 import { Route as publicVendorsIndexRouteImport } from './routes/(public)/vendors/index'
 import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
@@ -38,19 +38,19 @@ const publicIndexRoute = publicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const userRequestsIndexRoute = userRequestsIndexRouteImport.update({
-  id: '/(user)/requests/',
-  path: '/requests/',
+const UserRequestsIndexRoute = UserRequestsIndexRouteImport.update({
+  id: '/user/requests/',
+  path: '/user/requests/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const userOrdersIndexRoute = userOrdersIndexRouteImport.update({
-  id: '/(user)/orders/',
-  path: '/orders/',
+const UserOrdersIndexRoute = UserOrdersIndexRouteImport.update({
+  id: '/user/orders/',
+  path: '/user/orders/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const userCheckoutIndexRoute = userCheckoutIndexRouteImport.update({
-  id: '/(user)/checkout/',
-  path: '/checkout/',
+const UserCheckoutIndexRoute = UserCheckoutIndexRouteImport.update({
+  id: '/user/checkout/',
+  path: '/user/checkout/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const publicVendorsIndexRoute = publicVendorsIndexRouteImport.update({
@@ -110,9 +110,9 @@ export interface FileRoutesByFullPath {
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
   '/vendors': typeof publicVendorsIndexRoute
-  '/checkout': typeof userCheckoutIndexRoute
-  '/orders': typeof userOrdersIndexRoute
-  '/requests': typeof userRequestsIndexRoute
+  '/user/checkout': typeof UserCheckoutIndexRoute
+  '/user/orders': typeof UserOrdersIndexRoute
+  '/user/requests': typeof UserRequestsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/vendors/$vendorId': typeof publicVendorsVendorIdIndexRoute
 }
@@ -125,9 +125,9 @@ export interface FileRoutesByTo {
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
   '/vendors': typeof publicVendorsIndexRoute
-  '/checkout': typeof userCheckoutIndexRoute
-  '/orders': typeof userOrdersIndexRoute
-  '/requests': typeof userRequestsIndexRoute
+  '/user/checkout': typeof UserCheckoutIndexRoute
+  '/user/orders': typeof UserOrdersIndexRoute
+  '/user/requests': typeof UserRequestsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/vendors/$vendorId': typeof publicVendorsVendorIdIndexRoute
 }
@@ -143,9 +143,9 @@ export interface FileRoutesById {
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/products/': typeof publicProductsIndexRoute
   '/(public)/vendors/': typeof publicVendorsIndexRoute
-  '/(user)/checkout/': typeof userCheckoutIndexRoute
-  '/(user)/orders/': typeof userOrdersIndexRoute
-  '/(user)/requests/': typeof userRequestsIndexRoute
+  '/user/checkout/': typeof UserCheckoutIndexRoute
+  '/user/orders/': typeof UserOrdersIndexRoute
+  '/user/requests/': typeof UserRequestsIndexRoute
   '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
   '/(public)/vendors/$vendorId/': typeof publicVendorsVendorIdIndexRoute
 }
@@ -160,9 +160,9 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/vendors'
-    | '/checkout'
-    | '/orders'
-    | '/requests'
+    | '/user/checkout'
+    | '/user/orders'
+    | '/user/requests'
     | '/products/$productId'
     | '/vendors/$vendorId'
   fileRoutesByTo: FileRoutesByTo
@@ -175,9 +175,9 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/vendors'
-    | '/checkout'
-    | '/orders'
-    | '/requests'
+    | '/user/checkout'
+    | '/user/orders'
+    | '/user/requests'
     | '/products/$productId'
     | '/vendors/$vendorId'
   id:
@@ -192,9 +192,9 @@ export interface FileRouteTypes {
     | '/(public)/contact/'
     | '/(public)/products/'
     | '/(public)/vendors/'
-    | '/(user)/checkout/'
-    | '/(user)/orders/'
-    | '/(user)/requests/'
+    | '/user/checkout/'
+    | '/user/orders/'
+    | '/user/requests/'
     | '/(public)/products/$productId/'
     | '/(public)/vendors/$vendorId/'
   fileRoutesById: FileRoutesById
@@ -203,9 +203,9 @@ export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
   ApiOzowNotifyRoute: typeof ApiOzowNotifyRoute
-  userCheckoutIndexRoute: typeof userCheckoutIndexRoute
-  userOrdersIndexRoute: typeof userOrdersIndexRoute
-  userRequestsIndexRoute: typeof userRequestsIndexRoute
+  UserCheckoutIndexRoute: typeof UserCheckoutIndexRoute
+  UserOrdersIndexRoute: typeof UserOrdersIndexRoute
+  UserRequestsIndexRoute: typeof UserRequestsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -231,25 +231,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/(user)/requests/': {
-      id: '/(user)/requests/'
-      path: '/requests'
-      fullPath: '/requests'
-      preLoaderRoute: typeof userRequestsIndexRouteImport
+    '/user/requests/': {
+      id: '/user/requests/'
+      path: '/user/requests'
+      fullPath: '/user/requests'
+      preLoaderRoute: typeof UserRequestsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(user)/orders/': {
-      id: '/(user)/orders/'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof userOrdersIndexRouteImport
+    '/user/orders/': {
+      id: '/user/orders/'
+      path: '/user/orders'
+      fullPath: '/user/orders'
+      preLoaderRoute: typeof UserOrdersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(user)/checkout/': {
-      id: '/(user)/checkout/'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof userCheckoutIndexRouteImport
+    '/user/checkout/': {
+      id: '/user/checkout/'
+      path: '/user/checkout'
+      fullPath: '/user/checkout'
+      preLoaderRoute: typeof UserCheckoutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/vendors/': {
@@ -360,9 +360,9 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
   ApiOzowNotifyRoute: ApiOzowNotifyRoute,
-  userCheckoutIndexRoute: userCheckoutIndexRoute,
-  userOrdersIndexRoute: userOrdersIndexRoute,
-  userRequestsIndexRoute: userRequestsIndexRoute,
+  UserCheckoutIndexRoute: UserCheckoutIndexRoute,
+  UserOrdersIndexRoute: UserOrdersIndexRoute,
+  UserRequestsIndexRoute: UserRequestsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

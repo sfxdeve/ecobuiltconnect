@@ -2,12 +2,82 @@ import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
-import { orderRequestSelector, productSelector } from "@/prisma/selectors";
+import type {
+	OrderRequestWhereInput,
+	ProductWhereInput,
+} from "@/prisma/generated/models";
+import {
+	orderItemSelector,
+	orderRequestSelector,
+	productSelector,
+} from "@/prisma/selectors";
 import { getUserProfileServerFn } from "./profile";
 
 export const getUserOrderRequestsServerFn = createServerFn({
 	method: "GET",
-}).handler(async () => {});
+})
+	.inputValidator(
+		z.object({
+			page: z.number().default(1),
+			limit: z.number().default(10),
+			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
+			sortOrder: z.enum(["asc", "desc"]).default("desc"),
+			searchTerm: z.string().optional(),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { profile } = await getUserProfileServerFn();
+
+		const where: OrderRequestWhereInput = {
+			userProfile: { id: profile.id },
+			orderItems: {
+				some: {
+					product: {
+						AND: [],
+					},
+				},
+			},
+		};
+
+		const searchFields = [
+			"name",
+			"description",
+			"previousUsage",
+			"sku",
+		] as const;
+
+		if (data.searchTerm) {
+			(where.orderItems?.some?.product?.AND as ProductWhereInput[])?.push({
+				OR: searchFields.map((field) => ({
+					[field]: { contains: data.searchTerm, mode: "insensitive" },
+				})),
+			});
+		}
+
+		const [orderRequests, total] = await Promise.all([
+			prisma.orderRequest.findMany({
+				where,
+				take: data.limit,
+				skip: (data.page - 1) * data.limit,
+				orderBy: { [data.sortBy]: data.sortOrder },
+				select: {
+					...orderRequestSelector,
+					orderItems: {
+						select: orderItemSelector,
+					},
+				},
+			}),
+			prisma.orderRequest.count({ where }),
+		]);
+
+		return {
+			orderRequests,
+			total,
+			pages: Math.ceil(total / data.limit),
+			limit: data.limit,
+			page: data.page,
+		};
+	});
 
 export const getUserOrderRequestServerFn = createServerFn({
 	method: "GET",
@@ -23,9 +93,19 @@ export const getUserOrderRequestServerFn = createServerFn({
 		const orderRequest = await prisma.orderRequest.findUnique({
 			where: {
 				id: data.orderRequestId,
-				userProfileId: profile.id,
+				userProfile: { id: profile.id },
 			},
-			select: orderRequestSelector,
+			select: {
+				...orderRequestSelector,
+				orderItems: {
+					select: {
+						...orderItemSelector,
+						product: {
+							select: productSelector,
+						},
+					},
+				},
+			},
 		});
 
 		if (!orderRequest) {

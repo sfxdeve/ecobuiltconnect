@@ -22,21 +22,23 @@ export function AppUserOptionsMenu() {
 			<DropdownMenuContent align="end" className="space-y-1">
 				<DropdownMenuItem
 					render={
-						<Link to="/requests" activeProps={{ className: "bg-muted" }} />
+						<Link to="/user/requests" activeProps={{ className: "bg-muted" }} />
 					}
 				>
 					<GitPullRequestArrowIcon />
 					<span>Requests</span>
 				</DropdownMenuItem>
 				<DropdownMenuItem
-					render={<Link to="/orders" activeProps={{ className: "bg-muted" }} />}
+					render={
+						<Link to="/user/orders" activeProps={{ className: "bg-muted" }} />
+					}
 				>
 					<BoxIcon />
 					<span>Orders</span>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					render={
-						<Link to="/checkout" activeProps={{ className: "bg-muted" }} />
+						<Link to="/user/checkout" activeProps={{ className: "bg-muted" }} />
 					}
 				>
 					<ShoppingCartIcon />

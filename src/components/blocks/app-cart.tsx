@@ -111,7 +111,7 @@ export function AppCart() {
 							<Separator />
 							<div>
 								<Link
-									to={isSignedIn ? "/checkout" : "/sign-in/$"}
+									to={isSignedIn ? "/user/checkout" : "/sign-in/$"}
 									onClick={() => {
 										cartActions.toggleIsOpen();
 									}}

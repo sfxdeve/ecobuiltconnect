@@ -36,7 +36,7 @@ import { createOzowPaymentRequestServerFn } from "@/server/user/ozow";
 import { getUserProfileServerFn } from "@/server/user/profile";
 import { cartActions, cartStore } from "@/stores/cart";
 
-export const Route = createFileRoute("/(user)/checkout/")({
+export const Route = createFileRoute("/user/checkout/")({
 	head: () => ({
 		meta: [
 			{

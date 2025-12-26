@@ -1,16 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/(user)/orders/")({
+export const Route = createFileRoute("/user/requests/")({
 	head: () => ({
 		meta: [
 			{
-				title: "EcobuiltConnect - Orders",
+				title: "EcobuiltConnect - Product Requests",
 			},
 		],
 	}),
-	component: OrdersPage,
+	component: RequestsPage,
 });
 
-function OrdersPage() {
+function RequestsPage() {
 	return <section className="container mx-auto py-12 px-4"></section>;
 }
