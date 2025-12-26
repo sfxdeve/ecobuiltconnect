@@ -147,7 +147,7 @@ export function AppProfileForm({
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.value)}
 										aria-invalid={isInvalid}
-										placeholder="Enter address"
+										placeholder="Enter postcode"
 									/>
 									{isInvalid && <FieldError errors={field.state.meta.errors} />}
 								</Field>

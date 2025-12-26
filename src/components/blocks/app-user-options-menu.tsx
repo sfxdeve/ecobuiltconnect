@@ -1,3 +1,4 @@
+import { SignedIn } from "@clerk/tanstack-react-start";
 import { Link } from "@tanstack/react-router";
 import {
 	EllipsisVerticalIcon,
@@ -97,10 +98,12 @@ export function AppUserOptionsMenu() {
 							<TruckIcon />
 							<span>Deliveries</span>
 						</DropdownMenuItem>
-						<DropdownMenuItem render={<DialogTrigger className="w-full" />}>
-							<UserIcon />
-							<span>Profile</span>
-						</DropdownMenuItem>
+						<SignedIn>
+							<DropdownMenuItem render={<DialogTrigger className="w-full" />}>
+								<UserIcon />
+								<span>Profile</span>
+							</DropdownMenuItem>
+						</SignedIn>
 					</DropdownMenuGroup>
 					<DropdownMenuGroup className="md:hidden space-y-1">
 						<DropdownMenuItem
