@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/select";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { getPublicProductsServerFn } from "@/server/public/products";
+import { getProducts } from "@/server/public/products";
 import { cartActions } from "@/stores/cart";
 
 export const Route = createFileRoute("/(public)/products/")({
@@ -57,21 +57,14 @@ export const Route = createFileRoute("/(public)/products/")({
 		condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),
 		isVerified: z.boolean().optional(),
 		categoryId: z.uuid().optional(),
-		vendorId: z.uuid().optional(),
+		vendorProfileId: z.uuid().optional(),
 	}),
-	loaderDeps: ({ search }) => ({
-		search,
-	}),
-	loader: ({ deps: { search } }) =>
-		getPublicProductsServerFn({
-			data: {
-				...search,
-			},
-		}),
+	loaderDeps: ({ search }) => search,
+	loader: ({ deps }) => getProducts({ data: deps }),
 	head: () => ({
 		meta: [
 			{
-				title: "EcobuiltConnect - Products",
+				title: "Products - EcobuiltConnect",
 			},
 			{
 				name: "description",

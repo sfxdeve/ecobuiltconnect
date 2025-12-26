@@ -1,3 +1,4 @@
+import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
@@ -8,7 +9,7 @@ import {
 	vendorProfileSelector,
 } from "@/prisma/selectors";
 
-export const getPublicProductsServerFn = createServerFn({
+export const getProducts = createServerFn({
 	method: "GET",
 })
 	.inputValidator(
@@ -102,7 +103,7 @@ export const getPublicProductsServerFn = createServerFn({
 		};
 	});
 
-export const getPublicProductByIdServerFn = createServerFn({ method: "GET" })
+export const getProductById = createServerFn({ method: "GET" })
 	.inputValidator(
 		z.object({
 			id: z.uuid(),
@@ -122,6 +123,10 @@ export const getPublicProductByIdServerFn = createServerFn({ method: "GET" })
 				vendorProfile: { select: vendorProfileSelector },
 			},
 		});
+
+		if (!product) {
+			throw notFound();
+		}
 
 		return { product };
 	});

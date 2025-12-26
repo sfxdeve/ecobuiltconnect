@@ -6,7 +6,7 @@ import { useStore } from "@tanstack/react-store";
 import { ShoppingCartIcon, Trash2Icon } from "lucide-react";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { getPublicProductByIdServerFn } from "@/server/public/products";
+import { getProductById } from "@/server/public/products";
 import { cartActions, cartStore } from "@/stores/cart";
 import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
@@ -30,7 +30,7 @@ export function AppCart() {
 		items.reduce((sum, item) => sum + item.quantity, 0),
 	);
 
-	const getPublicProductById = useServerFn(getPublicProductByIdServerFn);
+	const getPublicProductById = useServerFn(getProductById);
 
 	const productResults = useQueries({
 		queries: cartState.items.map((item) => ({

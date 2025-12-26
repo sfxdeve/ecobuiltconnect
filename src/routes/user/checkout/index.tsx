@@ -30,7 +30,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { formatMoneyFromCents } from "@/lib/formatters";
-import { getPublicProductByIdServerFn } from "@/server/public/products";
+import { getProductById } from "@/server/public/products";
 import { createUserOrderRequestServerFn } from "@/server/user/orders";
 import { createOzowPaymentRequestServerFn } from "@/server/user/ozow";
 import { getUserProfileServerFn } from "@/server/user/profile";
@@ -53,7 +53,7 @@ function CheckoutPage() {
 	const cartState = useStore(cartStore);
 
 	const getUserProfile = useServerFn(getUserProfileServerFn);
-	const getPublicProductById = useServerFn(getPublicProductByIdServerFn);
+	const getPublicProductById = useServerFn(getProductById);
 	const createUserOrder = useServerFn(createUserOrderRequestServerFn);
 	const createOzowPaymentRequest = useServerFn(
 		createOzowPaymentRequestServerFn,

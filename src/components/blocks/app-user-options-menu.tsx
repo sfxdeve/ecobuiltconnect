@@ -4,6 +4,7 @@ import {
 	GitPullRequestArrowIcon,
 	HistoryIcon,
 	ShoppingCartIcon,
+	TruckIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import {
@@ -35,6 +36,12 @@ export function AppUserOptionsMenu() {
 				>
 					<BoxIcon />
 					<span>Orders</span>
+				</DropdownMenuItem>
+				<DropdownMenuItem
+					render={<Link to="/" activeProps={{ className: "bg-muted" }} />}
+				>
+					<TruckIcon />
+					<span>Deliveries</span>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					render={
