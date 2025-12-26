@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Building2Icon, CheckIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { getProductById } from "@/server/public/products";
@@ -29,12 +29,14 @@ function ProductDetailsPage() {
 
 	return (
 		<section className="container mx-auto py-12 px-4 flex gap-12 flex-col lg:flex-row">
-			<Card className="w-full lg:w-1/2 h-fit p-8 flex items-center justify-center shadow-sm">
-				<img
-					className="w-full h-auto aspect-square object-contain"
-					src={product.pictureIds[0]}
-					alt={product.name}
-				/>
+			<Card className="w-full lg:w-1/2">
+				<CardContent className="flex flex-col items-center justify-center">
+					<img
+						className="aspect-square object-contain"
+						src={product.pictureIds[0]}
+						alt={product.name}
+					/>
+				</CardContent>
 			</Card>
 			<div className="flex-1 space-y-4">
 				<div className="space-y-2">
