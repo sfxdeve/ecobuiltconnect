@@ -5,7 +5,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import { userProfileSelector } from "@/prisma/selectors";
 
-export const getUserProfileServerFn = createServerFn({
+export const getUserProfile = createServerFn({
 	method: "GET",
 }).handler(async () => {
 	const { isAuthenticated, userId: clerkId } = await auth();
@@ -28,7 +28,7 @@ export const getUserProfileServerFn = createServerFn({
 	return { profile };
 });
 
-export const createUserProfileServerFn = createServerFn({
+export const createUserProfile = createServerFn({
 	method: "POST",
 })
 	.inputValidator(

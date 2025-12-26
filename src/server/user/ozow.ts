@@ -2,9 +2,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { env } from "@/env/server";
 import { generateOzowHash } from "@/lib/ozow";
-import { getUserOrderRequestServerFn } from "./orders";
+import { getOrderRequest } from "./orders";
 
-export const createOzowPaymentRequestServerFn = createServerFn({
+export const initiateOzowPayment = createServerFn({
 	method: "POST",
 })
 	.inputValidator(
@@ -13,7 +13,7 @@ export const createOzowPaymentRequestServerFn = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { orderRequest } = await getUserOrderRequestServerFn({
+		const { orderRequest } = await getOrderRequest({
 			data: { orderRequestId: data.orderId },
 		});
 

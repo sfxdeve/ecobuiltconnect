@@ -11,9 +11,9 @@ import {
 	orderRequestSelector,
 	productSelector,
 } from "@/prisma/selectors";
-import { getUserProfileServerFn } from "./profile";
+import { getUserProfile } from "./profile";
 
-export const getUserOrderRequestsServerFn = createServerFn({
+export const getOrderRequests = createServerFn({
 	method: "GET",
 })
 	.inputValidator(
@@ -26,7 +26,7 @@ export const getUserOrderRequestsServerFn = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfileServerFn();
+		const { profile } = await getUserProfile();
 
 		const where: OrderRequestWhereInput = {
 			userProfile: { id: profile.id },
@@ -79,7 +79,7 @@ export const getUserOrderRequestsServerFn = createServerFn({
 		};
 	});
 
-export const getUserOrderRequestServerFn = createServerFn({
+export const getOrderRequest = createServerFn({
 	method: "GET",
 })
 	.inputValidator(
@@ -88,7 +88,7 @@ export const getUserOrderRequestServerFn = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfileServerFn();
+		const { profile } = await getUserProfile();
 
 		const orderRequest = await prisma.orderRequest.findUnique({
 			where: {
@@ -115,7 +115,7 @@ export const getUserOrderRequestServerFn = createServerFn({
 		return { orderRequest };
 	});
 
-export const createUserOrderRequestServerFn = createServerFn({
+export const createOrderRequest = createServerFn({
 	method: "POST",
 })
 	.inputValidator(
@@ -131,7 +131,7 @@ export const createUserOrderRequestServerFn = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfileServerFn();
+		const { profile } = await getUserProfile();
 
 		const quantityMapByProductId = new Map<string, number>();
 		data.items.forEach((item) => {

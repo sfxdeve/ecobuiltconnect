@@ -31,9 +31,9 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { getProductById } from "@/server/public/products";
-import { createUserOrderRequestServerFn } from "@/server/user/orders";
-import { createOzowPaymentRequestServerFn } from "@/server/user/ozow";
-import { getUserProfileServerFn } from "@/server/user/profile";
+import { createOrderRequest } from "@/server/user/orders";
+import { initiateOzowPayment } from "@/server/user/ozow";
+import { getUserProfile } from "@/server/user/profile";
 import { cartActions, cartStore } from "@/stores/cart";
 
 export const Route = createFileRoute("/user/checkout/")({
@@ -56,36 +56,34 @@ function CheckoutPage() {
 
 	const cartState = useStore(cartStore);
 
-	const getUserProfile = useServerFn(getUserProfileServerFn);
-	const getPublicProductById = useServerFn(getProductById);
-	const createUserOrder = useServerFn(createUserOrderRequestServerFn);
-	const createOzowPaymentRequest = useServerFn(
-		createOzowPaymentRequestServerFn,
-	);
+	const getUserProfileFn = useServerFn(getUserProfile);
+	const getPublicProductByIdFn = useServerFn(getProductById);
+	const createUserOrderFn = useServerFn(createOrderRequest);
+	const initiateOzowPaymentFn = useServerFn(initiateOzowPayment);
 
 	const queryClient = useQueryClient();
 
 	const userProfileResult = useQuery({
 		queryKey: ["profile", user?.id],
-		queryFn: () => getUserProfile(),
+		queryFn: () => getUserProfileFn(),
 	});
 
 	const productsResults = useQueries({
 		queries: cartState.items.map((item) => ({
 			queryKey: ["product", item.productId],
-			queryFn: () => getPublicProductById({ data: { id: item.productId } }),
+			queryFn: () => getPublicProductByIdFn({ data: { id: item.productId } }),
 		})),
 	});
 
 	const createUserOrderMutation = useMutation({
 		mutationFn: (items: typeof cartState.items) =>
-			createUserOrder({ data: { items } }),
+			createUserOrderFn({ data: { items } }),
 		onSuccess: async ({ orderRequest }) => {
 			queryClient.invalidateQueries({ queryKey: ["orders", user?.id] });
 
 			cartActions.clearCart();
 
-			const { redirectUrl } = await createOzowPaymentRequest({
+			const { redirectUrl } = await initiateOzowPaymentFn({
 				data: { orderId: orderRequest.id },
 			});
 

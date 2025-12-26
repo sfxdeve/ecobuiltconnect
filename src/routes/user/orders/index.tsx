@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/table";
 import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { getUserOrderRequestsServerFn } from "@/server/user/orders";
+import { getOrderRequests } from "@/server/user/orders";
 
 export const Route = createFileRoute("/user/orders/")({
 	validateSearch: z.object({
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/user/orders/")({
 		search,
 	}),
 	loader: ({ deps: { search } }) =>
-		getUserOrderRequestsServerFn({
+		getOrderRequests({
 			data: {
 				...search,
 			},

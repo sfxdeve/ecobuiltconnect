@@ -1,9 +1,17 @@
 import { debounce } from "@tanstack/pacer";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { z } from "zod";
+import { ProductRequestForm } from "@/components/forms/product-request-form";
 import { Button, buttonVariants } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import {
 	Empty,
 	EmptyDescription,
@@ -123,6 +131,9 @@ function ProductRequestsPage() {
 function ProductRequestsPageSearch() {
 	const navigate = Route.useNavigate();
 
+	const [isProductRequestDialogOpen, setIsProductRequestDialogOpen] =
+		useState(false);
+
 	const debouncedSearch = debounce(
 		(searchTerm: string) => {
 			navigate({
@@ -151,6 +162,34 @@ function ProductRequestsPageSearch() {
 					</Button>
 				</InputGroupAddon>
 			</InputGroup>
+			<Dialog
+				open={isProductRequestDialogOpen}
+				onOpenChange={setIsProductRequestDialogOpen}
+			>
+				<DialogTrigger render={<Button variant="default" />}>
+					New Request
+				</DialogTrigger>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle className="text-xl font-semibold">
+							Product Request
+						</DialogTitle>
+					</DialogHeader>
+					<ProductRequestForm
+						defaultValues={{
+							pictureIds: [""],
+							name: "",
+							description: "",
+							quantity: 0,
+							price: 0,
+							categoryId: "",
+						}}
+						submitHandler={() => {
+							setIsProductRequestDialogOpen(false);
+						}}
+					/>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

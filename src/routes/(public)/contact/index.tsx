@@ -22,7 +22,7 @@ const contactFormSchema = z.object({
 	name: z
 		.string("Name must be string")
 		.min(3, "Name must be at least 3 characters"),
-	email: z.email("Please enter a valid email address"),
+	email: z.email("Email must be valid email address"),
 	subject: z
 		.string("Subject must be string")
 		.min(3, "Subject must be at least 3 characters"),

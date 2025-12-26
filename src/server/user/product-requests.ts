@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { ProductRequestWhereInput } from "@/prisma/generated/models";
 import { categorySelector, productRequestSelector } from "@/prisma/selectors";
+import { getUserProfile } from "./profile";
 
 export const getProductRequests = createServerFn({
 	method: "GET",
@@ -109,6 +110,30 @@ export const getProductRequestById = createServerFn({ method: "GET" })
 		if (!productRequest) {
 			throw notFound();
 		}
+
+		return { productRequest };
+	});
+
+export const createProductRequest = createServerFn({ method: "POST" })
+	.inputValidator(
+		z.object({
+			pictureIds: z.array(z.string()).min(1),
+			name: z.string(),
+			description: z.string(),
+			quantity: z.number(),
+			price: z.number(),
+			categoryId: z.uuid(),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { profile } = await getUserProfile();
+
+		const productRequest = await prisma.productRequest.create({
+			data: {
+				...data,
+				userProfileId: profile.id,
+			},
+		});
 
 		return { productRequest };
 	});
