@@ -57,7 +57,11 @@ export const Route = createFileRoute("/user/orders/")({
 	head: () => ({
 		meta: [
 			{
-				title: "EcobuiltConnect - Orders",
+				title: "Orders - EcobuiltConnect",
+			},
+			{
+				name: "description",
+				content: "",
 			},
 		],
 	}),
@@ -75,10 +79,11 @@ function OrdersPage() {
 					<TableHeader>
 						<TableRow>
 							<TableHead>Order Id</TableHead>
-							<TableHead className="w-0">Items</TableHead>
-							<TableHead className="w-0">Status</TableHead>
-							<TableHead className="w-0">Total</TableHead>
-							<TableHead className="w-0">Date</TableHead>
+							<TableHead>Items</TableHead>
+							<TableHead>Status</TableHead>
+							<TableHead>Total</TableHead>
+							<TableHead>Date</TableHead>
+							<TableHead>Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
