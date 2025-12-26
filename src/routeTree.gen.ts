@@ -22,7 +22,6 @@ import { Route as publicCommunityIndexRouteImport } from './routes/(public)/comm
 import { Route as ApiOzowNotifyRouteImport } from './routes/api/ozow/notify'
 import { Route as authSignUpSplatRouteImport } from './routes/(auth)/sign-up/$'
 import { Route as authSignInSplatRouteImport } from './routes/(auth)/sign-in/$'
-import { Route as publicVendorsVendorIdIndexRouteImport } from './routes/(public)/vendors/$vendorId/index'
 import { Route as publicProductsProductIdIndexRouteImport } from './routes/(public)/products/$productId/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
@@ -88,12 +87,6 @@ const authSignInSplatRoute = authSignInSplatRouteImport.update({
   path: '/sign-in/$',
   getParentRoute: () => authRouteRoute,
 } as any)
-const publicVendorsVendorIdIndexRoute =
-  publicVendorsVendorIdIndexRouteImport.update({
-    id: '/vendors/$vendorId/',
-    path: '/vendors/$vendorId/',
-    getParentRoute: () => publicRouteRoute,
-  } as any)
 const publicProductsProductIdIndexRoute =
   publicProductsProductIdIndexRouteImport.update({
     id: '/products/$productId/',
@@ -114,7 +107,6 @@ export interface FileRoutesByFullPath {
   '/user/orders': typeof UserOrdersIndexRoute
   '/user/requests': typeof UserRequestsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
-  '/vendors/$vendorId': typeof publicVendorsVendorIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
@@ -129,7 +121,6 @@ export interface FileRoutesByTo {
   '/user/orders': typeof UserOrdersIndexRoute
   '/user/requests': typeof UserRequestsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
-  '/vendors/$vendorId': typeof publicVendorsVendorIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -147,7 +138,6 @@ export interface FileRoutesById {
   '/user/orders/': typeof UserOrdersIndexRoute
   '/user/requests/': typeof UserRequestsIndexRoute
   '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
-  '/(public)/vendors/$vendorId/': typeof publicVendorsVendorIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -164,7 +154,6 @@ export interface FileRouteTypes {
     | '/user/orders'
     | '/user/requests'
     | '/products/$productId'
-    | '/vendors/$vendorId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -179,7 +168,6 @@ export interface FileRouteTypes {
     | '/user/orders'
     | '/user/requests'
     | '/products/$productId'
-    | '/vendors/$vendorId'
   id:
     | '__root__'
     | '/(auth)'
@@ -196,7 +184,6 @@ export interface FileRouteTypes {
     | '/user/orders/'
     | '/user/requests/'
     | '/(public)/products/$productId/'
-    | '/(public)/vendors/$vendorId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -301,13 +288,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignInSplatRouteImport
       parentRoute: typeof authRouteRoute
     }
-    '/(public)/vendors/$vendorId/': {
-      id: '/(public)/vendors/$vendorId/'
-      path: '/vendors/$vendorId'
-      fullPath: '/vendors/$vendorId'
-      preLoaderRoute: typeof publicVendorsVendorIdIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
     '/(public)/products/$productId/': {
       id: '/(public)/products/$productId/'
       path: '/products/$productId'
@@ -339,7 +319,6 @@ interface publicRouteRouteChildren {
   publicProductsIndexRoute: typeof publicProductsIndexRoute
   publicVendorsIndexRoute: typeof publicVendorsIndexRoute
   publicProductsProductIdIndexRoute: typeof publicProductsProductIdIndexRoute
-  publicVendorsVendorIdIndexRoute: typeof publicVendorsVendorIdIndexRoute
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
@@ -349,7 +328,6 @@ const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicProductsIndexRoute: publicProductsIndexRoute,
   publicVendorsIndexRoute: publicVendorsIndexRoute,
   publicProductsProductIdIndexRoute: publicProductsProductIdIndexRoute,
-  publicVendorsVendorIdIndexRoute: publicVendorsVendorIdIndexRoute,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
