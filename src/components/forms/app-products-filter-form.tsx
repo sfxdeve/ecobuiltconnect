@@ -21,7 +21,7 @@ import {
 	SelectValue,
 } from "../ui/select";
 
-export const productsFiltersSchema = z.object({
+export const appProductsFiltersSchema = z.object({
 	sortBy: z
 		.enum(["name", "createdAt"], "Sort By must be one of name or createdAt")
 		.optional(),
@@ -43,18 +43,18 @@ export const productsFiltersSchema = z.object({
 	isVerified: z.boolean("Is Verified must be boolean").optional(),
 });
 
-export function ProductsFiltersForm({
+export function AppProductsFiltersForm({
 	defaultValues,
 	submitHandler,
 	resetHandler,
 }: {
-	defaultValues: z.infer<typeof productsFiltersSchema>;
-	submitHandler: (data: z.infer<typeof productsFiltersSchema>) => void;
-	resetHandler: (data: z.infer<typeof productsFiltersSchema>) => void;
+	defaultValues: z.infer<typeof appProductsFiltersSchema>;
+	submitHandler: (data: z.infer<typeof appProductsFiltersSchema>) => void;
+	resetHandler: (data: z.infer<typeof appProductsFiltersSchema>) => void;
 }) {
 	const form = useForm({
 		validators: {
-			onChange: productsFiltersSchema,
+			onChange: appProductsFiltersSchema,
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {

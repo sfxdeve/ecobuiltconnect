@@ -17,7 +17,7 @@ import {
 import { Spinner } from "../ui/spinner";
 import { Textarea } from "../ui/textarea";
 
-export const productRequestSchema = z.object({
+export const appProductRequestSchema = z.object({
 	pictureIds: z
 		.array(z.string("Picture Id must be string"))
 		.min(1, "At least one picture is required"),
@@ -34,14 +34,14 @@ export const productRequestSchema = z.object({
 	categoryId: z.uuid("Category Id must be valid UUID"),
 });
 
-export function ProductRequestForm({
+export function AppProductRequestForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
 }: {
-	defaultValues: z.infer<typeof productRequestSchema>;
+	defaultValues: z.infer<typeof appProductRequestSchema>;
 	isSubmitting: boolean;
-	submitHandler: (data: z.infer<typeof productRequestSchema>) => void;
+	submitHandler: (data: z.infer<typeof appProductRequestSchema>) => void;
 }) {
 	const getCategoriesFn = useServerFn(getCategories);
 
@@ -52,7 +52,7 @@ export function ProductRequestForm({
 
 	const form = useForm({
 		validators: {
-			onChange: productRequestSchema,
+			onChange: appProductRequestSchema,
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {

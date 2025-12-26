@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, FilterIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { z } from "zod";
-import { ProductsFiltersForm } from "@/components/forms/products-filter-form";
+import { AppProductsFiltersForm } from "@/components/forms/app-products-filter-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -204,7 +204,7 @@ function ProductsPageSearch() {
 							Filter Products
 						</DialogTitle>
 					</DialogHeader>
-					<ProductsFiltersForm
+					<AppProductsFiltersForm
 						defaultValues={{
 							sortBy: search.sortBy,
 							sortOrder: search.sortOrder,

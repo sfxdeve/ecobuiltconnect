@@ -7,9 +7,9 @@ import { useId, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
-	ProductRequestForm,
-	type productRequestSchema,
-} from "@/components/forms/product-request-form";
+	AppProductRequestForm,
+	type appProductRequestSchema,
+} from "@/components/forms/app-product-request-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
@@ -148,7 +148,7 @@ function ProductRequestsPageSearch() {
 	const createProductRequestFn = useServerFn(createProductRequest);
 
 	const createProductRequestMutation = useMutation({
-		mutationFn: (data: z.infer<typeof productRequestSchema>) =>
+		mutationFn: (data: z.infer<typeof appProductRequestSchema>) =>
 			createProductRequestFn({ data }),
 		onSuccess: async () => {
 			setIsProductRequestDialogOpen(false);
@@ -201,7 +201,7 @@ function ProductRequestsPageSearch() {
 							Product Request
 						</DialogTitle>
 					</DialogHeader>
-					<ProductRequestForm
+					<AppProductRequestForm
 						defaultValues={{
 							pictureIds: [""],
 							name: "",

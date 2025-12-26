@@ -72,7 +72,6 @@ export function AppHeader() {
 			{/* Actions */}
 			<div className="flex items-center gap-4">
 				<AppCart />
-				<AppUserOptionsMenu />
 				<SignedIn>
 					<UserButton
 						appearance={{
@@ -89,6 +88,7 @@ export function AppHeader() {
 						</Button>
 					</SignInButton>
 				</SignedOut>
+				<AppUserOptionsMenu />
 			</div>
 		</header>
 	);
