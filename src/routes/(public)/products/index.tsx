@@ -85,49 +85,57 @@ function ProductsPage() {
 			{loaderData.products.length > 0 ? (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{loaderData.products.map((product) => (
-						<Card key={product.id} className="relative">
-							{product.isVerified && (
-								<Badge className="absolute top-4 right-4">
-									EcobuiltConnect
-								</Badge>
-							)}
-							<CardHeader>
-								<img
-									className="aspect-square object-contain"
-									src={product.pictureIds[0]}
-									alt={product.name}
-								/>
-							</CardHeader>
-							<CardContent>
-								<h3 className="font-semibold text-primary text-xs uppercase">
-									{product.vendorProfile.name}
-								</h3>
-								<h2 className="font-semibold text-xl">{product.name}</h2>
-							</CardContent>
-							<CardFooter className="flex justify-between items-center">
-								<div className="flex flex-col">
-									<span className="font-bold text-xl">
-										{formatMoneyFromCents(
-											product.salePrice ? product.salePrice : product.price,
-											{
-												locale: "en-ZA",
-												currency: "ZAR",
-											},
-										)}
-									</span>
-									<span className="text-xs">Excl. VAT</span>
-								</div>
-								<Button
-									variant="default"
-									size="lg"
-									onClick={() => {
-										cartActions.addItem({ productId: product.id });
-									}}
-								>
-									Purchase
-								</Button>
-							</CardFooter>
-						</Card>
+						<Link
+							key={product.id}
+							to="/products/$productId"
+							params={{ productId: product.id }}
+						>
+							<Card className="relative">
+								{product.isVerified && (
+									<Badge className="absolute top-4 right-4">
+										EcobuiltConnect
+									</Badge>
+								)}
+								<CardHeader>
+									<img
+										className="aspect-square object-contain"
+										src={product.pictureIds[0]}
+										alt={product.name}
+									/>
+								</CardHeader>
+								<CardContent>
+									<h3 className="font-semibold text-primary text-xs uppercase">
+										{product.vendorProfile.name}
+									</h3>
+									<h2 className="font-semibold text-xl">{product.name}</h2>
+								</CardContent>
+								<CardFooter className="flex justify-between items-center">
+									<div className="flex flex-col">
+										<span className="font-bold text-xl">
+											{formatMoneyFromCents(
+												product.salePrice ? product.salePrice : product.price,
+												{
+													locale: "en-ZA",
+													currency: "ZAR",
+												},
+											)}
+										</span>
+										<span className="text-xs">Excl. VAT</span>
+									</div>
+									<Button
+										variant="default"
+										size="lg"
+										onClick={(event) => {
+											event.preventDefault();
+											event.stopPropagation();
+											cartActions.addItem({ productId: product.id });
+										}}
+									>
+										Purchase
+									</Button>
+								</CardFooter>
+							</Card>
+						</Link>
 					))}
 				</div>
 			) : (
