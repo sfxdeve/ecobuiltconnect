@@ -14,10 +14,10 @@ export const env = createEnv({
 		OZOW_API_KEY: z.string(),
 		OZOW_IS_TEST: z.enum(["true", "false"]),
 		OZOW_API_URL: z.url(),
-		OZOW_NOTIFY_URL: z.url(),
-		OZOW_CANCEL_URL: z.url(),
-		OZOW_ERROR_URL: z.url(),
-		OZOW_SUCCESS_URL: z.url(),
+		OZOW_NOTIFY_URL: z.string(),
+		OZOW_CANCEL_URL: z.string(),
+		OZOW_ERROR_URL: z.string(),
+		OZOW_SUCCESS_URL: z.string(),
 	},
 
 	/**

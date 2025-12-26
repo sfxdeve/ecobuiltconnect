@@ -24,10 +24,10 @@ export const initiateOzowPayment = createServerFn({
 			amount: orderRequest.total / 100,
 			transactionReference: orderRequest.id,
 			bankReference: orderRequest.id.slice(0, 18),
-			cancelUrl: env.OZOW_CANCEL_URL,
-			errorUrl: env.OZOW_ERROR_URL,
-			successUrl: env.OZOW_SUCCESS_URL,
-			notifyUrl: env.OZOW_NOTIFY_URL,
+			cancelUrl: env.APP_URL + env.OZOW_CANCEL_URL,
+			errorUrl: env.APP_URL + env.OZOW_ERROR_URL,
+			successUrl: env.APP_URL + env.OZOW_SUCCESS_URL,
+			notifyUrl: env.APP_URL + env.OZOW_NOTIFY_URL,
 			isTest: env.OZOW_IS_TEST === "true",
 		};
 
