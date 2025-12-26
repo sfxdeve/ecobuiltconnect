@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import {
 	AppProductRequestForm,
-	type appProductRequestSchema,
+	type appProductRequestFormSchema,
 } from "@/components/forms/app-product-request-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -148,7 +148,7 @@ function ProductRequestsPageSearch() {
 	const createProductRequestFn = useServerFn(createProductRequest);
 
 	const createProductRequestMutation = useMutation({
-		mutationFn: (data: z.infer<typeof appProductRequestSchema>) =>
+		mutationFn: (data: z.infer<typeof appProductRequestFormSchema>) =>
 			createProductRequestFn({ data }),
 		onSuccess: async () => {
 			setIsProductRequestDialogOpen(false);
