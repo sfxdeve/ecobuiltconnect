@@ -27,15 +27,6 @@ function getMoneyFormatter(locale: string, currency: string) {
 	return fmt;
 }
 
-export function formatMoney(
-	amount: number,
-	opts: { locale: string; currency: string },
-) {
-	if (!Number.isFinite(amount)) return "";
-
-	return getMoneyFormatter(opts.locale, opts.currency).format(amount);
-}
-
 export function formatMoneyFromCents(
 	cents: number,
 	opts: { locale: string; currency: string },

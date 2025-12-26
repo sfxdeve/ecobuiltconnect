@@ -33,7 +33,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/formatters";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { getUserOrderRequestsServerFn } from "@/server/user/orders";
 
@@ -91,7 +91,7 @@ function OrdersPage() {
 								case "COMPLETED":
 									statusBadgeVariant = "default";
 									break;
-								case "FAILED":
+								case "CANCELLED":
 									statusBadgeVariant = "destructive";
 									break;
 								default:
@@ -110,7 +110,12 @@ function OrdersPage() {
 											{orderRequest.status}
 										</Badge>
 									</TableCell>
-									<TableCell>{orderRequest.total}</TableCell>
+									<TableCell>
+										{formatMoneyFromCents(orderRequest.total, {
+											locale: "en-ZA",
+											currency: "ZAR",
+										})}
+									</TableCell>
 									<TableCell>{formatDate(orderRequest.createdAt)}</TableCell>
 								</TableRow>
 							);

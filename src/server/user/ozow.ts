@@ -21,7 +21,7 @@ export const createOzowPaymentRequestServerFn = createServerFn({
 			siteCode: env.OZOW_SITE_CODE,
 			countryCode: "ZA",
 			currencyCode: "ZAR",
-			amount: orderRequest.total,
+			amount: orderRequest.total / 100,
 			transactionReference: orderRequest.id,
 			bankReference: orderRequest.id.slice(0, 18),
 			cancelUrl: env.OZOW_CANCEL_URL,

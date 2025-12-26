@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@tanstack/react-store";
 import { ShoppingCartIcon, Trash2Icon } from "lucide-react";
-import { formatMoney } from "@/lib/formatters";
+import { formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { getPublicProductByIdServerFn } from "@/server/public/products";
 import { cartActions, cartStore } from "@/stores/cart";
@@ -86,7 +86,7 @@ export function AppCart() {
 												Qty: {item.quantity}
 											</p>
 											<p className="text-sm font-medium">
-												{formatMoney(
+												{formatMoneyFromCents(
 													(product.salePrice
 														? product.salePrice
 														: product.price) * item.quantity,

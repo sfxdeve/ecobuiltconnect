@@ -68,7 +68,10 @@ export const getPublicProductsServerFn = createServerFn({
 		}
 
 		if (data.minPrice !== undefined || data.maxPrice !== undefined) {
-			const priceRange = { gte: data.minPrice, lte: data.maxPrice };
+			const priceRange = {
+				gte: data.minPrice ? data.minPrice * 100 : undefined,
+				lte: data.maxPrice ? data.maxPrice * 100 : undefined,
+			};
 
 			(where.AND as ProductWhereInput[]).push({
 				OR: [{ salePrice: priceRange }, { salePrice: null, price: priceRange }],

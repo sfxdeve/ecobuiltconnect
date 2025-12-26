@@ -39,7 +39,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { formatMoney } from "@/lib/formatters";
+import { formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { getPublicProductsServerFn } from "@/server/public/products";
 import { cartActions } from "@/stores/cart";
@@ -114,7 +114,7 @@ function ProductsPage() {
 							<CardFooter className="flex justify-between items-center">
 								<div className="flex flex-col">
 									<span className="font-bold text-xl">
-										{formatMoney(
+										{formatMoneyFromCents(
 											product.salePrice ? product.salePrice : product.price,
 											{
 												locale: "en-ZA",

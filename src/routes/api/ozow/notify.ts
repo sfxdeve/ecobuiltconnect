@@ -78,7 +78,7 @@ export const Route = createFileRoute("/api/ozow/notify")({
 								await tx.orderRequest.update({
 									where: { id: orderRequest.id },
 									data: {
-										status: "FAILED",
+										status: "CANCELLED",
 									},
 								});
 							});

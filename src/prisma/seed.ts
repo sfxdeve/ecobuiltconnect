@@ -55,7 +55,9 @@ async function main() {
 		previousUsage: faker.helpers.maybe(() => faker.lorem.sentence()),
 		sku: faker.string.alphanumeric(10).toUpperCase(),
 		stock: faker.number.int({ min: 0, max: 100 }),
-		price: parseFloat(faker.commerce.price({ min: 10, max: 500 })),
+		price: Math.round(
+			parseFloat(faker.commerce.price({ min: 10, max: 500 })) * 100,
+		),
 		condition: faker.helpers.enumValue(ProductCondition),
 		categoryId: faker.helpers.arrayElement(categories).id,
 		vendorProfileId: faker.helpers.arrayElement(vendors).id,

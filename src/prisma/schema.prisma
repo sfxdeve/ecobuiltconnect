@@ -111,8 +111,8 @@ model Product {
   previousUsage String?          @map("previous_usage")
   sku           String           @unique
   stock         Int
-  price         Float
-  salePrice     Float?           @map("sale_price")
+  price         Int
+  salePrice     Int?             @map("sale_price")
   condition     ProductCondition @default(GOOD)
   isVerified    Boolean          @default(false) @map("is_verified")
   isDeleted     Boolean          @default(false) @map("is_deleted")
@@ -139,7 +139,7 @@ model ProductRequest {
   name        String
   description String
   quantity    Int
-  price       Float
+  price       Int
   isDeleted   Boolean  @default(false) @map("is_deleted")
 
   categoryId String   @map("category_id")
@@ -157,7 +157,7 @@ model ProductRequest {
 model OrderItem {
   id       String @id @default(uuid())
   quantity Int
-  price    Float
+  price    Int
 
   orderRequestId String       @map("order_request_id")
   orderRequest   OrderRequest @relation(fields: [orderRequestId], references: [id], onDelete: Cascade)
@@ -173,7 +173,7 @@ model OrderItem {
 
 enum OrderStatus {
   PENDING
-  FAILED
+  CANCELLED
   PAID
   PROCESSING
   READY
@@ -183,7 +183,7 @@ enum OrderStatus {
 model OrderRequest {
   id String @id @default(uuid())
 
-  total  Float
+  total  Int
   status OrderStatus @default(PENDING)
 
   userProfileId String      @map("user_profile_id")
@@ -210,8 +210,8 @@ enum LogisticStatus {
 model LogisticRequest {
   id String @id @default(uuid())
 
-  requestedPrice Float          @map("requested_price")
-  acceptedPrice  Float?         @map("accepted_price")
+  requestedPrice Int            @map("requested_price")
+  acceptedPrice  Int?           @map("accepted_price")
   status         LogisticStatus @default(PENDING)
 
   orderRequestId String       @unique @map("order_request_id")
@@ -226,7 +226,7 @@ model LogisticRequest {
 model LogisticResponse {
   id String @id @default(uuid())
 
-  price Float
+  price Int
 
   logisticProfileId String          @map("logistic_profile_id")
   logisticProfile   LogisticProfile @relation(fields: [logisticProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)

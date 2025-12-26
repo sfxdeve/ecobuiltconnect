@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { formatMoney } from "@/lib/formatters";
+import { formatMoneyFromCents } from "@/lib/formatters";
 import { getPublicProductByIdServerFn } from "@/server/public/products";
 import { createUserOrderRequestServerFn } from "@/server/user/orders";
 import { createOzowPaymentRequestServerFn } from "@/server/user/ozow";
@@ -148,7 +148,7 @@ function CheckoutPage() {
 												<span>Qty: {item.quantity}</span>
 												<br />
 												<span>
-													{formatMoney(
+													{formatMoneyFromCents(
 														(product.salePrice
 															? product.salePrice
 															: product.price) * item.quantity,
@@ -172,7 +172,7 @@ function CheckoutPage() {
 									<ItemTitle className="w-full flex justify-between text-xl font-semibold">
 										<span>Total</span>
 										<span>
-											{formatMoney(cartTotal, {
+											{formatMoneyFromCents(cartTotal, {
 												locale: "en-ZA",
 												currency: "ZAR",
 											})}
