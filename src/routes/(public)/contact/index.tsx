@@ -13,7 +13,15 @@ import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/(public)/contact/")({
 	head: () => ({
-		meta: [{ title: "EcobuiltConnect - Contact" }],
+		meta: [
+			{
+				title: "Contact - EcobuiltConnect",
+			},
+			{
+				name: "description",
+				content: "",
+			},
+		],
 	}),
 	component: ContactPage,
 });

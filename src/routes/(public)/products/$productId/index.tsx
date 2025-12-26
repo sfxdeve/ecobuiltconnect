@@ -17,7 +17,7 @@ export const Route = createFileRoute("/(public)/products/$productId/")({
 			},
 			{
 				name: "description",
-				content: loaderData?.product.description,
+				content: "",
 			},
 		],
 	}),

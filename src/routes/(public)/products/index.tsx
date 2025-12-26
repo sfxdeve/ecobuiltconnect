@@ -69,8 +69,7 @@ export const Route = createFileRoute("/(public)/products/")({
 			},
 			{
 				name: "description",
-				content:
-					"Browse our collection of sustainable and eco-friendly products on EcobuiltConnect.",
+				content: "",
 			},
 		],
 	}),

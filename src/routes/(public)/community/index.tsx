@@ -7,6 +7,10 @@ export const Route = createFileRoute("/(public)/community/")({
 			{
 				title: "Community - EcobuiltConnect",
 			},
+			{
+				name: "description",
+				content: "",
+			},
 		],
 	}),
 	component: CommunityPage,
