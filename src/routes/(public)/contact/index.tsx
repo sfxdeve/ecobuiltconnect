@@ -142,21 +142,9 @@ function ContactPage() {
 							);
 						}}
 					</form.Field>
-					<form.Subscribe selector={({ isSubmitting }) => [isSubmitting]}>
-						{([isSubmitting]) => (
-							<Field orientation="horizontal">
-								<Button
-									type="submit"
-									disabled={isSubmitting}
-									variant="default"
-									size="lg"
-									className="w-full"
-								>
-									{isSubmitting ? "Sending..." : "Send Message"}
-								</Button>
-							</Field>
-						)}
-					</form.Subscribe>
+					<Button type="submit" variant="default" size="lg" className="w-full">
+						Send Message
+					</Button>
 				</FieldGroup>
 			</form>
 			<iframe

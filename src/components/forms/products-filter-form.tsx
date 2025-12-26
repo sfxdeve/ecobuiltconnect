@@ -244,41 +244,28 @@ export function ProductsFiltersForm({
 					</form.Field>
 				</div>
 				<div className="flex gap-2 items-start justify-stretch">
-					<form.Subscribe selector={({ isSubmitting }) => [isSubmitting]}>
-						{([isSubmitting]) => (
-							<>
-								<Button
-									onClick={() => {
-										form.reset({
-											sortBy: undefined,
-											sortOrder: undefined,
-											minStock: undefined,
-											minPrice: undefined,
-											maxPrice: undefined,
-											isVerified: undefined,
-										});
+					<Button
+						onClick={() => {
+							form.reset({
+								sortBy: undefined,
+								sortOrder: undefined,
+								minStock: undefined,
+								minPrice: undefined,
+								maxPrice: undefined,
+								isVerified: undefined,
+							});
 
-										resetHandler(form.state.values);
-									}}
-									disabled={isSubmitting}
-									variant="outline"
-									size="lg"
-									className="flex-1"
-								>
-									Reset
-								</Button>
-								<Button
-									type="submit"
-									disabled={isSubmitting}
-									variant="default"
-									size="lg"
-									className="flex-1"
-								>
-									Apply
-								</Button>
-							</>
-						)}
-					</form.Subscribe>
+							resetHandler(form.state.values);
+						}}
+						variant="outline"
+						size="lg"
+						className="flex-1"
+					>
+						Reset
+					</Button>
+					<Button type="submit" variant="default" size="lg" className="flex-1">
+						Apply
+					</Button>
 				</div>
 			</FieldGroup>
 		</form>

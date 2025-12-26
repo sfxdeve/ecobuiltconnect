@@ -26,6 +26,7 @@ export const getProducts = createServerFn({
 			isVerified: z.boolean().optional(),
 			categoryId: z.uuid().optional(),
 			vendorProfileId: z.uuid().optional(),
+			productRequestId: z.uuid().optional(),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -41,6 +42,7 @@ export const getProducts = createServerFn({
 			"isVerified",
 			"categoryId",
 			"vendorProfileId",
+			"productRequestId",
 		] as const;
 
 		eqFields.forEach((field) => {

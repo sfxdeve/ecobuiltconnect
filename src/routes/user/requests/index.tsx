@@ -1,9 +1,15 @@
 import { debounce } from "@tanstack/pacer";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useId, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
-import { ProductRequestForm } from "@/components/forms/product-request-form";
+import {
+	ProductRequestForm,
+	type productRequestSchema,
+} from "@/components/forms/product-request-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
@@ -42,7 +48,10 @@ import {
 } from "@/components/ui/table";
 import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { getProductRequests } from "@/server/user/product-requests";
+import {
+	createProductRequest,
+	getProductRequests,
+} from "@/server/user/product-requests";
 
 export const Route = createFileRoute("/user/requests/")({
 	validateSearch: z.object({
@@ -131,8 +140,25 @@ function ProductRequestsPage() {
 function ProductRequestsPageSearch() {
 	const navigate = Route.useNavigate();
 
+	const router = useRouter();
+
 	const [isProductRequestDialogOpen, setIsProductRequestDialogOpen] =
 		useState(false);
+
+	const createProductRequestFn = useServerFn(createProductRequest);
+
+	const createProductRequestMutation = useMutation({
+		mutationFn: (data: z.infer<typeof productRequestSchema>) =>
+			createProductRequestFn({ data }),
+		onSuccess: async () => {
+			setIsProductRequestDialogOpen(false);
+
+			router.invalidate();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
 
 	const debouncedSearch = debounce(
 		(searchTerm: string) => {
@@ -184,8 +210,9 @@ function ProductRequestsPageSearch() {
 							price: 0,
 							categoryId: "",
 						}}
-						submitHandler={() => {
-							setIsProductRequestDialogOpen(false);
+						isSubmitting={createProductRequestMutation.isPending}
+						submitHandler={(data) => {
+							createProductRequestMutation.mutate(data);
 						}}
 					/>
 				</DialogContent>

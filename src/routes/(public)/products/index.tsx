@@ -58,6 +58,7 @@ export const Route = createFileRoute("/(public)/products/")({
 		isVerified: z.boolean().optional(),
 		categoryId: z.uuid().optional(),
 		vendorProfileId: z.uuid().optional(),
+		productRequestId: z.uuid().optional(),
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: ({ deps }) => getProducts({ data: deps }),

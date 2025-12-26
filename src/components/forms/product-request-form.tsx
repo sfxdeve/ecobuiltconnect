@@ -19,7 +19,7 @@ import { Textarea } from "../ui/textarea";
 
 export const productRequestSchema = z.object({
 	pictureIds: z
-		.array(z.string("Picture must be string"))
+		.array(z.string("Picture Id must be string"))
 		.min(1, "At least one picture is required"),
 	name: z
 		.string("Name must be string")
@@ -31,14 +31,16 @@ export const productRequestSchema = z.object({
 		.number("Quantity must be number")
 		.min(1, "Quantity must be at least 1"),
 	price: z.number("Price must be number").min(1, "Price must be at least 1"),
-	categoryId: z.uuid("Category must be valid category"),
+	categoryId: z.uuid("Category Id must be valid UUID"),
 });
 
 export function ProductRequestForm({
 	defaultValues,
+	isSubmitting,
 	submitHandler,
 }: {
 	defaultValues: z.infer<typeof productRequestSchema>;
+	isSubmitting: boolean;
 	submitHandler: (data: z.infer<typeof productRequestSchema>) => void;
 }) {
 	const getCategoriesFn = useServerFn(getCategories);
@@ -209,21 +211,15 @@ export function ProductRequestForm({
 					</form.Field>
 				</div>
 				<div className="flex gap-2 items-start justify-stretch">
-					<form.Subscribe selector={({ isSubmitting }) => [isSubmitting]}>
-						{([isSubmitting]) => (
-							<>
-								<Button
-									type="submit"
-									disabled={isSubmitting}
-									variant="default"
-									size="lg"
-									className="flex-1"
-								>
-									Request Product
-								</Button>
-							</>
-						)}
-					</form.Subscribe>
+					<Button
+						type="submit"
+						disabled={isSubmitting}
+						variant="default"
+						size="lg"
+						className="flex-1"
+					>
+						{isSubmitting ? <Spinner /> : "Request Product"}
+					</Button>
 				</div>
 			</FieldGroup>
 		</form>

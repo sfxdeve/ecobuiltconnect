@@ -117,12 +117,22 @@ export const getProductRequestById = createServerFn({ method: "GET" })
 export const createProductRequest = createServerFn({ method: "POST" })
 	.inputValidator(
 		z.object({
-			pictureIds: z.array(z.string()).min(1),
-			name: z.string(),
-			description: z.string(),
-			quantity: z.number(),
-			price: z.number(),
-			categoryId: z.uuid(),
+			pictureIds: z
+				.array(z.string("Picture Id must be string"))
+				.min(1, "At least one picture is required"),
+			name: z
+				.string("Name must be string")
+				.min(3, "Name must be at least 3 characters"),
+			description: z
+				.string("Description must be string")
+				.min(12, "Description must be at least 12 characters"),
+			quantity: z
+				.number("Quantity must be number")
+				.min(1, "Quantity must be at least 1"),
+			price: z
+				.number("Price must be number")
+				.min(1, "Price must be at least 1"),
+			categoryId: z.uuid("Category Id must be valid UUID"),
 		}),
 	)
 	.handler(async ({ data }) => {
