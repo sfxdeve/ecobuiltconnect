@@ -7,9 +7,11 @@ import type {
 	ProductWhereInput,
 } from "@/prisma/generated/models";
 import {
+	logisticRequestSelector,
 	orderItemSelector,
 	orderRequestSelector,
 	productSelector,
+	reviewSelector,
 } from "@/prisma/selectors";
 import { getUserProfile } from "./profile";
 
@@ -103,7 +105,13 @@ export const getOrderRequest = createServerFn({
 						product: {
 							select: productSelector,
 						},
+						review: {
+							select: reviewSelector,
+						},
 					},
+				},
+				logisticRequest: {
+					select: logisticRequestSelector,
 				},
 			},
 		});

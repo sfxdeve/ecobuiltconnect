@@ -1,10 +1,16 @@
 import { debounce } from "@tanstack/pacer";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoreHorizontalIcon } from "lucide-react";
 import { useId } from "react";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
 	Empty,
 	EmptyDescription,
@@ -118,6 +124,28 @@ function OrdersPage() {
 										})}
 									</TableCell>
 									<TableCell>{formatDate(orderRequest.createdAt)}</TableCell>
+									<TableCell>
+										<DropdownMenu>
+											<DropdownMenuTrigger
+												render={<Button variant="ghost" size="icon" />}
+											>
+												<MoreHorizontalIcon />
+												<span className="sr-only">Open actions</span>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent align="end">
+												<DropdownMenuItem
+													render={
+														<Link
+															to="/user/orders/$orderId"
+															params={{ orderId: orderRequest.id }}
+														/>
+													}
+												>
+													View
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</TableCell>
 								</TableRow>
 							);
 						})}

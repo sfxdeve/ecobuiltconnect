@@ -22,6 +22,7 @@ import { Route as publicCommunityIndexRouteImport } from './routes/(public)/comm
 import { Route as ApiOzowNotifyRouteImport } from './routes/api/ozow/notify'
 import { Route as authSignUpSplatRouteImport } from './routes/(auth)/sign-up/$'
 import { Route as authSignInSplatRouteImport } from './routes/(auth)/sign-in/$'
+import { Route as UserOrdersOrderIdIndexRouteImport } from './routes/user/orders/$orderId/index'
 import { Route as publicProductsProductIdIndexRouteImport } from './routes/(public)/products/$productId/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
@@ -87,6 +88,11 @@ const authSignInSplatRoute = authSignInSplatRouteImport.update({
   path: '/sign-in/$',
   getParentRoute: () => authRouteRoute,
 } as any)
+const UserOrdersOrderIdIndexRoute = UserOrdersOrderIdIndexRouteImport.update({
+  id: '/user/orders/$orderId/',
+  path: '/user/orders/$orderId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const publicProductsProductIdIndexRoute =
   publicProductsProductIdIndexRouteImport.update({
     id: '/products/$productId/',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/user/orders': typeof UserOrdersIndexRoute
   '/user/requests': typeof UserRequestsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
+  '/user/orders/$orderId': typeof UserOrdersOrderIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/user/orders': typeof UserOrdersIndexRoute
   '/user/requests': typeof UserRequestsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
+  '/user/orders/$orderId': typeof UserOrdersOrderIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/user/orders/': typeof UserOrdersIndexRoute
   '/user/requests/': typeof UserRequestsIndexRoute
   '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
+  '/user/orders/$orderId/': typeof UserOrdersOrderIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/user/orders'
     | '/user/requests'
     | '/products/$productId'
+    | '/user/orders/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/user/orders'
     | '/user/requests'
     | '/products/$productId'
+    | '/user/orders/$orderId'
   id:
     | '__root__'
     | '/(auth)'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/user/orders/'
     | '/user/requests/'
     | '/(public)/products/$productId/'
+    | '/user/orders/$orderId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -193,6 +205,7 @@ export interface RootRouteChildren {
   UserCheckoutIndexRoute: typeof UserCheckoutIndexRoute
   UserOrdersIndexRoute: typeof UserOrdersIndexRoute
   UserRequestsIndexRoute: typeof UserRequestsIndexRoute
+  UserOrdersOrderIdIndexRoute: typeof UserOrdersOrderIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -288,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignInSplatRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/user/orders/$orderId/': {
+      id: '/user/orders/$orderId/'
+      path: '/user/orders/$orderId'
+      fullPath: '/user/orders/$orderId'
+      preLoaderRoute: typeof UserOrdersOrderIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(public)/products/$productId/': {
       id: '/(public)/products/$productId/'
       path: '/products/$productId'
@@ -341,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   UserCheckoutIndexRoute: UserCheckoutIndexRoute,
   UserOrdersIndexRoute: UserOrdersIndexRoute,
   UserRequestsIndexRoute: UserRequestsIndexRoute,
+  UserOrdersOrderIdIndexRoute: UserOrdersOrderIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
