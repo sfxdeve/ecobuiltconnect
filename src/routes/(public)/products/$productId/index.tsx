@@ -3,6 +3,13 @@ import { Building2Icon, CheckIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
 import { Separator } from "@/components/ui/separator";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { getProductById } from "@/server/public/products";
@@ -31,11 +38,21 @@ function ProductDetailsPage() {
 		<section className="container mx-auto py-12 px-4 flex gap-12 flex-col lg:flex-row">
 			<Card className="w-full lg:w-1/2">
 				<CardContent className="flex flex-col items-center justify-center">
-					<img
-						className="aspect-square object-contain"
-						src={product.pictureIds[0]}
-						alt={product.name}
-					/>
+					<Carousel className="w-full">
+						<CarouselContent>
+							{product.pictureIds.map((pictureId, index) => (
+								<CarouselItem key={pictureId}>
+									<img
+										className="aspect-square object-contain w-full"
+										src={pictureId}
+										alt={`${product.name} - View ${index + 1}`}
+									/>
+								</CarouselItem>
+							))}
+						</CarouselContent>
+						<CarouselPrevious className="left-4" />
+						<CarouselNext className="right-4" />
+					</Carousel>
 				</CardContent>
 			</Card>
 			<div className="flex-1 space-y-4">
