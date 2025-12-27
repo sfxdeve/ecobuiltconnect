@@ -124,7 +124,10 @@ function ProductsPage() {
 										onClick={(event) => {
 											event.preventDefault();
 											event.stopPropagation();
-											cartActions.addItem({ productId: product.id });
+											cartActions.addItem({
+												productId: product.id,
+												quantity: 1,
+											});
 										}}
 									>
 										Purchase

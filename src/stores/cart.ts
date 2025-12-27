@@ -28,7 +28,7 @@ export const cartActions = {
 		cartStore.setState((state) => ({ ...state, items: [] }));
 	},
 
-	addItem(newItem: Omit<CartItem, "quantity">) {
+	addItem(newItem: CartItem) {
 		cartStore.setState((state) => {
 			const existing = state.items.find(
 				(item) => item.productId === newItem.productId,
@@ -39,7 +39,7 @@ export const cartActions = {
 					...state,
 					items: state.items.map((item) =>
 						item.productId === newItem.productId
-							? { ...item, quantity: item.quantity + 1 }
+							? { ...item, quantity: item.quantity + newItem.quantity }
 							: item,
 					),
 				};
@@ -47,7 +47,7 @@ export const cartActions = {
 
 			return {
 				...state,
-				items: [...state.items, { ...newItem, quantity: 1 }],
+				items: [...state.items, newItem],
 			};
 		});
 	},

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Building2Icon, CheckIcon } from "lucide-react";
+import { Building2Icon, CheckIcon, Minus, Plus } from "lucide-react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { getProductById } from "@/server/public/products";
@@ -33,6 +35,8 @@ export const Route = createFileRoute("/(public)/products/$productId/")({
 
 function ProductDetailsPage() {
 	const { product } = Route.useLoaderData();
+
+	const [quantity, setQuantity] = useState(1);
 
 	return (
 		<section className="container mx-auto py-12 px-4 flex gap-12 flex-col lg:flex-row">
@@ -121,13 +125,58 @@ function ProductDetailsPage() {
 					</div>
 				</div>
 				<Separator />
-				<Button
-					size="lg"
-					className="w-full"
-					onClick={() => cartActions.addItem({ productId: product.id })}
-				>
-					Add to Cart
-				</Button>
+				<div className="space-y-4">
+					<div className="flex items-center gap-2">
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={() => {
+								if (quantity > 1) {
+									setQuantity(quantity - 1);
+								}
+							}}
+							disabled={quantity <= 1}
+						>
+							<Minus className="size-4" />
+						</Button>
+						<Input
+							type="number"
+							min="1"
+							max={product.stock}
+							value={quantity}
+							onChange={(event) => {
+								if (
+									event.target.valueAsNumber >= 1 &&
+									event.target.valueAsNumber <= product.stock
+								) {
+									setQuantity(event.target.valueAsNumber);
+								}
+							}}
+							className="w-20 text-center"
+						/>
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={() => {
+								if (quantity < product.stock) {
+									setQuantity(quantity + 1);
+								}
+							}}
+							disabled={quantity >= product.stock}
+						>
+							<Plus className="size-4" />
+						</Button>
+					</div>
+					<Button
+						size="lg"
+						className="w-full"
+						onClick={() =>
+							cartActions.addItem({ productId: product.id, quantity })
+						}
+					>
+						Add to Cart
+					</Button>
+				</div>
 			</div>
 		</section>
 	);
