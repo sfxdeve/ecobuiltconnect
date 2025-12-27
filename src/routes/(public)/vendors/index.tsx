@@ -1,6 +1,6 @@
 import { debounce } from "@tanstack/pacer";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useId } from "react";
 import { z } from "zod";
 import { buttonVariants } from "@/components/ui/button";
@@ -190,7 +190,7 @@ function VendorsPagePagination() {
 						prevDisabled && "opacity-50 pointer-events-none",
 					)}
 				>
-					<ChevronLeft />
+					<ChevronLeftIcon />
 					<span>Previous</span>
 				</Link>
 				<Link
@@ -209,7 +209,7 @@ function VendorsPagePagination() {
 					)}
 				>
 					<span>Next</span>
-					<ChevronRight />
+					<ChevronRightIcon />
 				</Link>
 			</div>
 		</div>

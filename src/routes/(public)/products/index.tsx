@@ -1,6 +1,6 @@
 import { debounce } from "@tanstack/pacer";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight, FilterIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { z } from "zod";
 import { AppProductsFiltersForm } from "@/components/forms/app-products-filter-form";
@@ -309,7 +309,7 @@ function ProductsPagePagination() {
 						prevDisabled && "opacity-50 pointer-events-none",
 					)}
 				>
-					<ChevronLeft />
+					<ChevronLeftIcon />
 					<span>Previous</span>
 				</Link>
 				<Link
@@ -328,7 +328,7 @@ function ProductsPagePagination() {
 					)}
 				>
 					<span>Next</span>
-					<ChevronRight />
+					<ChevronRightIcon />
 				</Link>
 			</div>
 		</div>

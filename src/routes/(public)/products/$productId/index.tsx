@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Building2Icon, CheckIcon, Minus, Plus } from "lucide-react";
+import { Building2Icon, CheckIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -137,7 +137,7 @@ function ProductDetailsPage() {
 							}}
 							disabled={quantity <= 1}
 						>
-							<Minus className="size-4" />
+							<MinusIcon className="size-4" />
 						</Button>
 						<Input
 							type="number"
@@ -164,7 +164,7 @@ function ProductDetailsPage() {
 							}}
 							disabled={quantity >= product.stock}
 						>
-							<Plus className="size-4" />
+							<PlusIcon className="size-4" />
 						</Button>
 					</div>
 					<Button

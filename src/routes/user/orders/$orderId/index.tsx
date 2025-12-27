@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, Package } from "lucide-react";
+import { CalendarIcon, PackageIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -65,7 +65,7 @@ function OrderDetailsPage() {
 			<Card className="flex-1">
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
-						<Package className="h-5 w-5" />
+						<PackageIcon className="h-5 w-5" />
 						Order Items
 					</CardTitle>
 					<CardDescription>
@@ -171,7 +171,7 @@ function OrderDetailsPage() {
 			<Card className="w-full md:w-72">
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
-						<Calendar className="h-5 w-5" />
+						<CalendarIcon className="h-5 w-5" />
 						Order Info
 					</CardTitle>
 				</CardHeader>

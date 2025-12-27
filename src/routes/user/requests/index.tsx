@@ -2,7 +2,7 @@ import { debounce } from "@tanstack/pacer";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeft, ChevronRight, FilterIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -339,7 +339,7 @@ function ProductRequestsPagePagination() {
 						prevDisabled && "opacity-50 pointer-events-none",
 					)}
 				>
-					<ChevronLeft />
+					<ChevronLeftIcon />
 					<span>Previous</span>
 				</Link>
 				<Link
@@ -358,7 +358,7 @@ function ProductRequestsPagePagination() {
 					)}
 				>
 					<span>Next</span>
-					<ChevronRight />
+					<ChevronRightIcon />
 				</Link>
 			</div>
 		</div>

@@ -1,6 +1,10 @@
 import { debounce } from "@tanstack/pacer";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight, MoreHorizontalIcon } from "lucide-react";
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	MoreHorizontalIcon,
+} from "lucide-react";
 import { useId } from "react";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
@@ -256,7 +260,7 @@ function OrdersPagePagination() {
 						prevDisabled && "opacity-50 pointer-events-none",
 					)}
 				>
-					<ChevronLeft />
+					<ChevronLeftIcon />
 					<span>Previous</span>
 				</Link>
 				<Link
@@ -275,7 +279,7 @@ function OrdersPagePagination() {
 					)}
 				>
 					<span>Next</span>
-					<ChevronRight />
+					<ChevronRightIcon />
 				</Link>
 			</div>
 		</div>
