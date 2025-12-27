@@ -17,8 +17,14 @@ export const getProductRequests = createServerFn({
 			sortOrder: z.enum(["asc", "desc"]).default("desc"),
 			searchTerm: z.string().optional(),
 			minQuantity: z.number().optional(),
-			minPrice: z.number().optional(),
-			maxPrice: z.number().optional(),
+			minPrice: z
+				.number()
+				.transform((val) => val * 100)
+				.optional(), // Convert dollars to cents
+			maxPrice: z
+				.number()
+				.transform((val) => val * 100)
+				.optional(), // Convert dollars to cents
 			categoryId: z.uuid().optional(),
 		}),
 	)
@@ -61,8 +67,8 @@ export const getProductRequests = createServerFn({
 
 		if (data.minPrice !== undefined || data.maxPrice !== undefined) {
 			const priceRange = {
-				gte: data.minPrice ? data.minPrice * 100 : undefined,
-				lte: data.maxPrice ? data.maxPrice * 100 : undefined,
+				gte: data.minPrice,
+				lte: data.maxPrice,
 			};
 
 			where.price = priceRange;
@@ -137,7 +143,8 @@ export const createProductRequest = createServerFn({ method: "POST" })
 				.min(1, "Quantity must be at least 1"),
 			price: z
 				.number("Price must be number")
-				.min(1, "Price must be at least 1"),
+				.min(1, "Price must be at least 1")
+				.transform((val) => val * 100), // Convert dollars to cents
 			categoryId: z.uuid("Category Id must be valid UUID"),
 		}),
 	)
