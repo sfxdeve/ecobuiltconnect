@@ -2,7 +2,7 @@ import { debounce } from "@tanstack/pacer";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, FilterIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -10,6 +10,7 @@ import {
 	AppProductRequestForm,
 	type appProductRequestFormSchema,
 } from "@/components/forms/app-product-request-form";
+import { AppProductRequestsFiltersForm } from "@/components/forms/app-product-requests-filter-form copy";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
@@ -134,10 +135,15 @@ function ProductRequestsPage() {
 }
 
 function ProductRequestsPageSearch() {
+	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 
 	const router = useRouter();
 
+	const [
+		isProductRequestsFiltersDialogOpen,
+		setIsProductRequestsFiltersDialogOpen,
+	] = useState(false);
 	const [isProductRequestDialogOpen, setIsProductRequestDialogOpen] =
 		useState(false);
 
@@ -170,8 +176,69 @@ function ProductRequestsPageSearch() {
 		{ wait: 500 },
 	);
 
+	const areProductRequestsFiltersActive =
+		search.sortBy !== "createdAt" ||
+		search.sortOrder !== "desc" ||
+		search.minQuantity !== undefined ||
+		search.minPrice !== undefined ||
+		search.maxPrice !== undefined;
+
 	return (
 		<div className="flex gap-2 items-center justify-between">
+			<Dialog
+				open={isProductRequestsFiltersDialogOpen}
+				onOpenChange={setIsProductRequestsFiltersDialogOpen}
+			>
+				<DialogTrigger
+					render={
+						<Button
+							variant={areProductRequestsFiltersActive ? "default" : "outline"}
+						/>
+					}
+				>
+					<FilterIcon />
+				</DialogTrigger>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle className="text-xl font-semibold">
+							Filter Product Requests
+						</DialogTitle>
+					</DialogHeader>
+					<AppProductRequestsFiltersForm
+						defaultValues={{
+							sortBy: search.sortBy,
+							sortOrder: search.sortOrder,
+							minQuantity: search.minQuantity,
+							minPrice: search.minPrice,
+							maxPrice: search.maxPrice,
+						}}
+						submitHandler={(data) => {
+							navigate({
+								search: (prev) => ({
+									...prev,
+									...data,
+									page: 1,
+								}),
+								replace: true,
+							});
+
+							setIsProductRequestsFiltersDialogOpen(false);
+						}}
+						resetHandler={(data) => {
+							navigate({
+								search: (prev) => ({
+									...prev,
+									...data,
+									page: 1,
+								}),
+								replace: true,
+							});
+
+							setIsProductRequestsFiltersDialogOpen(false);
+						}}
+					/>
+				</DialogContent>
+			</Dialog>
 			<Input
 				placeholder="Search Product Requests"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
