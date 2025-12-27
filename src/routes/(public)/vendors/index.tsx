@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useId } from "react";
 import { z } from "zod";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
 	Empty,
@@ -12,11 +12,7 @@ import {
 	EmptyTitle,
 } from "@/components/ui/empty";
 import { Field, FieldLabel } from "@/components/ui/field";
-import {
-	InputGroup,
-	InputGroupAddon,
-	InputGroupInput,
-} from "@/components/ui/input-group";
+import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -123,18 +119,11 @@ function VendorsPageSearch() {
 
 	return (
 		<div className="flex gap-2 items-center justify-between">
-			<InputGroup>
-				<InputGroupInput
-					placeholder="Search Vendors"
-					defaultValue={Route.useSearch().searchTerm ?? ""}
-					onChange={(event) => debouncedSearch(event.target.value)}
-				/>
-				<InputGroupAddon align="inline-end" className="pr-1">
-					<Button variant="default" size="sm">
-						Search
-					</Button>
-				</InputGroupAddon>
-			</InputGroup>
+			<Input
+				placeholder="Search Vendors"
+				defaultValue={Route.useSearch().searchTerm ?? ""}
+				onChange={(event) => debouncedSearch(event.target.value)}
+			/>
 		</div>
 	);
 }
