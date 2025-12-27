@@ -28,7 +28,7 @@ export const appProductRequestFormSchema = z.object({
 		.string("Description must be string")
 		.min(12, "Description must be at least 12 characters"),
 	quantity: z
-		.number("Quantity must be number")
+		.int("Quantity must be integer")
 		.min(1, "Quantity must be at least 1"),
 	price: z.number("Price must be number").min(1, "Price must be at least 1"),
 	categoryId: z.uuid("Category Id must be valid UUID"),

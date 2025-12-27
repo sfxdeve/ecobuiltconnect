@@ -20,7 +20,7 @@ export const appProductRequestsFiltersFormSchema = z.object({
 		.enum(["asc", "desc"], "Sort Order must be one of asc or desc")
 		.optional(),
 	minQuantity: z
-		.number("Min Quantity must be number")
+		.int("Min Quantity must be integer")
 		.min(1, "Min Quantity must be greater than 0")
 		.optional(),
 	minPrice: z

@@ -42,12 +42,12 @@ import { cartActions } from "@/stores/cart";
 
 export const Route = createFileRoute("/(public)/products/")({
 	validateSearch: z.object({
-		page: z.number().default(1),
-		limit: z.number().default(10),
+		page: z.int().default(1),
+		limit: z.int().default(10),
 		sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
 		sortOrder: z.enum(["asc", "desc"]).default("desc"),
 		searchTerm: z.string().optional(),
-		minStock: z.number().optional(),
+		minStock: z.int().optional(),
 		minPrice: z.number().optional(),
 		maxPrice: z.number().optional(),
 		condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),

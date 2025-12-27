@@ -11,20 +11,20 @@ export const getProductRequests = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			page: z.number().default(1),
-			limit: z.number().default(10),
+			page: z.int().default(1),
+			limit: z.int().default(10),
 			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
 			sortOrder: z.enum(["asc", "desc"]).default("desc"),
 			searchTerm: z.string().optional(),
-			minQuantity: z.number().optional(),
+			minQuantity: z.int().optional(),
 			minPrice: z
 				.number()
 				.transform((val) => val * 100)
-				.optional(), // Convert dollars to cents
+				.optional(),
 			maxPrice: z
 				.number()
 				.transform((val) => val * 100)
-				.optional(), // Convert dollars to cents
+				.optional(),
 			categoryId: z.uuid().optional(),
 		}),
 	)
@@ -139,12 +139,12 @@ export const createProductRequest = createServerFn({ method: "POST" })
 				.string("Description must be string")
 				.min(12, "Description must be at least 12 characters"),
 			quantity: z
-				.number("Quantity must be number")
+				.int("Quantity must be number")
 				.min(1, "Quantity must be at least 1"),
 			price: z
 				.number("Price must be number")
 				.min(1, "Price must be at least 1")
-				.transform((val) => val * 100), // Convert dollars to cents
+				.transform((val) => val * 100),
 			categoryId: z.uuid("Category Id must be valid UUID"),
 		}),
 	)

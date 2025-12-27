@@ -20,8 +20,8 @@ export const getOrderRequests = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			page: z.number().default(1),
-			limit: z.number().default(10),
+			page: z.int().default(1),
+			limit: z.int().default(10),
 			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
 			sortOrder: z.enum(["asc", "desc"]).default("desc"),
 			searchTerm: z.string().optional(),
