@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Building2Icon, CheckIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
+import { AppPending } from "@/components/blocks/app-pending";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/(public)/products/$productId/")({
 		],
 	}),
 	component: ProductDetailsPage,
+	pendingComponent: AppPending,
 });
 
 function ProductDetailsPage() {
