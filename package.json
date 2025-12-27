@@ -10,7 +10,7 @@
 		"format": "biome format",
 		"lint": "biome lint",
 		"check": "biome check",
-		"db:generate": "prisma generate",
+		"db:generate": "dotenvx run -f .env.local -- prisma generate",
 		"db:push": "dotenvx run -f .env.local -- prisma db push",
 		"db:migrate": "dotenvx run -f .env.local -- prisma migrate dev",
 		"db:studio": "dotenvx run -f .env.local -- prisma studio",
