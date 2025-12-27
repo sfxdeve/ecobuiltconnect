@@ -51,7 +51,7 @@ export function AppCart() {
 					</Badge>
 				)}
 			</PopoverTrigger>
-			<PopoverContent align="end">
+			<PopoverContent align="center" className="m-2">
 				<PopoverHeader>
 					<PopoverTitle>Shopping Cart</PopoverTitle>
 				</PopoverHeader>

@@ -1,5 +1,7 @@
-import { SignedIn } from "@clerk/tanstack-react-start";
+import { SignedIn, useUser } from "@clerk/tanstack-react-start";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import {
 	EllipsisVerticalIcon,
 	FileTextIcon,
@@ -12,7 +14,14 @@ import {
 	UserIcon,
 	UsersIcon,
 } from "lucide-react";
-import { AppProfileForm } from "../forms/app-profile-form";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { z } from "zod";
+import { getUserProfile, upsertUserProfile } from "@/server/user/profile";
+import {
+	AppProfileForm,
+	type appProfileFormSchema,
+} from "../forms/app-profile-form";
 import { Button } from "../ui/button";
 import {
 	Dialog,
@@ -30,8 +39,41 @@ import {
 } from "../ui/dropdown-menu";
 
 export function AppUserOptionsMenu() {
+	const { user } = useUser();
+
+	const [upsertUserProfileDialogOpen, setUpsertUserProfileDialogOpen] =
+		useState(false);
+
+	const getUserProfileFn = useServerFn(getUserProfile);
+	const upsertUserProfileFn = useServerFn(upsertUserProfile);
+
+	const queryClient = useQueryClient();
+
+	const userProfileResult = useQuery({
+		queryKey: ["profile", user?.id],
+		queryFn: () => getUserProfileFn(),
+	});
+
+	const upsertUserProfileMutation = useMutation({
+		mutationFn: (data: z.infer<typeof appProfileFormSchema>) =>
+			upsertUserProfileFn({ data }),
+		onSuccess: async () => {
+			queryClient.invalidateQueries({
+				queryKey: ["profile", user?.id],
+			});
+
+			setUpsertUserProfileDialogOpen(false);
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
 	return (
-		<Dialog>
+		<Dialog
+			open={upsertUserProfileDialogOpen}
+			onOpenChange={setUpsertUserProfileDialogOpen}
+		>
 			<DropdownMenu>
 				<DropdownMenuTrigger render={<Button variant="outline" size="icon" />}>
 					<EllipsisVerticalIcon />
@@ -123,16 +165,13 @@ export function AppUserOptionsMenu() {
 				</DialogHeader>
 				<AppProfileForm
 					defaultValues={{
-						address: "",
-						city: "",
-						postcode: "",
+						address: userProfileResult.data?.profile?.address ?? "",
+						city: userProfileResult.data?.profile?.city ?? "",
+						postcode: userProfileResult.data?.profile?.postcode ?? "",
 					}}
-					isSubmitting={
-						// updateUserProfileMutation.isPending
-						false
-					}
-					submitHandler={() => {
-						// updateUserProfileMutation.mutate(data);
+					isSubmitting={upsertUserProfileMutation.isPending}
+					submitHandler={(data) => {
+						upsertUserProfileMutation.mutate(data);
 					}}
 				/>
 			</DialogContent>

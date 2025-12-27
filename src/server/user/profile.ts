@@ -1,5 +1,5 @@
 import { auth } from "@clerk/tanstack-react-start/server";
-import { notFound, redirect } from "@tanstack/react-router";
+import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
@@ -23,13 +23,13 @@ export const getUserProfile = createServerFn({
 	});
 
 	if (!profile) {
-		throw notFound();
+		throw redirect({ to: "/sign-in/$" });
 	}
 
 	return { profile };
 });
 
-export const createUserProfile = createServerFn({
+export const upsertUserProfile = createServerFn({
 	method: "POST",
 })
 	.inputValidator(
@@ -46,8 +46,16 @@ export const createUserProfile = createServerFn({
 			throw redirect({ to: "/sign-in/$" });
 		}
 
-		const profile = await prisma.userProfile.create({
-			data: {
+		const profile = await prisma.userProfile.upsert({
+			where: {
+				clerkId,
+			},
+			update: {
+				address: data.address,
+				city: data.city,
+				postcode: data.postcode,
+			},
+			create: {
 				clerkId,
 				address: data.address,
 				city: data.city,

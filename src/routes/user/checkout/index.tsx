@@ -262,7 +262,7 @@ function CheckoutPage() {
 							>
 								{createUserOrderMutation.isPending
 									? "Processing..."
-									: "Confirm Order"}
+									: "Confirm"}
 							</Button>
 						</CardFooter>
 					</Card>
