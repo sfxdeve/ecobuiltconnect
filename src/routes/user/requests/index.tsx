@@ -104,7 +104,7 @@ function ProductRequestsPage() {
 							<TableHead>Quantity</TableHead>
 							<TableHead>Price</TableHead>
 							<TableHead>Date</TableHead>
-							<TableHead>Actions</TableHead>
+							{/* <TableHead>Actions</TableHead> */}
 						</TableRow>
 					</TableHeader>
 					<TableBody>

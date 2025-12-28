@@ -3,19 +3,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
-	MoreHorizontalIcon,
+	ExternalLinkIcon,
 } from "lucide-react";
 import { useId } from "react";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { buttonVariants } from "@/components/ui/button";
 import {
 	Empty,
 	EmptyDescription,
@@ -92,7 +86,7 @@ function OrdersPage() {
 							<TableHead>Status</TableHead>
 							<TableHead>Total</TableHead>
 							<TableHead>Date</TableHead>
-							<TableHead>Actions</TableHead>
+							<TableHead></TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -131,26 +125,16 @@ function OrdersPage() {
 									</TableCell>
 									<TableCell>{formatDate(orderRequest.createdAt)}</TableCell>
 									<TableCell>
-										<DropdownMenu>
-											<DropdownMenuTrigger
-												render={<Button variant="ghost" size="icon" />}
-											>
-												<MoreHorizontalIcon />
-												<span className="sr-only">Open actions</span>
-											</DropdownMenuTrigger>
-											<DropdownMenuContent align="end">
-												<DropdownMenuItem
-													render={
-														<Link
-															to="/user/orders/$orderId"
-															params={{ orderId: orderRequest.id }}
-														/>
-													}
-												>
-													View
-												</DropdownMenuItem>
-											</DropdownMenuContent>
-										</DropdownMenu>
+										<Link
+											to="/user/orders/$orderId"
+											params={{ orderId: orderRequest.id }}
+											className={buttonVariants({
+												variant: "ghost",
+												size: "icon",
+											})}
+										>
+											<ExternalLinkIcon />
+										</Link>
 									</TableCell>
 								</TableRow>
 							);
