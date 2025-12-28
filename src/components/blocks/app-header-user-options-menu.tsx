@@ -39,7 +39,9 @@ import {
 } from "../ui/dropdown-menu";
 
 export function AppHeaderUserOptionsMenu() {
-	const { user } = useUser();
+	const { isSignedIn, user } = useUser();
+
+	const userId = user?.id;
 
 	const [upsertUserProfileDialogOpen, setUpsertUserProfileDialogOpen] =
 		useState(false);
@@ -50,16 +52,19 @@ export function AppHeaderUserOptionsMenu() {
 	const queryClient = useQueryClient();
 
 	const userProfileResult = useQuery({
-		queryKey: ["profile", user?.id],
-		queryFn: () => getUserProfileFn(),
+		enabled: isSignedIn && !!userId,
+		queryKey: ["profile", userId],
+		queryFn: () => {
+			return getUserProfileFn();
+		},
 	});
 
 	const upsertUserProfileMutation = useMutation({
 		mutationFn: (data: z.infer<typeof userProfileFormSchema>) =>
 			upsertUserProfileFn({ data }),
 		onSuccess: async () => {
-			queryClient.invalidateQueries({
-				queryKey: ["profile", user?.id],
+			await queryClient.invalidateQueries({
+				queryKey: ["profile", userId],
 			});
 
 			setUpsertUserProfileDialogOpen(false);
