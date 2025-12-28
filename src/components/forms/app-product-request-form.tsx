@@ -19,19 +19,19 @@ import { Textarea } from "../ui/textarea";
 
 export const appProductRequestFormSchema = z.object({
 	pictureIds: z
-		.array(z.string("Picture Id must be string"))
+		.array(z.string("Picture id must be a string"))
 		.min(1, "At least one picture is required"),
 	name: z
-		.string("Name must be string")
+		.string("Name must be a string")
 		.min(3, "Name must be at least 3 characters"),
 	description: z
-		.string("Description must be string")
+		.string("Description must be a string")
 		.min(12, "Description must be at least 12 characters"),
 	quantity: z
-		.int("Quantity must be integer")
+		.int("Quantity must be an integer")
 		.min(1, "Quantity must be at least 1"),
-	price: z.number("Price must be number").min(1, "Price must be at least 1"),
-	categoryId: z.uuid("Category Id must be valid UUID"),
+	price: z.number("Price must be a number").min(1, "Price must be at least 1"),
+	categoryId: z.uuid("Category id must be valid UUID"),
 });
 
 export function AppProductRequestForm({

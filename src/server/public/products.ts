@@ -14,25 +14,41 @@ export const getProducts = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			page: z.int().default(1),
-			limit: z.int().default(10),
-			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
-			sortOrder: z.enum(["asc", "desc"]).default("desc"),
-			searchTerm: z.string().optional(),
-			minStock: z.int().optional(),
+			page: z.int("Page must be an integer").default(1),
+			limit: z.int("Limit must be an integer").default(10),
+			sortBy: z
+				.enum(["name", "createdAt"], {
+					message: "Sort by must be either 'name' or 'createdAt'",
+				})
+				.default("createdAt"),
+			sortOrder: z
+				.enum(["asc", "desc"], {
+					message: "Sort order must be either 'asc' or 'desc'",
+				})
+				.default("desc"),
+			searchTerm: z.string("Search term must be a string").optional(),
+			minStock: z.int("Minimum stock must be an integer").optional(),
 			minPrice: z
-				.number()
+				.number("Minimum price must be a number")
 				.transform((val) => val * 100)
 				.optional(),
 			maxPrice: z
-				.number()
+				.number("Maximum price must be a number")
 				.transform((val) => val * 100)
 				.optional(),
-			condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),
-			isVerified: z.boolean().optional(),
-			categoryId: z.uuid().optional(),
-			vendorProfileId: z.uuid().optional(),
-			productRequestId: z.uuid().optional(),
+			condition: z
+				.enum(["EXCELLENT", "GOOD", "FAIR"], {
+					message: "Condition must be either 'EXCELLENT', 'GOOD', or 'FAIR'",
+				})
+				.optional(),
+			isVerified: z.boolean("Is verified must be a boolean").optional(),
+			categoryId: z.uuid("Category id must be valid UUID").optional(),
+			vendorProfileId: z
+				.uuid("Vendor profile id must be valid UUID")
+				.optional(),
+			productRequestId: z
+				.uuid("Product request id must be valid UUID")
+				.optional(),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -111,10 +127,12 @@ export const getProducts = createServerFn({
 		};
 	});
 
-export const getProductById = createServerFn({ method: "GET" })
+export const getProductById = createServerFn({
+	method: "GET",
+})
 	.inputValidator(
 		z.object({
-			id: z.uuid(),
+			id: z.uuid("Product id must be valid UUID"),
 		}),
 	)
 	.handler(async ({ data }) => {

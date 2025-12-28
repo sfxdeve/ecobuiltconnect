@@ -17,13 +17,13 @@ import { Spinner } from "../ui/spinner";
 
 export const appProfileFormSchema = z.object({
 	address: z
-		.string("Address must be string")
+		.string("Address must be a string")
 		.min(3, "Address must be at least 3 characters"),
 	city: z
-		.string("City must be string")
+		.string("City must be a string")
 		.min(3, "City must be at least 3 characters"),
 	postcode: z
-		.string("Postcode must be string")
+		.string("Postcode must be a string")
 		.min(3, "Postcode must be at least 3 characters"),
 });
 

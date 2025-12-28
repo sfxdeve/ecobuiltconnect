@@ -34,9 +34,9 @@ export const upsertUserProfile = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			address: z.string(),
-			city: z.string(),
-			postcode: z.string(),
+			address: z.string("Address must be a string"),
+			city: z.string("City must be a string"),
+			postcode: z.string("Postcode must be a string"),
 		}),
 	)
 	.handler(async ({ data }) => {

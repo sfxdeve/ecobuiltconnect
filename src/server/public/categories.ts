@@ -9,9 +9,17 @@ export const getCategories = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
-			sortOrder: z.enum(["asc", "desc"]).default("desc"),
-			searchTerm: z.string().optional(),
+			sortBy: z
+				.enum(["name", "createdAt"], {
+					message: "Sort by must be either 'name' or 'createdAt'",
+				})
+				.default("createdAt"),
+			sortOrder: z
+				.enum(["asc", "desc"], {
+					message: "Sort order must be either 'asc' or 'desc'",
+				})
+				.default("desc"),
+			searchTerm: z.string("Search term must be a string").optional(),
 		}),
 	)
 	.handler(async ({ data }) => {

@@ -11,21 +11,29 @@ export const getProductRequests = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			page: z.int().default(1),
-			limit: z.int().default(10),
-			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
-			sortOrder: z.enum(["asc", "desc"]).default("desc"),
-			searchTerm: z.string().optional(),
-			minQuantity: z.int().optional(),
+			page: z.int("Page must be an integer").default(1),
+			limit: z.int("Limit must be an integer").default(10),
+			sortBy: z
+				.enum(["name", "createdAt"], {
+					message: "Sort by must be either 'name' or 'createdAt'",
+				})
+				.default("createdAt"),
+			sortOrder: z
+				.enum(["asc", "desc"], {
+					message: "Sort order must be either 'asc' or 'desc'",
+				})
+				.default("desc"),
+			searchTerm: z.string("Search term must be a string").optional(),
+			minQuantity: z.int("Minimum quantity must be an integer").optional(),
 			minPrice: z
-				.number()
+				.number("Minimum price must be a number")
 				.transform((val) => val * 100)
 				.optional(),
 			maxPrice: z
-				.number()
+				.number("Maximum price must be a number")
 				.transform((val) => val * 100)
 				.optional(),
-			categoryId: z.uuid().optional(),
+			categoryId: z.uuid("Category id must be valid UUID").optional(),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -97,10 +105,12 @@ export const getProductRequests = createServerFn({
 		};
 	});
 
-export const getProductRequestById = createServerFn({ method: "GET" })
+export const getProductRequestById = createServerFn({
+	method: "GET",
+})
 	.inputValidator(
 		z.object({
-			id: z.uuid(),
+			productRequestId: z.uuid("Product request id must be valid UUID"),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -108,7 +118,7 @@ export const getProductRequestById = createServerFn({ method: "GET" })
 
 		const productRequest = await prisma.productRequest.findUnique({
 			where: {
-				id: data.id,
+				id: data.productRequestId,
 				isDeleted: false,
 				category: { status: "APPROVED", isDeleted: false },
 				userProfile: { id: profile.id },
@@ -126,36 +136,51 @@ export const getProductRequestById = createServerFn({ method: "GET" })
 		return { productRequest };
 	});
 
-export const createProductRequest = createServerFn({ method: "POST" })
+export const createProductRequest = createServerFn({
+	method: "POST",
+})
 	.inputValidator(
 		z.object({
 			pictureIds: z
-				.array(z.string("Picture Id must be string"))
+				.array(z.string("Picture id must be a string"))
 				.min(1, "At least one picture is required"),
 			name: z
-				.string("Name must be string")
+				.string("Name must be a string")
 				.min(3, "Name must be at least 3 characters"),
 			description: z
-				.string("Description must be string")
+				.string("Description must be a string")
 				.min(12, "Description must be at least 12 characters"),
 			quantity: z
-				.int("Quantity must be number")
+				.int("Quantity must be an integer")
 				.min(1, "Quantity must be at least 1"),
 			price: z
-				.number("Price must be number")
+				.number("Price must be a number")
 				.min(1, "Price must be at least 1")
 				.transform((val) => val * 100),
-			categoryId: z.uuid("Category Id must be valid UUID"),
+			categoryId: z.uuid("Category id must be valid UUID"),
 		}),
 	)
 	.handler(async ({ data }) => {
 		const { profile } = await getUserProfile();
+
+		const category = await prisma.category.findUnique({
+			where: {
+				id: data.categoryId,
+				status: "APPROVED",
+				isDeleted: false,
+			},
+		});
+
+		if (!category) {
+			throw new Error("Category not found or not approved");
+		}
 
 		const productRequest = await prisma.productRequest.create({
 			data: {
 				...data,
 				userProfileId: profile.id,
 			},
+			select: productRequestSelector,
 		});
 
 		return { productRequest };

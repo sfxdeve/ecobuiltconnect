@@ -3,7 +3,7 @@ import { prisma } from "@/prisma";
 import {
 	orderItemSelector,
 	orderRequestSelector,
-	productRequestSelector,
+	productSelector,
 } from "@/prisma/selectors";
 
 export const Route = createFileRoute("/api/ozow/notify")({
@@ -48,7 +48,7 @@ export const Route = createFileRoute("/api/ozow/notify")({
 										select: {
 											...orderItemSelector,
 											product: {
-												select: productRequestSelector,
+												select: productSelector,
 											},
 										},
 									},

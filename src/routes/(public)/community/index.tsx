@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppCommingSoon } from "@/components/blocks/app-comming-soon";
+import { AppComingSoon } from "@/components/blocks/app-coming-soon";
 
 export const Route = createFileRoute("/(public)/community/")({
 	head: () => ({
@@ -17,5 +17,5 @@ export const Route = createFileRoute("/(public)/community/")({
 });
 
 function CommunityPage() {
-	return <AppCommingSoon />;
+	return <AppComingSoon />;
 }

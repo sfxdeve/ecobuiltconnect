@@ -45,21 +45,22 @@ import { getOrderRequests } from "@/server/user/orders";
 
 export const Route = createFileRoute("/user/orders/")({
 	validateSearch: z.object({
-		page: z.int().default(1),
-		limit: z.int().default(10),
-		sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
-		sortOrder: z.enum(["asc", "desc"]).default("desc"),
-		searchTerm: z.string().optional(),
+		page: z.int("Page must be an integer").default(1),
+		limit: z.int("Limit must be an integer").default(10),
+		sortBy: z
+			.enum(["name", "createdAt"], {
+				message: "Sort by must be either 'name' or 'createdAt'",
+			})
+			.default("createdAt"),
+		sortOrder: z
+			.enum(["asc", "desc"], {
+				message: "Sort order must be either 'asc' or 'desc'",
+			})
+			.default("desc"),
+		searchTerm: z.string("Search term must be a string").optional(),
 	}),
-	loaderDeps: ({ search }) => ({
-		search,
-	}),
-	loader: ({ deps: { search } }) =>
-		getOrderRequests({
-			data: {
-				...search,
-			},
-		}),
+	loaderDeps: ({ search }) => search,
+	loader: ({ deps }) => getOrderRequests({ data: deps }),
 	head: () => ({
 		meta: [
 			{

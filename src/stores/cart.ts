@@ -99,7 +99,7 @@ export const cartActions = {
 
 	updateQuantity(productId: string, quantity: number) {
 		if (quantity <= 0) {
-			this.removeItem(productId);
+			cartActions.removeItem(productId);
 
 			return;
 		}

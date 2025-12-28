@@ -10,7 +10,7 @@ import { getProductById } from "@/server/public/products";
 import { cartActions, cartStore } from "@/stores/cart";
 import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
-import { Empty, EmptyDescription, EmptyHeader } from "../ui/empty";
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "../ui/empty";
 import {
 	Popover,
 	PopoverContent,
@@ -127,7 +127,10 @@ export function AppCart() {
 					) : (
 						<Empty className="bg-muted">
 							<EmptyHeader>
-								<EmptyDescription>Your cart is empty</EmptyDescription>
+								<EmptyTitle>Your cart is empty</EmptyTitle>
+								<EmptyDescription>
+									Add items to your cart to get started.
+								</EmptyDescription>
 							</EmptyHeader>
 						</Empty>
 					)}

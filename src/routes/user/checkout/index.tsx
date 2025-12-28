@@ -19,7 +19,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Empty, EmptyDescription, EmptyHeader } from "@/components/ui/empty";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "@/components/ui/empty";
 import {
 	Item,
 	ItemContent,
@@ -84,7 +89,7 @@ function CheckoutPage() {
 			cartActions.clearCart();
 
 			const { redirectUrl } = await initiateOzowPaymentFn({
-				data: { orderId: orderRequest.id },
+				data: { orderRequestId: orderRequest.id },
 			});
 
 			location.assign(redirectUrl);
@@ -270,7 +275,10 @@ function CheckoutPage() {
 			) : (
 				<Empty className="bg-muted">
 					<EmptyHeader>
-						<EmptyDescription>Your cart is empty</EmptyDescription>
+						<EmptyTitle>Your cart is empty</EmptyTitle>
+						<EmptyDescription>
+							Add items to your cart to proceed with checkout.
+						</EmptyDescription>
 					</EmptyHeader>
 				</Empty>
 			)}

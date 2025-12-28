@@ -19,11 +19,11 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
-import { getOrderRequest } from "@/server/user/orders";
+import { getOrderRequestById } from "@/server/user/orders";
 
 export const Route = createFileRoute("/user/orders/$orderId/")({
 	loader: ({ params }) =>
-		getOrderRequest({
+		getOrderRequestById({
 			data: {
 				orderRequestId: params.orderId,
 			},

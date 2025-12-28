@@ -20,11 +20,19 @@ export const getOrderRequests = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			page: z.int().default(1),
-			limit: z.int().default(10),
-			sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
-			sortOrder: z.enum(["asc", "desc"]).default("desc"),
-			searchTerm: z.string().optional(),
+			page: z.int("Page must be an integer").default(1),
+			limit: z.int("Limit must be an integer").default(10),
+			sortBy: z
+				.enum(["name", "createdAt"], {
+					message: "Sort by must be either 'name' or 'createdAt'",
+				})
+				.default("createdAt"),
+			sortOrder: z
+				.enum(["asc", "desc"], {
+					message: "Sort order must be either 'asc' or 'desc'",
+				})
+				.default("desc"),
+			searchTerm: z.string("Search term must be a string").optional(),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -81,12 +89,12 @@ export const getOrderRequests = createServerFn({
 		};
 	});
 
-export const getOrderRequest = createServerFn({
+export const getOrderRequestById = createServerFn({
 	method: "GET",
 })
 	.inputValidator(
 		z.object({
-			orderRequestId: z.uuid(),
+			orderRequestId: z.uuid("Order request id must be valid UUID"),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -131,8 +139,8 @@ export const createOrderRequest = createServerFn({
 			items: z
 				.array(
 					z.object({
-						productId: z.uuid(),
-						quantity: z.int().positive(),
+						productId: z.uuid("Product id must be valid UUID"),
+						quantity: z.int().positive("Quantity must be a positive integer"),
 					}),
 				)
 				.min(1, "Order must contain at least one item"),
@@ -151,12 +159,15 @@ export const createOrderRequest = createServerFn({
 		const products = await prisma.product.findMany({
 			where: {
 				id: { in: productIds },
+				isDeleted: false,
+				category: { status: "APPROVED", isDeleted: false },
+				vendorProfile: { status: "APPROVED" },
 			},
 			select: productSelector,
 		});
 
 		if (products.length !== productIds.length) {
-			throw new Error("Some products could not be found");
+			throw new Error("Some products could not be found or are not available");
 		}
 
 		const outOfStockItems: string[] = [];

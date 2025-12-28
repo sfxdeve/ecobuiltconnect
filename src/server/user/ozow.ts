@@ -2,19 +2,19 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { env } from "@/env/server";
 import { generateOzowHash } from "@/lib/ozow";
-import { getOrderRequest } from "./orders";
+import { getOrderRequestById } from "./orders";
 
 export const initiateOzowPayment = createServerFn({
 	method: "POST",
 })
 	.inputValidator(
 		z.object({
-			orderId: z.string(),
+			orderRequestId: z.uuid("Order request id must be valid UUID"),
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { orderRequest } = await getOrderRequest({
-			data: { orderRequestId: data.orderId },
+		const { orderRequest } = await getOrderRequestById({
+			data: { orderRequestId: data.orderRequestId },
 		});
 
 		const payload = {

@@ -23,24 +23,28 @@ import {
 
 export const appProductsFiltersFormSchema = z.object({
 	sortBy: z
-		.enum(["name", "createdAt"], "Sort By must be one of name or createdAt")
+		.enum(["name", "createdAt"], {
+			message: "Sort by must be either 'name' or 'createdAt'",
+		})
 		.optional(),
 	sortOrder: z
-		.enum(["asc", "desc"], "Sort Order must be one of asc or desc")
+		.enum(["asc", "desc"], {
+			message: "Sort order must be either 'asc' or 'desc'",
+		})
 		.optional(),
 	minStock: z
-		.int("Min Stock must be integer")
-		.min(1, "Min Stock must be greater than 0")
+		.int("Minimum stock must be an integer")
+		.min(1, "Minimum stock must be greater than 0")
 		.optional(),
 	minPrice: z
-		.number("Min Price must be number")
-		.min(1, "Min Price must be greater than 0")
+		.number("Minimum price must be a number")
+		.min(1, "Minimum price must be greater than 0")
 		.optional(),
 	maxPrice: z
-		.number("Max Price must be number")
-		.min(1, "Max Price must be greater than 0")
+		.number("Maximum price must be a number")
+		.min(1, "Maximum price must be greater than 0")
 		.optional(),
-	isVerified: z.boolean("Is Verified must be boolean").optional(),
+	isVerified: z.boolean("Is verified must be a boolean").optional(),
 });
 
 export function AppProductsFiltersForm({
@@ -77,7 +81,7 @@ export function AppProductsFiltersForm({
 								field.state.meta.isTouched && !field.state.meta.isValid;
 							return (
 								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Sort By</FieldLabel>
+									<FieldLabel htmlFor={field.name}>Sort by</FieldLabel>
 									<Select
 										value={field.state.value ?? null}
 										onValueChange={(value) =>
@@ -116,7 +120,7 @@ export function AppProductsFiltersForm({
 								field.state.meta.isTouched && !field.state.meta.isValid;
 							return (
 								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Sort Order</FieldLabel>
+									<FieldLabel htmlFor={field.name}>Sort order</FieldLabel>
 									<Select
 										value={field.state.value ?? null}
 										onValueChange={(value) =>
@@ -157,7 +161,7 @@ export function AppProductsFiltersForm({
 								field.state.meta.isTouched && !field.state.meta.isValid;
 							return (
 								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Min Stock</FieldLabel>
+									<FieldLabel htmlFor={field.name}>Minimum stock</FieldLabel>
 									<Input
 										id={field.name}
 										type="number"
@@ -180,7 +184,7 @@ export function AppProductsFiltersForm({
 								field.state.meta.isTouched && !field.state.meta.isValid;
 							return (
 								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Min Price</FieldLabel>
+									<FieldLabel htmlFor={field.name}>Minimum price</FieldLabel>
 									<Input
 										id={field.name}
 										type="number"
@@ -201,7 +205,7 @@ export function AppProductsFiltersForm({
 								field.state.meta.isTouched && !field.state.meta.isValid;
 							return (
 								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Max Price</FieldLabel>
+									<FieldLabel htmlFor={field.name}>Maximum price</FieldLabel>
 									<Input
 										id={field.name}
 										type="number"

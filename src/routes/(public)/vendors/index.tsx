@@ -26,18 +26,19 @@ import { getVendorProfiles } from "@/server/public/vendors";
 
 export const Route = createFileRoute("/(public)/vendors/")({
 	validateSearch: z.object({
-		page: z.int().default(1),
-		limit: z.int().default(10),
-		sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
-		sortOrder: z.enum(["asc", "desc"]).default("desc"),
-		searchTerm: z.string().optional(),
-		minStock: z.int().optional(),
-		minPrice: z.number().optional(),
-		maxPrice: z.number().optional(),
-		condition: z.enum(["EXCELLENT", "GOOD", "FAIR"]).optional(),
-		isVerified: z.boolean().optional(),
-		categoryId: z.uuid().optional(),
-		vendorProfileId: z.uuid().optional(),
+		page: z.int("Page must be an integer").default(1),
+		limit: z.int("Limit must be an integer").default(10),
+		sortBy: z
+			.enum(["name", "createdAt"], {
+				message: "Sort by must be either 'name' or 'createdAt'",
+			})
+			.default("createdAt"),
+		sortOrder: z
+			.enum(["asc", "desc"], {
+				message: "Sort order must be either 'asc' or 'desc'",
+			})
+			.default("desc"),
+		searchTerm: z.string("Search term must be a string").optional(),
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: ({ deps }) => getVendorProfiles({ data: deps }),

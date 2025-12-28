@@ -28,14 +28,14 @@ export const Route = createFileRoute("/(public)/contact/")({
 
 const contactFormSchema = z.object({
 	name: z
-		.string("Name must be string")
+		.string("Name must be a string")
 		.min(3, "Name must be at least 3 characters"),
-	email: z.email("Email must be valid email address"),
+	email: z.email("Email must be a valid email address"),
 	subject: z
-		.string("Subject must be string")
+		.string("Subject must be a string")
 		.min(3, "Subject must be at least 3 characters"),
 	message: z
-		.string("Message must be string")
+		.string("Message must be a string")
 		.min(10, "Message must be at least 10 characters"),
 });
 
