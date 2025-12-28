@@ -38,7 +38,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { getProductById } from "@/server/public/products";
 import { createOrderRequest } from "@/server/user/orders";
-import { initiateOzowPaymentForOrder } from "@/server/user/ozow";
+import { initiateOrderRequestPayment } from "@/server/user/ozow";
 import { getUserProfile } from "@/server/user/profile";
 import { cartActions, cartStore } from "@/stores/cart";
 
@@ -66,7 +66,7 @@ function CheckoutPage() {
 	const getUserProfileFn = useServerFn(getUserProfile);
 	const getPublicProductByIdFn = useServerFn(getProductById);
 	const createUserOrderFn = useServerFn(createOrderRequest);
-	const initiateOzowPaymentFn = useServerFn(initiateOzowPaymentForOrder);
+	const initiateOzowPaymentFn = useServerFn(initiateOrderRequestPayment);
 
 	const queryClient = useQueryClient();
 
