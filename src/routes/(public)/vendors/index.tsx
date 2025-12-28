@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useId } from "react";
 import { z } from "zod";
+import { AppPending } from "@/components/blocks/app-pending";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -54,6 +55,7 @@ export const Route = createFileRoute("/(public)/vendors/")({
 		],
 	}),
 	component: VendorsPage,
+	pendingComponent: AppPending,
 });
 
 function VendorsPage() {

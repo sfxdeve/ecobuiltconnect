@@ -6,6 +6,7 @@ import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { AppPending } from "@/components/blocks/app-pending";
 import {
 	AppProductRequestForm,
 	type appProductRequestFormSchema,
@@ -84,6 +85,7 @@ export const Route = createFileRoute("/user/requests/")({
 		],
 	}),
 	component: ProductRequestsPage,
+	pendingComponent: AppPending,
 });
 
 function ProductRequestsPage() {

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useId } from "react";
 import { z } from "zod";
+import { AppPending } from "@/components/blocks/app-pending";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -73,6 +74,7 @@ export const Route = createFileRoute("/user/orders/")({
 		],
 	}),
 	component: OrdersPage,
+	pendingComponent: AppPending,
 });
 
 function OrdersPage() {
@@ -95,8 +97,7 @@ function OrdersPage() {
 					</TableHeader>
 					<TableBody>
 						{loaderData.orderRequests.map((orderRequest) => {
-							let statusBadgeVariant: "default" | "outline" | "destructive" =
-								"default";
+							let statusBadgeVariant: "default" | "outline" | "destructive";
 
 							switch (orderRequest.status) {
 								case "PAID":

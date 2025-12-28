@@ -10,6 +10,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@tanstack/react-store";
 import { MapPinIcon, UserIcon } from "lucide-react";
 import { toast } from "sonner";
+import { AppPending } from "@/components/blocks/app-pending";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -54,6 +55,7 @@ export const Route = createFileRoute("/user/checkout/")({
 		],
 	}),
 	component: CheckoutPage,
+	pendingComponent: AppPending,
 });
 
 function CheckoutPage() {

@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { z } from "zod";
+import { AppPending } from "@/components/blocks/app-pending";
 import { AppProductsFiltersForm } from "@/components/forms/app-products-filter-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -84,6 +85,7 @@ export const Route = createFileRoute("/(public)/products/")({
 		],
 	}),
 	component: ProductsPage,
+	pendingComponent: AppPending,
 });
 
 function ProductsPage() {

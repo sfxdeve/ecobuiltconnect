@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { AppPending } from "@/components/blocks/app-pending";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/(public)/contact/")({
 		],
 	}),
 	component: ContactPage,
+	pendingComponent: AppPending,
 });
 
 const contactFormSchema = z.object({
