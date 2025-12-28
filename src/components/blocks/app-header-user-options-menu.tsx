@@ -39,9 +39,7 @@ import {
 } from "../ui/dropdown-menu";
 
 export function AppHeaderUserOptionsMenu() {
-	const { isSignedIn, user } = useUser();
-
-	const userId = user?.id;
+	const { isSignedIn } = useUser();
 
 	const [upsertUserProfileDialogOpen, setUpsertUserProfileDialogOpen] =
 		useState(false);
@@ -52,10 +50,11 @@ export function AppHeaderUserOptionsMenu() {
 	const queryClient = useQueryClient();
 
 	const userProfileResult = useQuery({
-		enabled: isSignedIn && !!userId,
-		queryKey: ["profile", userId],
+		queryKey: ["profile"],
 		queryFn: () => {
-			return getUserProfileFn();
+			if (isSignedIn) {
+				return getUserProfileFn();
+			}
 		},
 	});
 
@@ -64,7 +63,7 @@ export function AppHeaderUserOptionsMenu() {
 			upsertUserProfileFn({ data }),
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ["profile", userId],
+				queryKey: ["profile"],
 			});
 
 			setUpsertUserProfileDialogOpen(false);
