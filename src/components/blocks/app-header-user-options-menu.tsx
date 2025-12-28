@@ -10,7 +10,6 @@ import {
 	PackageIcon,
 	ShoppingBagIcon,
 	StoreIcon,
-	TruckIcon,
 	UserIcon,
 	UsersIcon,
 } from "lucide-react";
@@ -119,17 +118,6 @@ export function AppHeaderUserOptionsMenu() {
 						<DropdownMenuItem
 							render={
 								<Link
-									to="/user/requests"
-									activeProps={{ className: "bg-muted" }}
-								/>
-							}
-						>
-							<FileTextIcon />
-							<span>Requests</span>
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							render={
-								<Link
 									to="/user/orders"
 									activeProps={{ className: "bg-muted" }}
 								/>
@@ -139,10 +127,15 @@ export function AppHeaderUserOptionsMenu() {
 							<span>Orders</span>
 						</DropdownMenuItem>
 						<DropdownMenuItem
-							render={<Link to="/" activeProps={{ className: "bg-muted" }} />}
+							render={
+								<Link
+									to="/user/requests"
+									activeProps={{ className: "bg-muted" }}
+								/>
+							}
 						>
-							<TruckIcon />
-							<span>Deliveries</span>
+							<FileTextIcon />
+							<span>Requests</span>
 						</DropdownMenuItem>
 						<SignedIn>
 							<DropdownMenuItem render={<DialogTrigger className="w-full" />}>
