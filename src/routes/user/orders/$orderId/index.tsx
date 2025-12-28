@@ -84,18 +84,32 @@ function OrderDetailsPage() {
 		},
 	});
 
-	let statusBadgeVariant: "default" | "outline" | "destructive";
+	let orderStatusBadgeVariant: "default" | "outline" | "destructive";
+	let deliveryStatusBadgeVariant: "default" | "outline" | "destructive";
 
 	switch (orderRequest.status) {
 		case "PAID":
 		case "COMPLETED":
-			statusBadgeVariant = "default";
+			orderStatusBadgeVariant = "default";
 			break;
 		case "CANCELLED":
-			statusBadgeVariant = "destructive";
+			orderStatusBadgeVariant = "destructive";
 			break;
 		default:
-			statusBadgeVariant = "outline";
+			orderStatusBadgeVariant = "outline";
+			break;
+	}
+
+	switch (orderRequest.logisticRequest?.status) {
+		case "PAID":
+		case "DELIVERED":
+			deliveryStatusBadgeVariant = "default";
+			break;
+		case "CANCELLED":
+			deliveryStatusBadgeVariant = "destructive";
+			break;
+		default:
+			deliveryStatusBadgeVariant = "outline";
 			break;
 	}
 
@@ -231,13 +245,15 @@ function OrderDetailsPage() {
 					<Separator />
 					<div className="space-y-1">
 						<p className="text-sm font-medium">Order Status</p>
-						<Badge variant={statusBadgeVariant}>{orderRequest.status}</Badge>
+						<Badge variant={orderStatusBadgeVariant}>
+							{orderRequest.status}
+						</Badge>
 					</div>
 					<Separator />
 					<div className="space-y-1">
 						<p className="text-sm font-medium">Delivery Status</p>
 						{orderRequest.logisticRequest ? (
-							<Badge variant={statusBadgeVariant}>
+							<Badge variant={deliveryStatusBadgeVariant}>
 								{orderRequest.logisticRequest.status}
 							</Badge>
 						) : orderRequest.status === "COMPLETED" ? (
