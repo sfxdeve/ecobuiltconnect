@@ -14,11 +14,6 @@ export const createLogisticRequest = createServerFn({
 				.number("Requested price must be a number")
 				.min(1, "Requested price must be at least 1")
 				.transform((val) => val * 100),
-			acceptedPrice: z
-				.number("Accepted price must be a number")
-				.min(1, "Accepted price must be at least 1")
-				.transform((val) => val * 100)
-				.optional(),
 		}),
 	)
 	.handler(async ({ data }) => {

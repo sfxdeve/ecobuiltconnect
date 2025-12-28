@@ -1,6 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { CalendarIcon, PackageIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
+import {
+	UserLogisticRequestForm,
+	type userLogisticRequestFormSchema,
+} from "@/components/forms/user-logistic-request-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +19,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import {
 	Table,
@@ -20,6 +36,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { createLogisticRequest } from "@/server/user/logistic-requests";
 import { getOrderRequestById } from "@/server/user/orders";
 
 export const Route = createFileRoute("/user/orders/$orderId/")({
@@ -46,6 +63,26 @@ export const Route = createFileRoute("/user/orders/$orderId/")({
 
 function OrderDetailsPage() {
 	const { orderRequest } = Route.useLoaderData();
+
+	const router = useRouter();
+
+	const [isLogisticRequestDialogOpen, setIsLogisticRequestDialogOpen] =
+		useState(false);
+
+	const createLogisticRequestFn = useServerFn(createLogisticRequest);
+
+	const createLogisticRequestMutation = useMutation({
+		mutationFn: (data: z.infer<typeof userLogisticRequestFormSchema>) =>
+			createLogisticRequestFn({ data }),
+		onSuccess: async () => {
+			setIsLogisticRequestDialogOpen(false);
+
+			router.invalidate();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
 
 	let statusBadgeVariant: "default" | "outline" | "destructive";
 
@@ -204,9 +241,31 @@ function OrderDetailsPage() {
 								{orderRequest.logisticRequest.status}
 							</Badge>
 						) : orderRequest.status === "COMPLETED" ? (
-							<Button variant="outline" size="xs">
-								Request Delivery
-							</Button>
+							<Dialog
+								open={isLogisticRequestDialogOpen}
+								onOpenChange={setIsLogisticRequestDialogOpen}
+							>
+								<DialogTrigger render={<Button variant="outline" size="xs" />}>
+									Request
+								</DialogTrigger>
+								<DialogContent>
+									<DialogHeader>
+										<DialogTitle className="text-xl font-semibold">
+											Request Logistic
+										</DialogTitle>
+									</DialogHeader>
+									<UserLogisticRequestForm
+										defaultValues={{
+											orderRequestId: orderRequest.id,
+											requestedPrice: 0,
+										}}
+										isSubmitting={createLogisticRequestMutation.isPending}
+										submitHandler={(data) => {
+											createLogisticRequestMutation.mutate(data);
+										}}
+									/>
+								</DialogContent>
+							</Dialog>
 						) : (
 							<p className="text-sm text-muted-foreground">N/A</p>
 						)}

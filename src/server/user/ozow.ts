@@ -4,7 +4,7 @@ import { env } from "@/env/server";
 import { generateOzowHash } from "@/lib/ozow";
 import { getOrderRequestById } from "./orders";
 
-export const initiateOzowPayment = createServerFn({
+export const initiateOzowPaymentForOrder = createServerFn({
 	method: "POST",
 })
 	.inputValidator(
