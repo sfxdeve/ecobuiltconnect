@@ -4,7 +4,7 @@ import { env } from "@/env/server";
 import { generateOzowHash } from "@/lib/ozow";
 import { getOrderRequestById } from "./orders";
 
-export const initiateOzowPaymentForOrder = createServerFn({
+export const initiateOrderRequestPayment = createServerFn({
 	method: "POST",
 })
 	.inputValidator(
@@ -56,3 +56,13 @@ export const initiateOzowPaymentForOrder = createServerFn({
 
 		return { redirectUrl: url };
 	});
+
+export const initiateLogisticRequestPayment = createServerFn({
+	method: "POST",
+})
+	.inputValidator(
+		z.object({
+			logisticRequestId: z.uuid("Logistic request id must be valid UUID"),
+		}),
+	)
+	.handler(async ({ data }) => {});
