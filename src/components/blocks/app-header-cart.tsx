@@ -21,7 +21,7 @@ import {
 import { Separator } from "../ui/separator";
 import { Spinner } from "../ui/spinner";
 
-export function AppCart() {
+export function AppHeaderCart() {
 	const { isSignedIn } = useUser();
 
 	const cartState = useStore(cartStore);

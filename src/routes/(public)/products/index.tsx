@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
 import { useId, useState } from "react";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
-import { AppProductsFiltersForm } from "@/components/forms/app-products-filter-form";
+import { UserProductsFiltersForm } from "@/components/forms/user-products-filter-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -218,7 +218,7 @@ function ProductsPageSearch() {
 							Filter Products
 						</DialogTitle>
 					</DialogHeader>
-					<AppProductsFiltersForm
+					<UserProductsFiltersForm
 						defaultValues={{
 							sortBy: search.sortBy,
 							sortOrder: search.sortOrder,

@@ -15,7 +15,7 @@ import {
 } from "../ui/select";
 import { Spinner } from "../ui/spinner";
 
-export const appProfileFormSchema = z.object({
+export const userProfileFormSchema = z.object({
 	address: z
 		.string("Address must be a string")
 		.min(3, "Address must be at least 3 characters"),
@@ -27,14 +27,14 @@ export const appProfileFormSchema = z.object({
 		.min(3, "Postcode must be at least 3 characters"),
 });
 
-export function AppProfileForm({
+export function UserProfileForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
 }: {
-	defaultValues: z.infer<typeof appProfileFormSchema>;
+	defaultValues: z.infer<typeof userProfileFormSchema>;
 	isSubmitting: boolean;
-	submitHandler: (data: z.infer<typeof appProfileFormSchema>) => void;
+	submitHandler: (data: z.infer<typeof userProfileFormSchema>) => void;
 }) {
 	const cities = useQuery({
 		queryKey: ["cities"],
@@ -45,7 +45,7 @@ export function AppProfileForm({
 
 	const form = useForm({
 		validators: {
-			onChange: appProfileFormSchema,
+			onChange: userProfileFormSchema,
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {

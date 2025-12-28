@@ -19,9 +19,9 @@ import { toast } from "sonner";
 import type { z } from "zod";
 import { getUserProfile, upsertUserProfile } from "@/server/user/profile";
 import {
-	AppProfileForm,
-	type appProfileFormSchema,
-} from "../forms/app-profile-form";
+	UserProfileForm,
+	type userProfileFormSchema,
+} from "../forms/urser-profile-form";
 import { Button } from "../ui/button";
 import {
 	Dialog,
@@ -38,7 +38,7 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-export function AppUserOptionsMenu() {
+export function AppHeaderUserOptionsMenu() {
 	const { user } = useUser();
 
 	const [upsertUserProfileDialogOpen, setUpsertUserProfileDialogOpen] =
@@ -55,7 +55,7 @@ export function AppUserOptionsMenu() {
 	});
 
 	const upsertUserProfileMutation = useMutation({
-		mutationFn: (data: z.infer<typeof appProfileFormSchema>) =>
+		mutationFn: (data: z.infer<typeof userProfileFormSchema>) =>
 			upsertUserProfileFn({ data }),
 		onSuccess: async () => {
 			queryClient.invalidateQueries({
@@ -163,7 +163,7 @@ export function AppUserOptionsMenu() {
 				<DialogHeader>
 					<DialogTitle className="text-xl font-semibold">Profile</DialogTitle>
 				</DialogHeader>
-				<AppProfileForm
+				<UserProfileForm
 					defaultValues={{
 						address: userProfileResult.data?.profile?.address ?? "",
 						city: userProfileResult.data?.profile?.city ?? "",

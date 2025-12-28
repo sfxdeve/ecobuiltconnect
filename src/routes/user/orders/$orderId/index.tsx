@@ -1,13 +1,26 @@
-import {createFileRoute} from "@tanstack/react-router";
-import {CalendarIcon, PackageIcon} from "lucide-react";
-import {AppPending} from "@/components/blocks/app-pending";
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
-import {Separator} from "@/components/ui/separator";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import {formatDate, formatMoneyFromCents} from "@/lib/formatters";
-import {getOrderRequestById} from "@/server/user/orders";
+import { createFileRoute } from "@tanstack/react-router";
+import { CalendarIcon, PackageIcon } from "lucide-react";
+import { AppPending } from "@/components/blocks/app-pending";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { getOrderRequestById } from "@/server/user/orders";
 
 export const Route = createFileRoute("/user/orders/$orderId/")({
 	loader: ({ params }) =>

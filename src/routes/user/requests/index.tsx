@@ -8,10 +8,10 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
 import {
-	AppProductRequestForm,
-	type appProductRequestFormSchema,
-} from "@/components/forms/app-product-request-form";
-import { AppProductRequestsFiltersForm } from "@/components/forms/app-product-requests-filter-form";
+	UserProductRequestForm,
+	type userProductRequestFormSchema,
+} from "@/components/forms/user-product-request-form";
+import { UserProductRequestsFiltersForm } from "@/components/forms/user-product-requests-filter-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
@@ -160,7 +160,7 @@ function ProductRequestsPageSearch() {
 	const createProductRequestFn = useServerFn(createProductRequest);
 
 	const createProductRequestMutation = useMutation({
-		mutationFn: (data: z.infer<typeof appProductRequestFormSchema>) =>
+		mutationFn: (data: z.infer<typeof userProductRequestFormSchema>) =>
 			createProductRequestFn({ data }),
 		onSuccess: async () => {
 			setIsProductRequestDialogOpen(false);
@@ -214,7 +214,7 @@ function ProductRequestsPageSearch() {
 							Filter Product Requests
 						</DialogTitle>
 					</DialogHeader>
-					<AppProductRequestsFiltersForm
+					<UserProductRequestsFiltersForm
 						defaultValues={{
 							sortBy: search.sortBy,
 							sortOrder: search.sortOrder,
@@ -267,7 +267,7 @@ function ProductRequestsPageSearch() {
 							Product Request
 						</DialogTitle>
 					</DialogHeader>
-					<AppProductRequestForm
+					<UserProductRequestForm
 						defaultValues={{
 							pictureIds: [""],
 							name: "",

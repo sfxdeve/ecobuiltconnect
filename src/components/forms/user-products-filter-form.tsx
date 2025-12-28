@@ -1,7 +1,16 @@
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { Checkbox } from "../ui/checkbox";
+import {
+	Field,
+	FieldContent,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+	FieldSet,
+	FieldTitle,
+} from "../ui/field";
 import { Input } from "../ui/input";
 import {
 	Select,
@@ -12,7 +21,7 @@ import {
 	SelectValue,
 } from "../ui/select";
 
-export const appProductRequestsFiltersFormSchema = z.object({
+export const userProductsFiltersFormSchema = z.object({
 	sortBy: z
 		.enum(["name", "createdAt"], {
 			message: "Sort by must be either 'name' or 'createdAt'",
@@ -23,9 +32,9 @@ export const appProductRequestsFiltersFormSchema = z.object({
 			message: "Sort order must be either 'asc' or 'desc'",
 		})
 		.optional(),
-	minQuantity: z
-		.int("Minimum quantity must be an integer")
-		.min(1, "Minimum quantity must be greater than 0")
+	minStock: z
+		.int("Minimum stock must be an integer")
+		.min(1, "Minimum stock must be greater than 0")
 		.optional(),
 	minPrice: z
 		.number("Minimum price must be a number")
@@ -35,24 +44,21 @@ export const appProductRequestsFiltersFormSchema = z.object({
 		.number("Maximum price must be a number")
 		.min(1, "Maximum price must be greater than 0")
 		.optional(),
+	isVerified: z.boolean("Is verified must be a boolean").optional(),
 });
 
-export function AppProductRequestsFiltersForm({
+export function UserProductsFiltersForm({
 	defaultValues,
 	submitHandler,
 	resetHandler,
 }: {
-	defaultValues: z.infer<typeof appProductRequestsFiltersFormSchema>;
-	submitHandler: (
-		data: z.infer<typeof appProductRequestsFiltersFormSchema>,
-	) => void;
-	resetHandler: (
-		data: z.infer<typeof appProductRequestsFiltersFormSchema>,
-	) => void;
+	defaultValues: z.infer<typeof userProductsFiltersFormSchema>;
+	submitHandler: (data: z.infer<typeof userProductsFiltersFormSchema>) => void;
+	resetHandler: (data: z.infer<typeof userProductsFiltersFormSchema>) => void;
 }) {
 	const form = useForm({
 		validators: {
-			onChange: appProductRequestsFiltersFormSchema,
+			onChange: userProductsFiltersFormSchema,
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {
@@ -149,13 +155,13 @@ export function AppProductRequestsFiltersForm({
 					</form.Field>
 				</div>
 				<div className="flex gap-2 items-start">
-					<form.Field name="minQuantity">
+					<form.Field name="minStock">
 						{(field) => {
 							const isInvalid =
 								field.state.meta.isTouched && !field.state.meta.isValid;
 							return (
 								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Minimum quantity</FieldLabel>
+									<FieldLabel htmlFor={field.name}>Minimum stock</FieldLabel>
 									<Input
 										id={field.name}
 										type="number"
@@ -215,15 +221,46 @@ export function AppProductRequestsFiltersForm({
 						}}
 					</form.Field>
 				</div>
+				<div className="flex gap-2 items-start">
+					<form.Field name="isVerified">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<FieldSet className="flex-1">
+									<FieldLabel htmlFor={field.name}>
+										<Field data-invalid={isInvalid} orientation="horizontal">
+											<Checkbox
+												id={field.name}
+												name={field.name}
+												checked={field.state.value ?? false}
+												onBlur={field.handleBlur}
+												onCheckedChange={(value) =>
+													field.handleChange(value ? true : undefined)
+												}
+												aria-invalid={isInvalid}
+											/>
+											<FieldContent>
+												<FieldTitle>Ecobuilt Connect Verified</FieldTitle>
+											</FieldContent>
+										</Field>
+									</FieldLabel>
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</FieldSet>
+							);
+						}}
+					</form.Field>
+				</div>
 				<div className="flex gap-2 items-start justify-stretch">
 					<Button
 						onClick={() => {
 							form.reset({
 								sortBy: undefined,
 								sortOrder: undefined,
-								minQuantity: undefined,
+								minStock: undefined,
 								minPrice: undefined,
 								maxPrice: undefined,
+								isVerified: undefined,
 							});
 
 							resetHandler(form.state.values);
