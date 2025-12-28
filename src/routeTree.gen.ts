@@ -24,6 +24,7 @@ import { Route as authSignUpSplatRouteImport } from './routes/(auth)/sign-up/$'
 import { Route as authSignInSplatRouteImport } from './routes/(auth)/sign-in/$'
 import { Route as UserOrdersOrderIdIndexRouteImport } from './routes/user/orders/$orderId/index'
 import { Route as publicProductsProductIdIndexRouteImport } from './routes/(public)/products/$productId/index'
+import { Route as UserOrdersOrderIdDeliveryIndexRouteImport } from './routes/user/orders/$orderId/delivery/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
@@ -99,6 +100,12 @@ const publicProductsProductIdIndexRoute =
     path: '/products/$productId/',
     getParentRoute: () => publicRouteRoute,
   } as any)
+const UserOrdersOrderIdDeliveryIndexRoute =
+  UserOrdersOrderIdDeliveryIndexRouteImport.update({
+    id: '/user/orders/$orderId/delivery/',
+    path: '/user/orders/$orderId/delivery/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/user/requests': typeof UserRequestsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/user/orders/$orderId': typeof UserOrdersOrderIdIndexRoute
+  '/user/orders/$orderId/delivery': typeof UserOrdersOrderIdDeliveryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
@@ -129,6 +137,7 @@ export interface FileRoutesByTo {
   '/user/requests': typeof UserRequestsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/user/orders/$orderId': typeof UserOrdersOrderIdIndexRoute
+  '/user/orders/$orderId/delivery': typeof UserOrdersOrderIdDeliveryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -147,6 +156,7 @@ export interface FileRoutesById {
   '/user/requests/': typeof UserRequestsIndexRoute
   '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
   '/user/orders/$orderId/': typeof UserOrdersOrderIdIndexRoute
+  '/user/orders/$orderId/delivery/': typeof UserOrdersOrderIdDeliveryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/user/requests'
     | '/products/$productId'
     | '/user/orders/$orderId'
+    | '/user/orders/$orderId/delivery'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/user/requests'
     | '/products/$productId'
     | '/user/orders/$orderId'
+    | '/user/orders/$orderId/delivery'
   id:
     | '__root__'
     | '/(auth)'
@@ -196,6 +208,7 @@ export interface FileRouteTypes {
     | '/user/requests/'
     | '/(public)/products/$productId/'
     | '/user/orders/$orderId/'
+    | '/user/orders/$orderId/delivery/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -206,6 +219,7 @@ export interface RootRouteChildren {
   UserOrdersIndexRoute: typeof UserOrdersIndexRoute
   UserRequestsIndexRoute: typeof UserRequestsIndexRoute
   UserOrdersOrderIdIndexRoute: typeof UserOrdersOrderIdIndexRoute
+  UserOrdersOrderIdDeliveryIndexRoute: typeof UserOrdersOrderIdDeliveryIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -315,6 +329,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicProductsProductIdIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
+    '/user/orders/$orderId/delivery/': {
+      id: '/user/orders/$orderId/delivery/'
+      path: '/user/orders/$orderId/delivery'
+      fullPath: '/user/orders/$orderId/delivery'
+      preLoaderRoute: typeof UserOrdersOrderIdDeliveryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -362,6 +383,7 @@ const rootRouteChildren: RootRouteChildren = {
   UserOrdersIndexRoute: UserOrdersIndexRoute,
   UserRequestsIndexRoute: UserRequestsIndexRoute,
   UserOrdersOrderIdIndexRoute: UserOrdersOrderIdIndexRoute,
+  UserOrdersOrderIdDeliveryIndexRoute: UserOrdersOrderIdDeliveryIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { CalendarIcon, PackageIcon } from "lucide-react";
+import { CalendarIcon, ExternalLinkIcon, PackageIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -11,7 +11,7 @@ import {
 	type userLogisticRequestFormSchema,
 } from "@/components/forms/user-logistic-request-form";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -36,6 +36,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
 import { createLogisticRequest } from "@/server/user/logistic-requests";
 import { getOrderRequestById } from "@/server/user/orders";
 
@@ -253,9 +254,23 @@ function OrderDetailsPage() {
 					<div className="space-y-1">
 						<p className="text-sm font-medium">Delivery Status</p>
 						{orderRequest.logisticRequest ? (
-							<Badge variant={deliveryStatusBadgeVariant}>
-								{orderRequest.logisticRequest.status}
-							</Badge>
+							<div className="flex gap-1 items-center">
+								<Badge variant={deliveryStatusBadgeVariant}>
+									{orderRequest.logisticRequest.status}
+								</Badge>
+								<Link
+									to="/user/orders/$orderId/delivery"
+									params={{ orderId: orderRequest.id }}
+									className={cn(
+										buttonVariants({
+											variant: "ghost",
+											size: "icon-xs",
+										}),
+									)}
+								>
+									<ExternalLinkIcon />
+								</Link>
+							</div>
 						) : orderRequest.status === "COMPLETED" ? (
 							<Dialog
 								open={isLogisticRequestDialogOpen}
