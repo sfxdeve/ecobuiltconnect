@@ -35,10 +35,10 @@ import {
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
+import { getUserProfile } from "@/lib/api/profile";
 import { getProductById } from "@/server/public/products";
 import { createOrderRequest } from "@/server/user/order-requests";
 import { initiateOrderRequestPayment } from "@/server/user/ozow";
-import { getUserProfile } from "@/server/user/profile";
 import { cartActions, cartStore } from "@/stores/cart";
 import { formatMoneyFromCents } from "@/utils/formatters";
 

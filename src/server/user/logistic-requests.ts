@@ -1,8 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { getUserProfile } from "@/lib/api/profile";
 import { prisma } from "@/prisma";
 import { logisticRequestSelector } from "@/prisma/selectors";
-import { getUserProfile } from "./profile";
 
 export const createLogisticRequest = createServerFn({
 	method: "POST",
