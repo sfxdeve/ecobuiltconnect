@@ -17,59 +17,58 @@ export function AppHeader() {
 				"container mx-auto px-4 flex items-center justify-between py-4"
 			}
 		>
-			{/* Logo */}
-			<img className="size-18" src="/logo.webp" alt="Logo" />
-
-			{/* Links */}
-			<ul className="hidden md:flex lg:gap-4 gap-2 items-center">
-				<li>
-					<Link
-						to="/"
-						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
-						activeProps={{ className: "bg-muted" }}
-					>
-						Home
-					</Link>
-				</li>
-				<li>
-					<Link
-						to="/products"
-						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
-						activeProps={{ className: "bg-muted" }}
-					>
-						Marketplace
-					</Link>
-				</li>
-				<li>
-					<Link
-						to="/vendors"
-						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
-						activeProps={{ className: "bg-muted" }}
-					>
-						Vendors
-					</Link>
-				</li>
-				<li>
-					<Link
-						to="/community"
-						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
-						activeProps={{ className: "bg-muted" }}
-					>
-						Community
-					</Link>
-				</li>
-				<li>
-					<Link
-						to="/contact"
-						className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
-						activeProps={{ className: "bg-muted" }}
-					>
-						Contact
-					</Link>
-				</li>
-			</ul>
-
-			{/* Actions */}
+			<div>
+				<img className="size-18" src="/logo.webp" alt="Logo" />
+			</div>
+			<nav>
+				<ul className="hidden md:flex lg:gap-4 gap-2 items-center">
+					<li>
+						<Link
+							to="/"
+							className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+							activeProps={{ className: "bg-muted" }}
+						>
+							Home
+						</Link>
+					</li>
+					<li>
+						<Link
+							to="/products"
+							className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+							activeProps={{ className: "bg-muted" }}
+						>
+							Marketplace
+						</Link>
+					</li>
+					<li>
+						<Link
+							to="/vendors"
+							className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+							activeProps={{ className: "bg-muted" }}
+						>
+							Vendors
+						</Link>
+					</li>
+					<li>
+						<Link
+							to="/community"
+							className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+							activeProps={{ className: "bg-muted" }}
+						>
+							Community
+						</Link>
+					</li>
+					<li>
+						<Link
+							to="/contact"
+							className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}
+							activeProps={{ className: "bg-muted" }}
+						>
+							Contact
+						</Link>
+					</li>
+				</ul>
+			</nav>
 			<div className="flex items-center gap-4">
 				<AppHeaderCart />
 				<SignedIn>

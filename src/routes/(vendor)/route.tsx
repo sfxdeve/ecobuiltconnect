@@ -11,14 +11,12 @@ export const Route = createFileRoute("/(vendor)")({
 
 function VendorLayout() {
 	return (
-		<>
-			<SidebarProvider>
-				<VendorSidebar />
-				<main>
-					<Outlet />
-				</main>
-			</SidebarProvider>
-			<AppFooter />
-		</>
+		<SidebarProvider>
+			<VendorSidebar />
+			<div className="w-full">
+				<Outlet />
+				<AppFooter />
+			</div>
+		</SidebarProvider>
 	);
 }
