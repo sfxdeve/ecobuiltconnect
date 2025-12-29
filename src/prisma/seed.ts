@@ -15,10 +15,18 @@ async function main() {
 	console.log("🌱 Seeding database...");
 
 	// Clear existing records
+	await prisma.review.deleteMany();
+	await prisma.logisticResponse.deleteMany();
+	await prisma.logisticRequest.deleteMany();
+	await prisma.orderRequest.deleteMany();
+	await prisma.orderItem.deleteMany();
 	await prisma.productRequest.deleteMany();
 	await prisma.product.deleteMany();
 	await prisma.category.deleteMany();
 	await prisma.vendorProfile.deleteMany();
+	await prisma.logisticProfile.deleteMany();
+	await prisma.adminProfile.deleteMany();
+	// await prisma.userProfile.deleteMany();
 
 	const userProfiles = await prisma.userProfile.findMany();
 
@@ -86,8 +94,8 @@ async function main() {
 }
 
 main()
-	.catch((e) => {
-		console.error("❌ Error seeding database:", e);
+	.catch((error) => {
+		console.error("❌ Error seeding database:", error);
 		process.exit(1);
 	})
 	.finally(async () => {
