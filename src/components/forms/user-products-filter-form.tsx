@@ -1,7 +1,15 @@
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import {
 	Field,
 	FieldContent,
@@ -12,14 +20,6 @@ import {
 	FieldTitle,
 } from "../ui/field";
 import { Input } from "../ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "../ui/select";
 
 export const userProductsFiltersFormSchema = z.object({
 	sortBy: z

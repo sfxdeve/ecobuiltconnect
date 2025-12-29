@@ -5,10 +5,10 @@ import {
 	UserButton,
 } from "@clerk/tanstack-react-start";
 import { Link } from "@tanstack/react-router";
+import { AppHeaderCart } from "@/components/blocks/app-header-cart";
+import { AppHeaderUserMenu } from "@/components/blocks/app-header-user-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils";
-import { AppHeaderCart } from "./app-header-cart";
-import { AppHeaderUserMenu } from "./app-header-user-menu";
 
 export function AppHeader() {
 	return (

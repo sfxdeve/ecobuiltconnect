@@ -6,6 +6,17 @@ import { useState } from "react";
 import { toast } from "sonner";
 import type { z } from "zod";
 import {
+	VendorProfileForm,
+	type vendorProfileFormSchema,
+} from "@/components/forms/vendor-profile-form";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
@@ -14,19 +25,8 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { getVendorProfile, upsertVendorProfile } from "@/lib/api/profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
-import { getVendorProfile, upsertVendorProfile } from "@/server/vendor/profile";
-import {
-	VendorProfileForm,
-	type vendorProfileFormSchema,
-} from "../forms/vendor-profile-form";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "../ui/dialog";
 
 const items = [
 	{

@@ -4,22 +4,27 @@ import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@tanstack/react-store";
 import { ShoppingCartIcon, Trash2Icon } from "lucide-react";
-import { getProductById } from "@/server/public/products";
-import { cartActions, cartStore } from "@/stores/cart";
-import { cn } from "@/utils";
-import { formatMoneyFromCents } from "@/utils/formatters";
-import { Badge } from "../ui/badge";
-import { Button, buttonVariants } from "../ui/button";
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "../ui/empty";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "@/components/ui/empty";
 import {
 	Popover,
 	PopoverContent,
 	PopoverHeader,
 	PopoverTitle,
 	PopoverTrigger,
-} from "../ui/popover";
-import { Separator } from "../ui/separator";
-import { Spinner } from "../ui/spinner";
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
+import { getProductById } from "@/server/public/products";
+import { cartActions, cartStore } from "@/stores/cart";
+import { cn } from "@/utils";
+import { formatMoneyFromCents } from "@/utils/formatters";
 
 export function AppHeaderCart() {
 	const { isSignedIn } = useUser();

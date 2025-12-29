@@ -16,26 +16,26 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { getUserProfile, upsertUserProfile } from "@/server/user/profile";
 import {
 	UserProfileForm,
 	type userProfileFormSchema,
-} from "../forms/user-profile-form";
-import { Button } from "../ui/button";
+} from "@/components/forms/user-profile-form";
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
+import { getUserProfile, upsertUserProfile } from "@/lib/api/profile";
 
 export function AppHeaderUserMenu() {
 	const { user } = useUser();

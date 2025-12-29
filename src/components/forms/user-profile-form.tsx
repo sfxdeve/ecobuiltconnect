@@ -1,10 +1,14 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { fetchPlaceNamesByCountry } from "@/utils/cities";
-import { Button } from "../ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -12,8 +16,9 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "../ui/select";
-import { Spinner } from "../ui/spinner";
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { fetchPlaceNamesByCountry } from "@/utils/cities";
 
 export const userProfileFormSchema = z.object({
 	address: z
