@@ -20,7 +20,7 @@ import { getUserProfile, upsertUserProfile } from "@/server/user/profile";
 import {
 	UserProfileForm,
 	type userProfileFormSchema,
-} from "../forms/urser-profile-form";
+} from "../forms/user-profile-form";
 import { Button } from "../ui/button";
 import {
 	Dialog,

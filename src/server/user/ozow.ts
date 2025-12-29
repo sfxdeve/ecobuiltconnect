@@ -56,13 +56,3 @@ export const initiateOrderRequestPayment = createServerFn({
 
 		return { redirectUrl: url };
 	});
-
-export const initiateLogisticRequestPayment = createServerFn({
-	method: "POST",
-})
-	.inputValidator(
-		z.object({
-			logisticRequestId: z.uuid("Logistic request id must be valid UUID"),
-		}),
-	)
-	.handler(async ({ data }) => {});
