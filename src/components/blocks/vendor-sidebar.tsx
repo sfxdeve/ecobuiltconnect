@@ -62,7 +62,7 @@ export function VendorSidebar() {
 	const queryClient = useQueryClient();
 
 	const vendorProfileResult = useQuery({
-		queryKey: ["vendor", "profile", user?.id],
+		queryKey: ["vendor-profile", user?.id],
 		queryFn: () => getVendorProfileFn(),
 	});
 
@@ -71,7 +71,7 @@ export function VendorSidebar() {
 			upsertVendorProfileFn({ data }),
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ["vendor", "profile", user?.id],
+				queryKey: ["vendor-profile", user?.id],
 			});
 
 			setIsUpsertVendorProfileDialogOpen(false);

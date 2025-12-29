@@ -22,8 +22,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 import { getVendorProfiles } from "@/server/public/vendors";
+import { cn } from "@/utils";
 
 export const Route = createFileRoute("/(public)/vendors/")({
 	validateSearch: z.object({
@@ -55,8 +55,8 @@ export const Route = createFileRoute("/(public)/vendors/")({
 			},
 		],
 	}),
-	component: VendorsPage,
 	pendingComponent: AppPending,
+	component: VendorsPage,
 });
 
 function VendorsPage() {

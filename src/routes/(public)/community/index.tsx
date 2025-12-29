@@ -15,8 +15,8 @@ export const Route = createFileRoute("/(public)/community/")({
 			},
 		],
 	}),
-	component: CommunityPage,
 	pendingComponent: AppPending,
+	component: CommunityPage,
 });
 
 function CommunityPage() {

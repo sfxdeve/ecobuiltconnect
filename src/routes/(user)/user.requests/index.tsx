@@ -44,12 +44,12 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
-import { cn } from "@/lib/utils";
 import {
 	createProductRequest,
 	getProductRequests,
 } from "@/server/user/product-requests";
+import { cn } from "@/utils";
+import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(user)/user/requests/")({
 	validateSearch: z.object({

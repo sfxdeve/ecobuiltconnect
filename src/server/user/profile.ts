@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getClerkId } from "@/lib/auth";
+import { getClerkId } from "@/lib/api/clerk";
 import { prisma } from "@/prisma";
 import { userProfileSelector } from "@/prisma/selectors";
 

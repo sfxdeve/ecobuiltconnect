@@ -4,10 +4,10 @@ import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@tanstack/react-store";
 import { ShoppingCartIcon, Trash2Icon } from "lucide-react";
-import { formatMoneyFromCents } from "@/lib/formatters";
-import { cn } from "@/lib/utils";
 import { getProductById } from "@/server/public/products";
 import { cartActions, cartStore } from "@/stores/cart";
+import { cn } from "@/utils";
+import { formatMoneyFromCents } from "@/utils/formatters";
 import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "../ui/empty";
@@ -30,12 +30,12 @@ export function AppHeaderCart() {
 		items.reduce((sum, item) => sum + item.quantity, 0),
 	);
 
-	const getPublicProductById = useServerFn(getProductById);
+	const getProductByIdFn = useServerFn(getProductById);
 
 	const productResults = useQueries({
 		queries: cartState.items.map((item) => ({
 			queryKey: ["product", item.productId],
-			queryFn: () => getPublicProductById({ data: { id: item.productId } }),
+			queryFn: () => getProductByIdFn({ data: { id: item.productId } }),
 		})),
 	});
 

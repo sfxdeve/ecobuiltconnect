@@ -9,8 +9,14 @@ export const getVendorProfiles = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			page: z.int("Page must be an integer").default(1),
-			limit: z.int("Limit must be an integer").default(10),
+			page: z
+				.int("Page must be an integer")
+				.positive("Page must be a positive integer")
+				.default(1),
+			limit: z
+				.int("Limit must be an integer")
+				.positive("Limit must be a positive integer")
+				.default(10),
 			sortBy: z
 				.enum(["name", "createdAt"], {
 					message: "Sort by must be either 'name' or 'createdAt'",

@@ -15,8 +15,8 @@ export const Route = createFileRoute("/(public)/")({
 			},
 		],
 	}),
-	component: HomePage,
 	pendingComponent: AppPending,
+	component: HomePage,
 });
 
 function HomePage() {

@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/carousel";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { formatMoneyFromCents } from "@/lib/formatters";
 import { getProductById } from "@/server/public/products";
 import { cartActions } from "@/stores/cart";
+import { formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(public)/products/$productId/")({
 	loader: ({ params }) => getProductById({ data: { id: params.productId } }),
@@ -31,8 +31,8 @@ export const Route = createFileRoute("/(public)/products/$productId/")({
 			},
 		],
 	}),
-	component: ProductDetailsPage,
 	pendingComponent: AppPending,
+	component: ProductDetailsPage,
 });
 
 function ProductDetailsPage() {

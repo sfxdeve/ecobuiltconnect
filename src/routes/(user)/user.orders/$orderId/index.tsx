@@ -35,10 +35,10 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
-import { cn } from "@/lib/utils";
 import { createLogisticRequest } from "@/server/user/logistic-requests";
 import { getOrderRequestById } from "@/server/user/order-requests";
+import { cn } from "@/utils";
+import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(user)/user/orders/$orderId/")({
 	loader: ({ params }) =>

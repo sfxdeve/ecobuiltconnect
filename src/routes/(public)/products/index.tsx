@@ -36,10 +36,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { formatMoneyFromCents } from "@/lib/formatters";
-import { cn } from "@/lib/utils";
 import { getProducts } from "@/server/public/products";
 import { cartActions } from "@/stores/cart";
+import { cn } from "@/utils";
+import { formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(public)/products/")({
 	validateSearch: z.object({
@@ -85,8 +85,8 @@ export const Route = createFileRoute("/(public)/products/")({
 			},
 		],
 	}),
-	component: ProductsPage,
 	pendingComponent: AppPending,
+	component: ProductsPage,
 });
 
 function ProductsPage() {

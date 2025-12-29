@@ -4,8 +4,8 @@ import { AppHeader } from "@/components/blocks/app-header";
 import { AppPending } from "@/components/blocks/app-pending";
 
 export const Route = createFileRoute("/(public)")({
-	component: PublicLayout,
 	pendingComponent: AppPending,
+	component: PublicLayout,
 });
 
 function PublicLayout() {

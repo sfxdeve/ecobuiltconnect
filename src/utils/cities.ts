@@ -23,6 +23,7 @@ export async function fetchPlaceNamesByCountry(
 	const query = buildQuery(iso2, placeTypes);
 
 	const url = new URL("https://overpass-api.de/api/interpreter");
+
 	url.searchParams.set("data", query);
 
 	const res = await fetch(url, { headers: { Accept: "application/json" } });

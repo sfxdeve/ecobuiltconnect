@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { fetchPlaceNamesByCountry } from "@/lib/cities";
+import { fetchPlaceNamesByCountry } from "@/utils/cities";
 import { Button } from "../ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";

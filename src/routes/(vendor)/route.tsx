@@ -1,12 +1,22 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { AppPending } from "@/components/blocks/app-pending";
 import { VendorSidebar } from "@/components/blocks/vendor-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { getVendorProfile } from "@/lib/api/profile";
 
 export const Route = createFileRoute("/(vendor)")({
-	component: VendorLayout,
+	beforeLoad: async () => {
+		try {
+			await getVendorProfile();
+		} catch (error) {
+			console.error(error);
+
+			throw redirect({ to: "/" });
+		}
+	},
 	pendingComponent: AppPending,
+	component: VendorLayout,
 });
 
 function VendorLayout() {

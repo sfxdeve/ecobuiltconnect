@@ -6,10 +6,13 @@ import {
 } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
 
-export function VendorHeader({ title }: { title: string }) {
+export function DashboardHeader({ title }: { title: string }) {
 	return (
-		<header className={"flex items-center justify-between p-4"}>
-			<div>{title}</div>
+		<header className={"p-4 flex items-center justify-between"}>
+			<div>
+				<h2>{title}</h2>
+				<p></p>
+			</div>
 			<div className="flex items-center gap-4">
 				<SignedIn>
 					<UserButton

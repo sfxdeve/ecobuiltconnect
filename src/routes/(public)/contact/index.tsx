@@ -25,8 +25,8 @@ export const Route = createFileRoute("/(public)/contact/")({
 			},
 		],
 	}),
-	component: ContactPage,
 	pendingComponent: AppPending,
+	component: ContactPage,
 });
 
 const contactFormSchema = z.object({

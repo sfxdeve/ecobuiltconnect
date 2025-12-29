@@ -1,6 +1,6 @@
 export function AppNotFound() {
 	return (
-		<section className="container mx-auto flex h-[calc(100vh-16rem)] flex-col items-center justify-center gap-4 px-4 py-12">
+		<section className="container mx-auto py-12 px-4 min-h-screen flex flex-col gap-4 justify-center items-center">
 			<h3 className="text-center text-3xl font-bold">404 — Page Not Found</h3>
 
 			<p className="max-w-2xl text-center font-semibold text-muted-foreground">

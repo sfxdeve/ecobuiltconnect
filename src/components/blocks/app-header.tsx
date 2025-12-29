@@ -6,7 +6,7 @@ import {
 } from "@clerk/tanstack-react-start";
 import { Link } from "@tanstack/react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { AppHeaderCart } from "./app-header-cart";
 import { AppHeaderUserMenu } from "./app-header-user-menu";
 
@@ -14,7 +14,7 @@ export function AppHeader() {
 	return (
 		<header
 			className={
-				"container mx-auto px-4 flex items-center justify-between py-4"
+				"container mx-auto py-4 px-4 flex items-center justify-between"
 			}
 		>
 			<div>

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppPending } from "@/components/blocks/app-pending";
-import { VendorHeader } from "@/components/blocks/vendor-header";
+import { DashboardHeader } from "@/components/blocks/dashboard-header";
 
 export const Route = createFileRoute("/(vendor)/vendor/orders/")({
 	head: () => ({
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/(vendor)/vendor/orders/")({
 function VendorOrdersPage() {
 	return (
 		<>
-			<VendorHeader title="Orders" />
+			<DashboardHeader title="Orders" />
 			<main className="min-h-screen">
 				<section></section>
 			</main>
