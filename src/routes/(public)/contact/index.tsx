@@ -59,7 +59,7 @@ function ContactPage() {
 	});
 
 	return (
-		<section className="container mx-auto py-12 px-4 flex gap-6 items-start">
+		<section className="container mx-auto py-12 px-4 pt-28 flex gap-6 items-start">
 			<form
 				onSubmit={(event) => {
 					event.preventDefault();

@@ -27,8 +27,14 @@ import { cn } from "@/utils";
 
 export const Route = createFileRoute("/(public)/vendors/")({
 	validateSearch: z.object({
-		page: z.int("Page must be an integer").default(1),
-		limit: z.int("Limit must be an integer").default(10),
+		page: z
+			.int("Page must be an integer")
+			.positive("Page must be a positive integer")
+			.default(1),
+		limit: z
+			.int("Limit must be an integer")
+			.positive("Limit must be a positive integer")
+			.default(10),
 		sortBy: z
 			.enum(["name", "createdAt"], {
 				message: "Sort by must be either 'name' or 'createdAt'",
@@ -63,7 +69,7 @@ function VendorsPage() {
 	const loaderData = Route.useLoaderData();
 
 	return (
-		<section className="container mx-auto py-12 px-4 space-y-6">
+		<section className="container mx-auto py-12 px-4 pt-28 space-y-6">
 			<VendorsPageSearch />
 			{loaderData.vendorProfiles.length > 0 ? (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

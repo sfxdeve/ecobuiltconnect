@@ -22,16 +22,14 @@ export const Route = createFileRoute("/(auth)")({
 
 function AuthLayout() {
 	return (
-		<>
+		<main className="relative">
 			<AppHeader />
-			<main>
-				<section className="container mx-auto py-12 px-4">
-					<div className="flex justify-center">
-						<Outlet />
-					</div>
-				</section>
-			</main>
+			<section className="container mx-auto py-12 px-4 pt-[104px]">
+				<div className="flex justify-center">
+					<Outlet />
+				</div>
+			</section>
 			<AppFooter />
-		</>
+		</main>
 	);
 }

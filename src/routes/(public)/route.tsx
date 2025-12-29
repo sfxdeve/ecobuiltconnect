@@ -10,12 +10,10 @@ export const Route = createFileRoute("/(public)")({
 
 function PublicLayout() {
 	return (
-		<>
+		<main className="relative">
 			<AppHeader />
-			<main>
-				<Outlet />
-			</main>
+			<Outlet />
 			<AppFooter />
-		</>
+		</main>
 	);
 }

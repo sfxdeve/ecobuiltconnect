@@ -43,8 +43,14 @@ import { formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(public)/products/")({
 	validateSearch: z.object({
-		page: z.int("Page must be an integer").default(1),
-		limit: z.int("Limit must be an integer").default(10),
+		page: z
+			.int("Page must be an integer")
+			.positive("Page must be a positive integer")
+			.default(1),
+		limit: z
+			.int("Limit must be an integer")
+			.positive("Limit must be a positive integer")
+			.default(10),
 		sortBy: z
 			.enum(["name", "createdAt"], {
 				message: "Sort by must be either 'name' or 'createdAt'",
@@ -93,7 +99,7 @@ function ProductsPage() {
 	const loaderData = Route.useLoaderData();
 
 	return (
-		<section className="container mx-auto py-12 px-4 space-y-6">
+		<section className="container mx-auto py-12 px-4 pt-28 space-y-6">
 			<ProductsPageSearch />
 			{loaderData.products.length > 0 ? (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -170,8 +176,8 @@ function ProductsPage() {
 }
 
 function ProductsPageSearch() {
-	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
+	const search = Route.useSearch();
 
 	const [isProductsFiltersDialogOpen, setIsProductsFiltersDialogOpen] =
 		useState(false);

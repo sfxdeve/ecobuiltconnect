@@ -41,7 +41,7 @@ function ProductDetailsPage() {
 	const [quantity, setQuantity] = useState(1);
 
 	return (
-		<section className="container mx-auto py-12 px-4 flex gap-12 flex-col lg:flex-row">
+		<section className="container mx-auto py-12 px-4 pt-28 flex gap-12 flex-col lg:flex-row">
 			<Card className="w-full lg:w-1/2">
 				<CardContent className="flex flex-col items-center justify-center">
 					<Carousel className="w-full">

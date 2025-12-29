@@ -12,11 +12,7 @@ import { AppHeaderUserMenu } from "./app-header-user-menu";
 
 export function AppHeader() {
 	return (
-		<header
-			className={
-				"container mx-auto py-4 px-4 flex items-center justify-between"
-			}
-		>
+		<header className="absolute top-0 left-0 right-0 z-50 container mx-auto py-4 px-4 flex items-center justify-between bg-background">
 			<div>
 				<img className="size-18" src="/logo.webp" alt="Logo" />
 			</div>
