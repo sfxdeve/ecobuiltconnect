@@ -291,28 +291,52 @@ function ViewOrderDialogContent({
 				<DialogTitle>Order Details</DialogTitle>
 			</DialogHeader>
 			<div className="space-y-6">
-				<div className="grid grid-cols-2 gap-4 p-4 bg-muted rounded-lg">
-					<div>
-						<p className="text-sm text-muted-foreground">Order ID</p>
-						<p className="font-medium uppercase">{orderRequest.id.slice(24)}</p>
-					</div>
-					<div>
-						<p className="text-sm text-muted-foreground">Status</p>
-						<Badge variant={statusBadgeVariant}>{orderRequest.status}</Badge>
-					</div>
-					<div>
-						<p className="text-sm text-muted-foreground">Date</p>
-						<p className="font-medium">{formatDate(orderRequest.createdAt)}</p>
-					</div>
-					<div>
-						<p className="text-sm text-muted-foreground">Total</p>
-						<p className="font-medium">
-							{formatMoneyFromCents(orderRequest.total, {
-								locale: "en-ZA",
-								currency: "ZAR",
-							})}
-						</p>
-					</div>
+				<div className="grid grid-cols-2 gap-4">
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Order ID
+							</ItemDescription>
+							<ItemTitle className="font-medium uppercase">
+								{orderRequest.id.slice(24)}
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Status
+							</ItemDescription>
+							<ItemTitle>
+								<Badge variant={statusBadgeVariant}>
+									{orderRequest.status}
+								</Badge>
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Date
+							</ItemDescription>
+							<ItemTitle className="font-medium">
+								{formatDate(orderRequest.createdAt)}
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Total
+							</ItemDescription>
+							<ItemTitle className="font-medium">
+								{formatMoneyFromCents(orderRequest.total, {
+									locale: "en-ZA",
+									currency: "ZAR",
+								})}
+							</ItemTitle>
+						</ItemContent>
+					</Item>
 				</div>
 				<div className="space-y-4">
 					{orderRequest.orderItems.map((item) => (
@@ -321,7 +345,7 @@ function ViewOrderDialogContent({
 								<img src={item.product.pictureIds[0]} alt={item.product.name} />
 							</ItemMedia>
 							<ItemContent>
-								<ItemTitle className="text-lg font-bold">
+								<ItemTitle className="font-bold text-base">
 									{item.product.name}
 								</ItemTitle>
 								<ItemDescription>
