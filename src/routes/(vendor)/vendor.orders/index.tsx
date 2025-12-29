@@ -39,6 +39,13 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
+	Item,
+	ItemContent,
+	ItemDescription,
+	ItemMedia,
+	ItemTitle,
+} from "@/components/ui/item";
+import {
 	Select,
 	SelectContent,
 	SelectGroup,
@@ -236,11 +243,102 @@ function ViewOrderDialogContent({
 		queryFn: () => getOrderRequestFn({ data: { orderRequestId } }),
 	});
 
+	if (orderRequestResult.isPending) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>View Order</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-muted-foreground">
+					Loading order details...
+				</div>
+			</DialogContent>
+		);
+	}
+
+	if (orderRequestResult.isError) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>View Order</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-destructive">
+					Error loading order: {orderRequestResult.error.message}
+				</div>
+			</DialogContent>
+		);
+	}
+
+	const { orderRequest } = orderRequestResult.data;
+
+	let statusBadgeVariant: "default" | "outline" | "destructive";
+	switch (orderRequest.status) {
+		case "PAID":
+		case "COMPLETED":
+			statusBadgeVariant = "default";
+			break;
+		case "CANCELLED":
+			statusBadgeVariant = "destructive";
+			break;
+		default:
+			statusBadgeVariant = "outline";
+			break;
+	}
+
 	return (
-		<DialogContent>
+		<DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
 			<DialogHeader>
-				<DialogTitle>View Order</DialogTitle>
+				<DialogTitle>Order Details</DialogTitle>
 			</DialogHeader>
+			<div className="space-y-6">
+				<div className="grid grid-cols-2 gap-4 p-4 bg-muted rounded-lg">
+					<div>
+						<p className="text-sm text-muted-foreground">Order ID</p>
+						<p className="font-medium uppercase">{orderRequest.id.slice(24)}</p>
+					</div>
+					<div>
+						<p className="text-sm text-muted-foreground">Status</p>
+						<Badge variant={statusBadgeVariant}>{orderRequest.status}</Badge>
+					</div>
+					<div>
+						<p className="text-sm text-muted-foreground">Date</p>
+						<p className="font-medium">{formatDate(orderRequest.createdAt)}</p>
+					</div>
+					<div>
+						<p className="text-sm text-muted-foreground">Total</p>
+						<p className="font-medium">
+							{formatMoneyFromCents(orderRequest.total, {
+								locale: "en-ZA",
+								currency: "ZAR",
+							})}
+						</p>
+					</div>
+				</div>
+				<div className="space-y-4">
+					{orderRequest.orderItems.map((item) => (
+						<Item key={item.id} variant="muted" className="flex gap-3">
+							<ItemMedia variant="image" className="size-20">
+								<img src={item.product.pictureIds[0]} alt={item.product.name} />
+							</ItemMedia>
+							<ItemContent>
+								<ItemTitle className="text-lg font-bold">
+									{item.product.name}
+								</ItemTitle>
+								<ItemDescription>
+									<span>Qty: {item.quantity}</span>
+									<br />
+									<span>
+										{formatMoneyFromCents(item.price * item.quantity, {
+											locale: "en-ZA",
+											currency: "ZAR",
+										})}
+									</span>
+								</ItemDescription>
+							</ItemContent>
+						</Item>
+					))}
+				</div>
+			</div>
 		</DialogContent>
 	);
 }
