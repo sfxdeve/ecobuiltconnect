@@ -134,12 +134,12 @@ export const getProducts = createServerFn({
 		};
 	});
 
-export const getProductById = createServerFn({
+export const getProduct = createServerFn({
 	method: "GET",
 })
 	.inputValidator(
 		z.object({
-			id: z.uuid("Product id must be valid UUID"),
+			productId: z.uuid("Product id must be valid UUID"),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -147,7 +147,7 @@ export const getProductById = createServerFn({
 
 		const product = await prisma.product.findUnique({
 			where: {
-				id: data.id,
+				id: data.productId,
 				isDeleted: false,
 				vendorProfile: { id: vendorProfile.id },
 			},

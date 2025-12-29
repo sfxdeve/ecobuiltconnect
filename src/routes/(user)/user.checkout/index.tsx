@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { getProductById } from "@/lib/api/public.products";
+import { getProduct } from "@/lib/api/public.products";
 import { getUserProfile } from "@/lib/api/user.profile";
 import { createOrderRequest } from "@/server/user/order-requests";
 import { initiateOrderRequestPayment } from "@/server/user/ozow";
@@ -64,7 +64,7 @@ function CheckoutPage() {
 	const cartState = useStore(cartStore);
 
 	const getUserProfileFn = useServerFn(getUserProfile);
-	const getPublicProductByIdFn = useServerFn(getProductById);
+	const getPublicProductByIdFn = useServerFn(getProduct);
 	const createUserOrderFn = useServerFn(createOrderRequest);
 	const initiateOzowPaymentFn = useServerFn(initiateOrderRequestPayment);
 
@@ -78,7 +78,8 @@ function CheckoutPage() {
 	const productsResults = useQueries({
 		queries: cartState.items.map((item) => ({
 			queryKey: ["product", item.productId],
-			queryFn: () => getPublicProductByIdFn({ data: { id: item.productId } }),
+			queryFn: () =>
+				getPublicProductByIdFn({ data: { productId: item.productId } }),
 		})),
 	});
 

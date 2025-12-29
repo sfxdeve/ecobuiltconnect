@@ -1,12 +1,29 @@
 import { debounce } from "@tanstack/pacer";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useId } from "react";
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	MoreHorizontalIcon,
+} from "lucide-react";
+import { useId, useState } from "react";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
 	Empty,
 	EmptyDescription,
@@ -77,6 +94,9 @@ export const Route = createFileRoute("/(vendor)/vendor/orders/")({
 function VendorOrdersPage() {
 	const loaderData = Route.useLoaderData();
 
+	const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+	const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+
 	return (
 		<>
 			<DashboardHeader title="Orders" />
@@ -91,7 +111,7 @@ function VendorOrdersPage() {
 								<TableHead>Status</TableHead>
 								<TableHead>Total</TableHead>
 								<TableHead>Date</TableHead>
-								<TableHead></TableHead>
+								<TableHead>Actions</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
@@ -129,7 +149,70 @@ function VendorOrdersPage() {
 											})}
 										</TableCell>
 										<TableCell>{formatDate(orderRequest.createdAt)}</TableCell>
-										<TableCell></TableCell>
+										<TableCell>
+											<DropdownMenu>
+												<DropdownMenuTrigger
+													render={<Button variant="ghost" size="icon" />}
+												>
+													<MoreHorizontalIcon />
+													<span className="sr-only">Open actions menu</span>
+												</DropdownMenuTrigger>
+												<DropdownMenuContent align="end">
+													<DropdownMenuItem
+														onClick={() => {
+															setIsViewDialogOpen(true);
+														}}
+													>
+														View
+													</DropdownMenuItem>
+													<DropdownMenuItem
+														onClick={() => {
+															setIsUpdateDialogOpen(true);
+														}}
+													>
+														Update
+													</DropdownMenuItem>
+												</DropdownMenuContent>
+											</DropdownMenu>
+											<Dialog
+												open={isViewDialogOpen}
+												onOpenChange={setIsViewDialogOpen}
+											>
+												<DialogContent>
+													<DialogHeader>
+														<DialogTitle>View Order</DialogTitle>
+													</DialogHeader>
+												</DialogContent>
+											</Dialog>
+											<Dialog
+												open={isUpdateDialogOpen}
+												onOpenChange={setIsUpdateDialogOpen}
+											>
+												<DialogContent>
+													<DialogHeader>
+														<DialogTitle>Update Order</DialogTitle>
+													</DialogHeader>
+													<DialogFooter>
+														<Button
+															variant="secondary"
+															onClick={() => {
+																setIsUpdateDialogOpen(false);
+															}}
+														>
+															Cancel
+														</Button>
+														<Button
+															variant="default"
+															onClick={() => {
+																setIsUpdateDialogOpen(false);
+															}}
+														>
+															Update
+														</Button>
+													</DialogFooter>
+												</DialogContent>
+											</Dialog>
+										</TableCell>
 									</TableRow>
 								);
 							})}

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { getProductById } from "@/lib/api/public.products";
+import { getProduct } from "@/lib/api/public.products";
 import { cartActions, cartStore } from "@/stores/cart";
 import { cn } from "@/utils";
 import { formatMoneyFromCents } from "@/utils/formatters";
@@ -35,12 +35,12 @@ export function AppHeaderCart() {
 		items.reduce((sum, item) => sum + item.quantity, 0),
 	);
 
-	const getProductByIdFn = useServerFn(getProductById);
+	const getProductByIdFn = useServerFn(getProduct);
 
 	const productResults = useQueries({
 		queries: cartState.items.map((item) => ({
 			queryKey: ["product", item.productId],
-			queryFn: () => getProductByIdFn({ data: { id: item.productId } }),
+			queryFn: () => getProductByIdFn({ data: { productId: item.productId } }),
 		})),
 	});
 

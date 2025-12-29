@@ -14,12 +14,12 @@ import {
 } from "@/components/ui/carousel";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { getProductById } from "@/lib/api/public.products";
+import { getProduct } from "@/lib/api/public.products";
 import { cartActions } from "@/stores/cart";
 import { formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(public)/products/$productId/")({
-	loader: ({ params }) => getProductById({ data: { id: params.productId } }),
+	loader: ({ params }) => getProduct({ data: { productId: params.productId } }),
 	head: ({ loaderData }) => ({
 		meta: [
 			{

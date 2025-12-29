@@ -1,11 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
+import { OrderStatus } from "@/prisma/generated/enums";
 import type {
 	OrderRequestWhereInput,
 	ProductWhereInput,
 } from "@/prisma/generated/models";
-import { orderRequestSelector } from "@/prisma/selectors";
+import { orderItemSelector, orderRequestSelector } from "@/prisma/selectors";
 import { getVendorProfile } from "./vendor.profile";
 
 export const getOrderRequests = createServerFn({ method: "GET" })
@@ -95,5 +96,83 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 			pages: Math.ceil(total / data.limit),
 			limit: data.limit,
 			page: data.page,
+		};
+	});
+
+export const getOrderRequest = createServerFn({ method: "GET" })
+	.inputValidator(
+		z.object({
+			orderRequestId: z.uuid("Order request id must be valid UUID"),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { vendorProfile } = await getVendorProfile();
+
+		const orderRequest = await prisma.orderRequest.findUnique({
+			where: {
+				id: data.orderRequestId,
+				orderItems: {
+					every: {
+						product: {
+							vendorProfile: {
+								id: vendorProfile.id,
+							},
+						},
+					},
+				},
+			},
+			select: {
+				...orderRequestSelector,
+				orderItems: {
+					select: {
+						...orderItemSelector,
+					},
+				},
+			},
+		});
+
+		if (!orderRequest) {
+			throw new Error("Order request not found");
+		}
+
+		return { orderRequest };
+	});
+
+export const updateOrderRequest = createServerFn({ method: "POST" })
+	.inputValidator(
+		z.object({
+			orderRequestId: z.uuid("Order request id must be valid UUID"),
+			status: z.enum(
+				[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
+				{
+					message:
+						"Status must be either 'PROCESSING', 'READY', or 'COMPLETED'",
+				},
+			),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { vendorProfile } = await getVendorProfile();
+
+		const orderRequest = await prisma.orderRequest.update({
+			where: {
+				id: data.orderRequestId,
+				orderItems: {
+					every: {
+						product: {
+							vendorProfile: {
+								id: vendorProfile.id,
+							},
+						},
+					},
+				},
+			},
+			data: {
+				status: data.status,
+			},
+		});
+
+		return {
+			orderRequest,
 		};
 	});
