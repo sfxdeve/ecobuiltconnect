@@ -23,16 +23,16 @@ const items = [
 		href: "/vendor/dashboard",
 	},
 	{
-		label: "Products",
-		href: "/vendor/products",
+		label: "Orders",
+		href: "/vendor/orders",
 	},
 	{
 		label: "Requests",
 		href: "/vendor/requests",
 	},
 	{
-		label: "Orders",
-		href: "/vendor/orders",
+		label: "Products",
+		href: "/vendor/products",
 	},
 ] satisfies {
 	label: string;
