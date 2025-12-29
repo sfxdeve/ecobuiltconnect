@@ -6,7 +6,13 @@ import type {
 	OrderRequestWhereInput,
 	ProductWhereInput,
 } from "@/prisma/generated/models";
-import { orderItemSelector, orderRequestSelector } from "@/prisma/selectors";
+import {
+	orderItemSelector,
+	orderRequestSelector,
+	productSelector,
+	reviewSelector,
+	userProfileSelector,
+} from "@/prisma/selectors";
 import { getVendorProfile } from "./vendor.profile";
 
 export const getOrderRequests = createServerFn({ method: "GET" })
@@ -126,7 +132,16 @@ export const getOrderRequest = createServerFn({ method: "GET" })
 				orderItems: {
 					select: {
 						...orderItemSelector,
+						product: {
+							select: productSelector,
+						},
+						review: {
+							select: reviewSelector,
+						},
 					},
+				},
+				userProfile: {
+					select: userProfileSelector,
 				},
 			},
 		});

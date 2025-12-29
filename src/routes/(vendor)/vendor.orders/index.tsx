@@ -1,20 +1,26 @@
 import { debounce } from "@tanstack/pacer";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	MoreHorizontalIcon,
 } from "lucide-react";
 import { useId, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
+import {
+	VendorOrderRequestForm,
+	type vendorOrderRequestFormSchema,
+} from "@/components/forms/vendor-order-request-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
@@ -48,7 +54,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getOrderRequests } from "@/lib/api/vendor.order-requests";
+import {
+	getOrderRequest,
+	getOrderRequests,
+	updateOrderRequest,
+} from "@/lib/api/vendor.order-requests";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
@@ -178,39 +188,18 @@ function VendorOrdersPage() {
 												open={isViewDialogOpen}
 												onOpenChange={setIsViewDialogOpen}
 											>
-												<DialogContent>
-													<DialogHeader>
-														<DialogTitle>View Order</DialogTitle>
-													</DialogHeader>
-												</DialogContent>
+												<ViewOrderDialogContent
+													orderRequestId={orderRequest.id}
+												/>
 											</Dialog>
 											<Dialog
 												open={isUpdateDialogOpen}
 												onOpenChange={setIsUpdateDialogOpen}
 											>
-												<DialogContent>
-													<DialogHeader>
-														<DialogTitle>Update Order</DialogTitle>
-													</DialogHeader>
-													<DialogFooter>
-														<Button
-															variant="secondary"
-															onClick={() => {
-																setIsUpdateDialogOpen(false);
-															}}
-														>
-															Cancel
-														</Button>
-														<Button
-															variant="default"
-															onClick={() => {
-																setIsUpdateDialogOpen(false);
-															}}
-														>
-															Update
-														</Button>
-													</DialogFooter>
-												</DialogContent>
+												<UpdateOrderDialogContent
+													orderRequestId={orderRequest.id}
+													setIsDialogOpen={setIsUpdateDialogOpen}
+												/>
 											</Dialog>
 										</TableCell>
 									</TableRow>
@@ -232,6 +221,77 @@ function VendorOrdersPage() {
 				<OrdersPagePagination />
 			</section>
 		</>
+	);
+}
+
+function ViewOrderDialogContent({
+	orderRequestId,
+}: {
+	orderRequestId: string;
+}) {
+	const getOrderRequestFn = useServerFn(getOrderRequest);
+
+	const orderRequestResult = useQuery({
+		queryKey: ["order-request", orderRequestId],
+		queryFn: () => getOrderRequestFn({ data: { orderRequestId } }),
+	});
+
+	return (
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>View Order</DialogTitle>
+			</DialogHeader>
+		</DialogContent>
+	);
+}
+
+function UpdateOrderDialogContent({
+	orderRequestId,
+	setIsDialogOpen,
+}: {
+	orderRequestId: string;
+	setIsDialogOpen: (open: boolean) => void;
+}) {
+	const router = useRouter();
+
+	const getOrderRequestFn = useServerFn(getOrderRequest);
+	const updateOrderRequestFn = useServerFn(updateOrderRequest);
+
+	const orderRequestResult = useQuery({
+		queryKey: ["order-request", orderRequestId],
+		queryFn: () => getOrderRequestFn({ data: { orderRequestId } }),
+	});
+
+	const updateOrderRequestMutation = useMutation({
+		mutationFn: updateOrderRequestFn,
+		onSuccess: () => {
+			toast.success("Order updated successfully");
+
+			router.invalidate();
+
+			setIsDialogOpen(false);
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
+	return (
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>Update Order</DialogTitle>
+			</DialogHeader>
+			<VendorOrderRequestForm
+				defaultValues={{
+					orderRequestId,
+					status: orderRequestResult.data?.orderRequest.status as z.infer<
+						typeof vendorOrderRequestFormSchema
+					>["status"],
+				}}
+				isSubmitting={updateOrderRequestMutation.isPending}
+				submitHandler={updateOrderRequestMutation.mutate}
+			/>
+		</DialogContent>
 	);
 }
 
