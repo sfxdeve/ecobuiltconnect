@@ -1,4 +1,3 @@
-import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
@@ -11,8 +10,14 @@ export const getProductRequests = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			page: z.int("Page must be an integer").default(1),
-			limit: z.int("Limit must be an integer").default(10),
+			page: z
+				.int("Page must be an integer")
+				.positive("Page must be a positive integer")
+				.default(1),
+			limit: z
+				.int("Limit must be an integer")
+				.positive("Limit must be a positive integer")
+				.default(10),
 			sortBy: z
 				.enum(["name", "createdAt"], {
 					message: "Sort by must be either 'name' or 'createdAt'",
@@ -37,7 +42,7 @@ export const getProductRequests = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfile();
+		const { userProfile: profile } = await getUserProfile();
 
 		const where: ProductRequestWhereInput = {
 			isDeleted: false,
@@ -114,14 +119,14 @@ export const getProductRequestById = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfile();
+		const { userProfile } = await getUserProfile();
 
 		const productRequest = await prisma.productRequest.findUnique({
 			where: {
 				id: data.productRequestId,
 				isDeleted: false,
 				category: { status: "APPROVED", isDeleted: false },
-				userProfile: { id: profile.id },
+				userProfile: { id: userProfile.id },
 			},
 			select: {
 				...productRequestSelector,
@@ -130,7 +135,7 @@ export const getProductRequestById = createServerFn({
 		});
 
 		if (!productRequest) {
-			throw notFound();
+			throw new Error("Product request not found");
 		}
 
 		return { productRequest };
@@ -149,7 +154,7 @@ export const createProductRequest = createServerFn({
 				.min(3, "Name must be at least 3 characters"),
 			description: z
 				.string("Description must be a string")
-				.min(12, "Description must be at least 12 characters"),
+				.min(10, "Description must be at least 10 characters"),
 			quantity: z
 				.int("Quantity must be an integer")
 				.min(1, "Quantity must be at least 1"),
@@ -161,7 +166,7 @@ export const createProductRequest = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfile();
+		const { userProfile } = await getUserProfile();
 
 		const category = await prisma.category.findUnique({
 			where: {
@@ -178,7 +183,7 @@ export const createProductRequest = createServerFn({
 		const productRequest = await prisma.productRequest.create({
 			data: {
 				...data,
-				userProfileId: profile.id,
+				userProfileId: userProfile.id,
 			},
 			select: productRequestSelector,
 		});

@@ -17,12 +17,15 @@ export const createLogisticRequest = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfile();
+		const { userProfile } = await getUserProfile();
 
 		const orderRequest = await prisma.orderRequest.findUnique({
 			where: {
 				id: data.orderRequestId,
-				userProfile: { id: profile.id },
+				status: {
+					notIn: ["PENDING", "CANCELLED"],
+				},
+				userProfile: { id: userProfile.id },
 			},
 		});
 

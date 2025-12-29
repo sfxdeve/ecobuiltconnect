@@ -1,18 +1,8 @@
-import { auth } from "@clerk/tanstack-react-start/server";
-import { createServerFn, createServerOnlyFn } from "@tanstack/react-start";
+import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { getClerkId } from "@/lib/auth";
 import { prisma } from "@/prisma";
 import { vendorProfileSelector } from "@/prisma/selectors";
-
-export const getClerkId = createServerOnlyFn(async () => {
-	const { isAuthenticated, userId: clerkId } = await auth();
-
-	if (!isAuthenticated) {
-		throw new Error("Unauthorized");
-	}
-
-	return { clerkId };
-});
 
 export const getVendorProfile = createServerFn({
 	method: "GET",

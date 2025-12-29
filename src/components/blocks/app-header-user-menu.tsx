@@ -158,9 +158,9 @@ export function AppHeaderUserMenu() {
 				</DialogHeader>
 				<UserProfileForm
 					defaultValues={{
-						address: userProfileResult.data?.profile?.address ?? "",
-						city: userProfileResult.data?.profile?.city ?? "",
-						postcode: userProfileResult.data?.profile?.postcode ?? "",
+						address: userProfileResult.data?.userProfile?.address ?? "",
+						city: userProfileResult.data?.userProfile?.city ?? "",
+						postcode: userProfileResult.data?.userProfile?.postcode ?? "",
 					}}
 					isSubmitting={upsertUserProfileMutation.isPending}
 					submitHandler={(data) => {

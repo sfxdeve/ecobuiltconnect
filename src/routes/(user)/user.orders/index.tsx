@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/table";
 import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { getOrderRequests } from "@/server/user/orders";
+import { getOrderRequests } from "@/server/user/order-requests";
 
 export const Route = createFileRoute("/(user)/user/orders/")({
 	validateSearch: z.object({

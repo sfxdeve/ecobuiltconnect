@@ -1,4 +1,3 @@
-import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
@@ -20,8 +19,14 @@ export const getOrderRequests = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			page: z.int("Page must be an integer").default(1),
-			limit: z.int("Limit must be an integer").default(10),
+			page: z
+				.int("Page must be an integer")
+				.positive("Page must be a positive integer")
+				.default(1),
+			limit: z
+				.int("Limit must be an integer")
+				.positive("Limit must be a positive integer")
+				.default(10),
 			sortBy: z
 				.enum(["name", "createdAt"], {
 					message: "Sort by must be either 'name' or 'createdAt'",
@@ -36,10 +41,10 @@ export const getOrderRequests = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfile();
+		const { userProfile } = await getUserProfile();
 
 		const where: OrderRequestWhereInput = {
-			userProfile: { id: profile.id },
+			userProfile: { id: userProfile.id },
 			orderItems: {
 				some: {
 					product: {
@@ -98,7 +103,7 @@ export const getOrderRequestById = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfile();
+		const { userProfile: profile } = await getUserProfile();
 
 		const orderRequest = await prisma.orderRequest.findUnique({
 			where: {
@@ -125,7 +130,7 @@ export const getOrderRequestById = createServerFn({
 		});
 
 		if (!orderRequest) {
-			throw notFound();
+			throw new Error("Order request not found");
 		}
 
 		return { orderRequest };
@@ -140,16 +145,19 @@ export const createOrderRequest = createServerFn({
 				.array(
 					z.object({
 						productId: z.uuid("Product id must be valid UUID"),
-						quantity: z.int().positive("Quantity must be a positive integer"),
+						quantity: z
+							.int("Quantity must be an integer")
+							.positive("Quantity must be a positive integer"),
 					}),
 				)
 				.min(1, "Order must contain at least one item"),
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { profile } = await getUserProfile();
+		const { userProfile } = await getUserProfile();
 
 		const quantityMapByProductId = new Map<string, number>();
+
 		data.items.forEach((item) => {
 			quantityMapByProductId.set(item.productId, item.quantity);
 		});
@@ -167,10 +175,11 @@ export const createOrderRequest = createServerFn({
 		});
 
 		if (products.length !== productIds.length) {
-			throw new Error("Some products could not be found or are not available");
+			throw new Error("Some products could not be found");
 		}
 
 		const outOfStockItems: string[] = [];
+
 		const insufficientStockItems: Array<{
 			name: string;
 			requested: number;
@@ -218,7 +227,7 @@ export const createOrderRequest = createServerFn({
 			const orderRequest = await tx.orderRequest.create({
 				data: {
 					total,
-					userProfileId: profile.id,
+					userProfileId: userProfile.id,
 				},
 				select: orderRequestSelector,
 			});

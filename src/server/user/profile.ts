@@ -1,20 +1,15 @@
-import { auth } from "@clerk/tanstack-react-start/server";
-import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { getClerkId } from "@/lib/auth";
 import { prisma } from "@/prisma";
 import { userProfileSelector } from "@/prisma/selectors";
 
 export const getUserProfile = createServerFn({
 	method: "GET",
 }).handler(async () => {
-	const { isAuthenticated, userId: clerkId } = await auth();
+	const { clerkId } = await getClerkId();
 
-	if (!isAuthenticated) {
-		throw redirect({ to: "/sign-in/$" });
-	}
-
-	const profile = await prisma.userProfile.findUnique({
+	const userProfile = await prisma.userProfile.findUnique({
 		where: {
 			clerkId,
 			status: "APPROVED",
@@ -22,11 +17,11 @@ export const getUserProfile = createServerFn({
 		select: userProfileSelector,
 	});
 
-	if (!profile) {
-		throw redirect({ to: "/sign-in/$" });
+	if (!userProfile) {
+		throw new Error("User profile not found");
 	}
 
-	return { profile };
+	return { userProfile };
 });
 
 export const upsertUserProfile = createServerFn({
@@ -34,19 +29,21 @@ export const upsertUserProfile = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			address: z.string("Address must be a string"),
-			city: z.string("City must be a string"),
-			postcode: z.string("Postcode must be a string"),
+			address: z
+				.string("Address must be a string")
+				.min(3, "Address must be at least 3 characters"),
+			city: z
+				.string("City must be a string")
+				.min(3, "City must be at least 3 characters"),
+			postcode: z
+				.string("Postcode must be a string")
+				.min(3, "Postcode must be at least 3 characters"),
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { isAuthenticated, userId: clerkId } = await auth();
+		const { clerkId } = await getClerkId();
 
-		if (!isAuthenticated) {
-			throw redirect({ to: "/sign-in/$" });
-		}
-
-		const profile = await prisma.userProfile.upsert({
+		const userProfile = await prisma.userProfile.upsert({
 			where: {
 				clerkId,
 			},
@@ -64,5 +61,5 @@ export const upsertUserProfile = createServerFn({
 			select: userProfileSelector,
 		});
 
-		return { profile };
+		return { userProfile };
 	});

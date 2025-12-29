@@ -37,7 +37,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { getProductById } from "@/server/public/products";
-import { createOrderRequest } from "@/server/user/orders";
+import { createOrderRequest } from "@/server/user/order-requests";
 import { initiateOrderRequestPayment } from "@/server/user/ozow";
 import { getUserProfile } from "@/server/user/profile";
 import { cartActions, cartStore } from "@/stores/cart";
@@ -233,11 +233,11 @@ function CheckoutPage() {
 												return <Spinner />;
 											}
 
-											if (!userProfileResult.data?.profile) {
+											if (!userProfileResult.data?.userProfile) {
 												return null;
 											}
 
-											const profile = userProfileResult.data.profile;
+											const profile = userProfileResult.data.userProfile;
 
 											return (
 												<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">

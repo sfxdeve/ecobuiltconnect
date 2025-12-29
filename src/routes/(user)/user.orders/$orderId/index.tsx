@@ -38,7 +38,7 @@ import {
 import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { createLogisticRequest } from "@/server/user/logistic-requests";
-import { getOrderRequestById } from "@/server/user/orders";
+import { getOrderRequestById } from "@/server/user/order-requests";
 
 export const Route = createFileRoute("/(user)/user/orders/$orderId/")({
 	loader: ({ params }) =>
