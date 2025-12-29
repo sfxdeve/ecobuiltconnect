@@ -2,6 +2,14 @@ import { useUser } from "@clerk/tanstack-react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
+import {
+	FileTextIcon,
+	LayoutDashboardIcon,
+	type LucideIcon,
+	PackageIcon,
+	ShoppingBagIcon,
+	UserIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -35,22 +43,27 @@ const items = [
 	{
 		label: "Dashboard",
 		href: "/vendor/dashboard",
+		icon: LayoutDashboardIcon,
 	},
 	{
 		label: "Orders",
 		href: "/vendor/orders",
+		icon: ShoppingBagIcon,
 	},
 	{
 		label: "Requests",
 		href: "/vendor/requests",
+		icon: FileTextIcon,
 	},
 	{
 		label: "Products",
 		href: "/vendor/products",
+		icon: PackageIcon,
 	},
 ] satisfies {
 	label: string;
 	href: FileRouteTypes["to"];
+	icon: LucideIcon;
 }[];
 
 export function VendorSidebar() {
@@ -101,7 +114,8 @@ export function VendorSidebar() {
 									/>
 								}
 							>
-								{item.label}
+								<item.icon />
+								<span>{item.label}</span>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
 					))}
@@ -115,7 +129,8 @@ export function VendorSidebar() {
 					>
 						<SidebarMenuItem>
 							<SidebarMenuButton render={<DialogTrigger />}>
-								Profile
+								<UserIcon />
+								<span>Profile</span>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
 						<DialogContent>

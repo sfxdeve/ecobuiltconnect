@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { ProductRequestWhereInput } from "@/prisma/generated/models";
 import { categorySelector, productRequestSelector } from "@/prisma/selectors";
-// import { getVendorProfile } from "./vendor.profile";
+import { getVendorProfile } from "./vendor.profile";
 
 export const getProductRequests = createServerFn({
 	method: "GET",
@@ -42,11 +42,18 @@ export const getProductRequests = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		// const { vendorProfile } = await getVendorProfile();
+		const { vendorProfile } = await getVendorProfile();
 
 		const where: ProductRequestWhereInput = {
 			isDeleted: false,
 			category: { status: "APPROVED", isDeleted: false },
+			products: {
+				none: {
+					vendorProfile: {
+						id: vendorProfile.id,
+					},
+				},
+			},
 			AND: [],
 		};
 
