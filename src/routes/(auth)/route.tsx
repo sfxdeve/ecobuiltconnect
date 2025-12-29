@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { AppHeader } from "@/components/blocks/app-header";
 import { AppPending } from "@/components/blocks/app-pending";
-import { getClerkId } from "@/lib/api/clerk";
+import { getClerkId } from "@/lib/api/shared.clerk";
 
 export const Route = createFileRoute("/(auth)")({
 	beforeLoad: async () => {
@@ -12,9 +12,7 @@ export const Route = createFileRoute("/(auth)")({
 			if (clerkId) {
 				throw redirect({ to: "/" });
 			}
-		} catch (error) {
-			console.error(error);
-		}
+		} catch (_error) {}
 	},
 	pendingComponent: AppPending,
 	component: AuthLayout,

@@ -35,7 +35,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getUserProfile, upsertUserProfile } from "@/lib/api/profile";
+import { getUserProfile, upsertUserProfile } from "@/lib/api/user.profile";
 
 export function AppHeaderUserMenu() {
 	const { user } = useUser();
@@ -48,7 +48,7 @@ export function AppHeaderUserMenu() {
 	const queryClient = useQueryClient();
 
 	const userProfileResult = useQuery({
-		queryKey: ["user", "profile", user?.id],
+		queryKey: ["user-profile", user?.id],
 		queryFn: () => getUserProfileFn(),
 	});
 
@@ -57,7 +57,7 @@ export function AppHeaderUserMenu() {
 			upsertUserProfileFn({ data }),
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ["user", "profile", user?.id],
+				queryKey: ["user-profile", user?.id],
 			});
 
 			setIsUserMenuDialogOpen(false);

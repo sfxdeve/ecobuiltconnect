@@ -36,7 +36,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { getProducts } from "@/server/public/products";
+import { getProducts } from "@/lib/api/public.products";
 import { cartActions } from "@/stores/cart";
 import { cn } from "@/utils";
 import { formatMoneyFromCents } from "@/utils/formatters";

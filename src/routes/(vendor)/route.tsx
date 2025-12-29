@@ -3,15 +3,13 @@ import { AppFooter } from "@/components/blocks/app-footer";
 import { AppPending } from "@/components/blocks/app-pending";
 import { VendorSidebar } from "@/components/blocks/vendor-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { getVendorProfile } from "@/lib/api/profile";
+import { getVendorProfile } from "@/lib/api/vendor.profile";
 
 export const Route = createFileRoute("/(vendor)")({
 	beforeLoad: async () => {
 		try {
 			await getVendorProfile();
-		} catch (error) {
-			console.error(error);
-
+		} catch (_error) {
 			throw redirect({ to: "/" });
 		}
 	},

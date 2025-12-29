@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getUserProfile } from "@/lib/api/profile";
+import { getUserProfile } from "@/lib/api/user.profile";
 import { prisma } from "@/prisma";
 import type { ProductRequestWhereInput } from "@/prisma/generated/models";
 import { categorySelector, productRequestSelector } from "@/prisma/selectors";

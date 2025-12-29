@@ -35,8 +35,8 @@ import {
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { getUserProfile } from "@/lib/api/profile";
-import { getProductById } from "@/server/public/products";
+import { getProductById } from "@/lib/api/public.products";
+import { getUserProfile } from "@/lib/api/user.profile";
 import { createOrderRequest } from "@/server/user/order-requests";
 import { initiateOrderRequestPayment } from "@/server/user/ozow";
 import { cartActions, cartStore } from "@/stores/cart";
@@ -71,7 +71,7 @@ function CheckoutPage() {
 	const queryClient = useQueryClient();
 
 	const userProfileResult = useQuery({
-		queryKey: ["user", "profile", user?.id],
+		queryKey: ["user-profile", user?.id],
 		queryFn: () => getUserProfileFn(),
 	});
 
@@ -206,10 +206,10 @@ function CheckoutPage() {
 									<ItemDescription>
 										<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
 											<span className="font-medium">Name:</span>
-											<span>{user.fullName}</span>
+											<span>{user?.fullName}</span>
 											<span className="font-medium">Email:</span>
 											<span className="break-all">
-												{user.primaryEmailAddress?.emailAddress}
+												{user?.primaryEmailAddress?.emailAddress}
 											</span>
 										</div>
 									</ItemDescription>
