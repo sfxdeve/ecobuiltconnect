@@ -103,7 +103,6 @@ function VendorRequestsPage() {
 								<TableHead>Quantity</TableHead>
 								<TableHead>Price</TableHead>
 								<TableHead>Date</TableHead>
-								<TableHead></TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
@@ -125,7 +124,6 @@ function VendorRequestsPage() {
 										<TableCell>
 											{formatDate(productRequest.createdAt)}
 										</TableCell>
-										<TableCell></TableCell>
 									</TableRow>
 								);
 							})}

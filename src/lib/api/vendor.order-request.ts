@@ -43,6 +43,9 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 		const { vendorProfile } = await getVendorProfile();
 
 		const where: OrderRequestWhereInput = {
+			status: {
+				notIn: [OrderStatus.PENDING, OrderStatus.CANCELLED],
+			},
 			orderItems: {
 				every: {
 					product: {
@@ -117,6 +120,9 @@ export const getOrderRequest = createServerFn({ method: "GET" })
 		const orderRequest = await prisma.orderRequest.findUnique({
 			where: {
 				id: data.orderRequestId,
+				status: {
+					notIn: [OrderStatus.PENDING, OrderStatus.CANCELLED],
+				},
 				orderItems: {
 					every: {
 						product: {
