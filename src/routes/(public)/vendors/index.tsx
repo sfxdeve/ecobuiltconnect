@@ -22,7 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { getVendorProfiles } from "@/lib/api/public.vendors";
+import { getVendorProfiles } from "@/lib/api/public.vendor-profiles";
 import { cn } from "@/utils";
 
 export const Route = createFileRoute("/(public)/vendors/")({

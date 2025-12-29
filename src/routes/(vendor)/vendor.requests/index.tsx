@@ -14,17 +14,15 @@ export const Route = createFileRoute("/(vendor)/vendor/requests/")({
 			},
 		],
 	}),
-	component: VendorRequestsPage,
 	pendingComponent: AppPending,
+	component: VendorRequestsPage,
 });
 
 function VendorRequestsPage() {
 	return (
 		<>
 			<DashboardHeader title="Requests" />
-			<main className="min-h-screen">
-				<section></section>
-			</main>
+			<section className="min-h-screen"></section>
 		</>
 	);
 }

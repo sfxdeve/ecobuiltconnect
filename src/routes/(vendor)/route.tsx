@@ -21,10 +21,10 @@ function VendorLayout() {
 	return (
 		<SidebarProvider>
 			<VendorSidebar />
-			<div className="w-full">
+			<main className="w-full">
 				<Outlet />
 				<AppFooter />
-			</div>
+			</main>
 		</SidebarProvider>
 	);
 }
