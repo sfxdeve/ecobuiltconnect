@@ -47,7 +47,11 @@ export function VendorProfileForm({
 }: {
 	defaultValues: z.infer<typeof vendorProfileFormSchema>;
 	isSubmitting: boolean;
-	submitHandler: (data: z.infer<typeof vendorProfileFormSchema>) => void;
+	submitHandler: ({
+		data,
+	}: {
+		data: z.infer<typeof vendorProfileFormSchema>;
+	}) => void;
 }) {
 	const cities = useQuery({
 		queryKey: ["cities"],
@@ -62,7 +66,7 @@ export function VendorProfileForm({
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {
-			submitHandler(data);
+			submitHandler({ data });
 		},
 	});
 

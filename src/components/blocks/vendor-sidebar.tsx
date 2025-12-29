@@ -12,11 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { z } from "zod";
-import {
-	VendorProfileForm,
-	type vendorProfileFormSchema,
-} from "@/components/forms/vendor-profile-form";
+import { VendorProfileForm } from "@/components/forms/vendor-profile-form";
 import {
 	Dialog,
 	DialogContent,
@@ -83,8 +79,7 @@ export function VendorSidebar() {
 	});
 
 	const upsertVendorProfileMutation = useMutation({
-		mutationFn: (data: z.infer<typeof vendorProfileFormSchema>) =>
-			upsertVendorProfileFn({ data }),
+		mutationFn: upsertVendorProfileFn,
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
 				queryKey: ["vendor-profile", user?.id],
@@ -154,9 +149,7 @@ export function VendorSidebar() {
 										vendorProfileResult.data?.vendorProfile?.postcode ?? "",
 								}}
 								isSubmitting={upsertVendorProfileMutation.isPending}
-								submitHandler={(data) => {
-									upsertVendorProfileMutation.mutate(data);
-								}}
+								submitHandler={upsertVendorProfileMutation.mutate}
 							/>
 						</DialogContent>
 					</Dialog>
