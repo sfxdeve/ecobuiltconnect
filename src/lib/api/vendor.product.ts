@@ -7,6 +7,7 @@ import {
 	productSelector,
 	vendorProfileSelector,
 } from "@/prisma/selectors";
+import { getVendorProfile } from "./vendor.profile";
 
 export const getProducts = createServerFn({
 	method: "GET",
@@ -57,10 +58,11 @@ export const getProducts = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
+		const { vendorProfile } = await getVendorProfile();
+
 		const where: ProductWhereInput = {
 			isDeleted: false,
-			category: { status: "APPROVED", isDeleted: false },
-			vendorProfile: { status: "APPROVED" },
+			vendorProfile: { id: vendorProfile.id },
 			AND: [],
 		};
 
@@ -141,12 +143,13 @@ export const getProductById = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
+		const { vendorProfile } = await getVendorProfile();
+
 		const product = await prisma.product.findUnique({
 			where: {
 				id: data.id,
 				isDeleted: false,
-				category: { status: "APPROVED", isDeleted: false },
-				vendorProfile: { status: "APPROVED" },
+				vendorProfile: { id: vendorProfile.id },
 			},
 			select: {
 				...productSelector,
