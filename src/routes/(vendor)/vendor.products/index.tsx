@@ -1,6 +1,11 @@
 import { debounce } from "@tanstack/pacer";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	FilterIcon,
+	MoreHorizontalIcon,
+} from "lucide-react";
 import { useId, useState } from "react";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
@@ -14,6 +19,12 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
 	Empty,
 	EmptyDescription,
@@ -98,6 +109,10 @@ export const Route = createFileRoute("/(vendor)/vendor/products/")({
 function VendorProductsPage() {
 	const loaderData = Route.useLoaderData();
 
+	const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+	const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
 	return (
 		<>
 			<DashboardHeader title="Products" />
@@ -136,7 +151,60 @@ function VendorProductsPage() {
 											)}
 										</TableCell>
 										<TableCell>{formatDate(product.createdAt)}</TableCell>
-										<TableCell></TableCell>
+										<TableCell>
+											<DropdownMenu>
+												<DropdownMenuTrigger
+													render={<Button variant="ghost" size="icon" />}
+												>
+													<MoreHorizontalIcon />
+													<span className="sr-only">Open actions menu</span>
+												</DropdownMenuTrigger>
+												<DropdownMenuContent align="end">
+													<DropdownMenuItem
+														onClick={() => {
+															setIsViewDialogOpen(true);
+														}}
+													>
+														View
+													</DropdownMenuItem>
+													<DropdownMenuItem
+														onClick={() => {
+															setIsUpdateDialogOpen(true);
+														}}
+													>
+														Update
+													</DropdownMenuItem>
+													<DropdownMenuItem
+														onClick={() => {
+															setIsDeleteDialogOpen(true);
+														}}
+													>
+														Delete
+													</DropdownMenuItem>
+												</DropdownMenuContent>
+											</DropdownMenu>
+											<Dialog
+												open={isViewDialogOpen}
+												onOpenChange={setIsViewDialogOpen}
+											>
+												{/* <ViewProductDialogContent productId={product.id} /> */}
+											</Dialog>
+											<Dialog
+												open={isUpdateDialogOpen}
+												onOpenChange={setIsUpdateDialogOpen}
+											>
+												{/* <UpdateProductDialogContent
+													productId={product.id}
+													setIsDialogOpen={setIsUpdateDialogOpen}
+												/> */}
+											</Dialog>
+											<Dialog
+												open={isDeleteDialogOpen}
+												onOpenChange={setIsDeleteDialogOpen}
+											>
+												{/* <DeleteProductDialogContent productId={product.id} /> */}
+											</Dialog>
+										</TableCell>
 									</TableRow>
 								);
 							})}

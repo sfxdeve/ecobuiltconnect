@@ -96,19 +96,19 @@ export const Route = createFileRoute("/(vendor)/vendor/orders/")({
 	head: () => ({
 		meta: [
 			{
-				title: "Orders - EcobuiltConnect",
+				title: "Order Requests - EcobuiltConnect",
 			},
 			{
 				name: "description",
-				content: "Manage your vendor orders and shipments.",
+				content: "Manage your order requests.",
 			},
 		],
 	}),
 	pendingComponent: AppPending,
-	component: VendorOrdersPage,
+	component: VendorOrderRequestsPage,
 });
 
-function VendorOrdersPage() {
+function VendorOrderRequestsPage() {
 	const loaderData = Route.useLoaderData();
 
 	const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -116,9 +116,9 @@ function VendorOrdersPage() {
 
 	return (
 		<>
-			<DashboardHeader title="Orders" />
+			<DashboardHeader title="Order Requests" />
 			<section className="p-4 space-y-6 min-h-screen">
-				<OrdersPageSearch />
+				<OrderRequestsPageSearch />
 				{loaderData.orderRequests.length > 0 ? (
 					<Table>
 						<TableHeader>
@@ -195,7 +195,7 @@ function VendorOrdersPage() {
 												open={isViewDialogOpen}
 												onOpenChange={setIsViewDialogOpen}
 											>
-												<ViewOrderDialogContent
+												<ViewOrderRequestDialogContent
 													orderRequestId={orderRequest.id}
 												/>
 											</Dialog>
@@ -203,7 +203,7 @@ function VendorOrdersPage() {
 												open={isUpdateDialogOpen}
 												onOpenChange={setIsUpdateDialogOpen}
 											>
-												<UpdateOrderDialogContent
+												<UpdateOrderRequestDialogContent
 													orderRequestId={orderRequest.id}
 													setIsDialogOpen={setIsUpdateDialogOpen}
 												/>
@@ -225,13 +225,13 @@ function VendorOrdersPage() {
 						</EmptyHeader>
 					</Empty>
 				)}
-				<OrdersPagePagination />
+				<OrderRequestsPagePagination />
 			</section>
 		</>
 	);
 }
 
-function ViewOrderDialogContent({
+function ViewOrderRequestDialogContent({
 	orderRequestId,
 }: {
 	orderRequestId: string;
@@ -247,10 +247,10 @@ function ViewOrderDialogContent({
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>View Order</DialogTitle>
+					<DialogTitle>View Order Request</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-muted-foreground">
-					Loading order details...
+					Loading order request details...
 				</div>
 			</DialogContent>
 		);
@@ -260,10 +260,10 @@ function ViewOrderDialogContent({
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>View Order</DialogTitle>
+					<DialogTitle>View Order Request</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-destructive">
-					Error loading order: {orderRequestResult.error.message}
+					Error loading order request: {orderRequestResult.error.message}
 				</div>
 			</DialogContent>
 		);
@@ -288,7 +288,7 @@ function ViewOrderDialogContent({
 	return (
 		<DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
 			<DialogHeader>
-				<DialogTitle>Order Details</DialogTitle>
+				<DialogTitle>Order Request Details</DialogTitle>
 			</DialogHeader>
 			<div className="space-y-6">
 				<div className="grid grid-cols-2 gap-4">
@@ -367,7 +367,7 @@ function ViewOrderDialogContent({
 	);
 }
 
-function UpdateOrderDialogContent({
+function UpdateOrderRequestDialogContent({
 	orderRequestId,
 	setIsDialogOpen,
 }: {
@@ -387,7 +387,7 @@ function UpdateOrderDialogContent({
 	const updateOrderRequestMutation = useMutation({
 		mutationFn: updateOrderRequestFn,
 		onSuccess: () => {
-			toast.success("Order updated successfully");
+			toast.success("Order Request updated successfully");
 
 			router.invalidate();
 
@@ -401,7 +401,7 @@ function UpdateOrderDialogContent({
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Update Order</DialogTitle>
+				<DialogTitle>Update Order Request</DialogTitle>
 			</DialogHeader>
 			<VendorOrderRequestForm
 				defaultValues={{
@@ -417,7 +417,7 @@ function UpdateOrderDialogContent({
 	);
 }
 
-function OrdersPageSearch() {
+function OrderRequestsPageSearch() {
 	const navigate = Route.useNavigate();
 
 	const debouncedSearch = debounce(
@@ -437,7 +437,7 @@ function OrdersPageSearch() {
 	return (
 		<div className="flex gap-2 items-center justify-between">
 			<Input
-				placeholder="Search Orders"
+				placeholder="Search Order Requests"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
@@ -445,7 +445,7 @@ function OrdersPageSearch() {
 	);
 }
 
-function OrdersPagePagination() {
+function OrderRequestsPagePagination() {
 	const loaderData = Route.useLoaderData();
 	const navigate = Route.useNavigate();
 
@@ -462,7 +462,7 @@ function OrdersPagePagination() {
 			<Field orientation="horizontal" className="w-fit">
 				<FieldLabel htmlFor={limitSelectId}>
 					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
-					{loaderData.total} orders
+					{loaderData.total} orderRequests
 				</FieldLabel>
 				<Select
 					key={loaderData.limit}
