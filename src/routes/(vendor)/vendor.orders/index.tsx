@@ -116,7 +116,7 @@ function VendorOrdersPage() {
 										<TableCell className="uppercase">
 											{orderRequest.id.slice(24)}
 										</TableCell>
-										<TableCell>{orderRequest.orderItems.length}</TableCell>
+										<TableCell>{orderRequest._count.orderItems}</TableCell>
 										<TableCell>
 											<Badge variant={statusBadgeVariant}>
 												{orderRequest.status}

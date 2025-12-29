@@ -5,7 +5,7 @@ import type {
 	OrderRequestWhereInput,
 	ProductWhereInput,
 } from "@/prisma/generated/models";
-import { orderItemSelector, orderRequestSelector } from "@/prisma/selectors";
+import { orderRequestSelector } from "@/prisma/selectors";
 import { getVendorProfile } from "./vendor.profile";
 
 export const getOrderRequests = createServerFn({ method: "GET" })
@@ -79,8 +79,10 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 				orderBy: { [data.sortBy]: data.sortOrder },
 				select: {
 					...orderRequestSelector,
-					orderItems: {
-						select: orderItemSelector,
+					_count: {
+						select: {
+							orderItems: true,
+						},
 					},
 				},
 			}),

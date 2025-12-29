@@ -104,7 +104,7 @@ function ProductRequestsPage() {
 							<TableHead>Quantity</TableHead>
 							<TableHead>Price</TableHead>
 							<TableHead>Date</TableHead>
-							{/* <TableHead>Actions</TableHead> */}
+							<TableHead></TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -124,6 +124,7 @@ function ProductRequestsPage() {
 										})}
 									</TableCell>
 									<TableCell>{formatDate(productRequest.createdAt)}</TableCell>
+									<TableCell></TableCell>
 								</TableRow>
 							);
 						})}
