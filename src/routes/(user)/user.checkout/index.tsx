@@ -50,7 +50,7 @@ export const Route = createFileRoute("/(user)/user/checkout/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content: "Secure checkout for your sustainable building supplies.",
 			},
 		],
 	}),

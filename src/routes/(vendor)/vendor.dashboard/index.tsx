@@ -9,7 +9,8 @@ export const Route = createFileRoute("/(vendor)/vendor/dashboard/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content:
+					"Vendor dashboard overview. Monitor sales, orders, and performance.",
 			},
 		],
 	}),

@@ -63,7 +63,7 @@ export const Route = createFileRoute("/(user)/user/orders/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content: "View your order history and status on EcobuiltConnect.",
 			},
 		],
 	}),

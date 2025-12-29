@@ -80,7 +80,8 @@ export const Route = createFileRoute("/(public)/products/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content:
+					"Browse our catalog of eco-friendly building materials and products. Sustainable sourcing for your construction needs.",
 			},
 		],
 	}),

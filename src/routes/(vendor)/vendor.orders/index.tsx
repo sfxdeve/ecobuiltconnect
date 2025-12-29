@@ -9,7 +9,7 @@ export const Route = createFileRoute("/(vendor)/vendor/orders/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content: "Manage your vendor orders and shipments.",
 			},
 		],
 	}),

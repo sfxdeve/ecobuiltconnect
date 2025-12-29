@@ -10,7 +10,7 @@ export const Route = createFileRoute("/(auth)/sign-up/$")({
 			},
 			{
 				name: "description",
-				content: "",
+				content: "Sign up for a new EcobuiltConnect account today.",
 			},
 		],
 	}),

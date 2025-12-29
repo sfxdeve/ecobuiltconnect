@@ -10,7 +10,8 @@ export const Route = createFileRoute("/(public)/community/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content:
+					"Join the EcobuiltConnect community. Share ideas, discuss sustainable building practices, and connect with like-minded individuals.",
 			},
 		],
 	}),

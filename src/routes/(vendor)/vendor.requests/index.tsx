@@ -9,7 +9,7 @@ export const Route = createFileRoute("/(vendor)/vendor/requests/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content: "View and respond to customer product requests.",
 			},
 		],
 	}),

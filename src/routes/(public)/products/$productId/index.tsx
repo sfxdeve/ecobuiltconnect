@@ -27,7 +27,7 @@ export const Route = createFileRoute("/(public)/products/$productId/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content: `Buy ${loaderData?.product.name} on EcobuiltConnect. Sustainable construction materials and products.`,
 			},
 		],
 	}),

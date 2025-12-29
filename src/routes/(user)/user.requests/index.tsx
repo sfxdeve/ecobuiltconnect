@@ -80,7 +80,7 @@ export const Route = createFileRoute("/(user)/user/requests/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content: "Manage your service and product requests on EcobuiltConnect.",
 			},
 		],
 	}),

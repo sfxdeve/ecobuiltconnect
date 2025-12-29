@@ -50,7 +50,8 @@ export const Route = createFileRoute("/(public)/vendors/")({
 			},
 			{
 				name: "description",
-				content: "",
+				content:
+					"Find trusted vendors and suppliers for sustainable construction materials.",
 			},
 		],
 	}),
