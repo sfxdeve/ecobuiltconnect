@@ -6,11 +6,10 @@ import { Input } from "../ui/input";
 import { Spinner } from "../ui/spinner";
 
 export const userLogisticRequestFormSchema = z.object({
-	orderRequestId: z.uuid("Order request id must be valid UUID"),
 	requestedPrice: z
 		.number("Requested price must be a number")
-		.min(1, "Requested price must be at least 1")
-		.transform((val) => val * 100),
+		.min(1, "Requested price must be at least 1"),
+	orderRequestId: z.uuid("Order request id must be valid UUID"),
 });
 
 export function UserLogisticRequestForm({

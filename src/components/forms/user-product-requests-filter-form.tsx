@@ -25,15 +25,15 @@ export const userProductRequestsFiltersFormSchema = z.object({
 		.optional(),
 	minQuantity: z
 		.int("Minimum quantity must be an integer")
-		.min(1, "Minimum quantity must be greater than 0")
+		.min(1, "Minimum quantity must be at least 1")
 		.optional(),
 	minPrice: z
 		.number("Minimum price must be a number")
-		.min(1, "Minimum price must be greater than 0")
+		.min(1, "Minimum price must be at least 1")
 		.optional(),
 	maxPrice: z
 		.number("Maximum price must be a number")
-		.min(1, "Maximum price must be greater than 0")
+		.min(1, "Maximum price must be at least 1")
 		.optional(),
 });
 

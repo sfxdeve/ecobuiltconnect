@@ -26,7 +26,7 @@ export const userProductRequestFormSchema = z.object({
 		.min(3, "Name must be at least 3 characters"),
 	description: z
 		.string("Description must be a string")
-		.min(12, "Description must be at least 12 characters"),
+		.min(10, "Description must be at least 10 characters"),
 	quantity: z
 		.int("Quantity must be an integer")
 		.min(1, "Quantity must be at least 1"),

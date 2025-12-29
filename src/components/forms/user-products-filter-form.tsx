@@ -34,15 +34,15 @@ export const userProductsFiltersFormSchema = z.object({
 		.optional(),
 	minStock: z
 		.int("Minimum stock must be an integer")
-		.min(1, "Minimum stock must be greater than 0")
+		.min(1, "Minimum stock must be at least 1")
 		.optional(),
 	minPrice: z
 		.number("Minimum price must be a number")
-		.min(1, "Minimum price must be greater than 0")
+		.min(1, "Minimum price must be at least 1")
 		.optional(),
 	maxPrice: z
 		.number("Maximum price must be a number")
-		.min(1, "Maximum price must be greater than 0")
+		.min(1, "Maximum price must be at least 1")
 		.optional(),
 	isVerified: z.boolean("Is verified must be a boolean").optional(),
 });
