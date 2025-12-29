@@ -40,7 +40,7 @@ import { cn } from "@/lib/utils";
 import { createLogisticRequest } from "@/server/user/logistic-requests";
 import { getOrderRequestById } from "@/server/user/orders";
 
-export const Route = createFileRoute("/user/orders/$orderId/")({
+export const Route = createFileRoute("/(user)/user/orders/$orderId/")({
 	loader: ({ params }) =>
 		getOrderRequestById({
 			data: {

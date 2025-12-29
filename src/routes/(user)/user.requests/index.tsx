@@ -51,7 +51,7 @@ import {
 	getProductRequests,
 } from "@/server/user/product-requests";
 
-export const Route = createFileRoute("/user/requests/")({
+export const Route = createFileRoute("/(user)/user/requests/")({
 	validateSearch: z.object({
 		page: z.int("Page must be an integer").default(1),
 		limit: z.int("Limit must be an integer").default(10),

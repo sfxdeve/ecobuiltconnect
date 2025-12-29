@@ -9,23 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as vendorRouteRouteImport } from './routes/(vendor)/route'
+import { Route as userRouteRouteImport } from './routes/(user)/route'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
-import { Route as UserRequestsIndexRouteImport } from './routes/user/requests/index'
-import { Route as UserOrdersIndexRouteImport } from './routes/user/orders/index'
-import { Route as UserCheckoutIndexRouteImport } from './routes/user/checkout/index'
 import { Route as publicVendorsIndexRouteImport } from './routes/(public)/vendors/index'
 import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
 import { Route as publicCommunityIndexRouteImport } from './routes/(public)/community/index'
-import { Route as ApiOzowNotifyRouteImport } from './routes/api/ozow/notify'
 import { Route as authSignUpSplatRouteImport } from './routes/(auth)/sign-up/$'
 import { Route as authSignInSplatRouteImport } from './routes/(auth)/sign-in/$'
-import { Route as UserOrdersOrderIdIndexRouteImport } from './routes/user/orders/$orderId/index'
+import { Route as vendorVendorRequestsIndexRouteImport } from './routes/(vendor)/vendor.requests/index'
+import { Route as vendorVendorProductsIndexRouteImport } from './routes/(vendor)/vendor.products/index'
+import { Route as vendorVendorOrdersIndexRouteImport } from './routes/(vendor)/vendor.orders/index'
+import { Route as vendorVendorDashboardIndexRouteImport } from './routes/(vendor)/vendor.dashboard/index'
+import { Route as userUserRequestsIndexRouteImport } from './routes/(user)/user.requests/index'
+import { Route as userUserOrdersIndexRouteImport } from './routes/(user)/user.orders/index'
+import { Route as userUserCheckoutIndexRouteImport } from './routes/(user)/user.checkout/index'
 import { Route as publicProductsProductIdIndexRouteImport } from './routes/(public)/products/$productId/index'
-import { Route as UserOrdersOrderIdDeliveryIndexRouteImport } from './routes/user/orders/$orderId/delivery/index'
+import { Route as apiApiOzowNotifyRouteImport } from './routes/(api)/api.ozow/notify'
+import { Route as userUserOrdersOrderIdIndexRouteImport } from './routes/(user)/user.orders/$orderId/index'
+import { Route as userUserOrdersOrderIdDeliveryIndexRouteImport } from './routes/(user)/user.orders/$orderId/delivery/index'
 
+const vendorRouteRoute = vendorRouteRouteImport.update({
+  id: '/(vendor)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const userRouteRoute = userRouteRouteImport.update({
+  id: '/(user)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
   getParentRoute: () => rootRouteImport,
@@ -38,21 +52,6 @@ const publicIndexRoute = publicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => publicRouteRoute,
-} as any)
-const UserRequestsIndexRoute = UserRequestsIndexRouteImport.update({
-  id: '/user/requests/',
-  path: '/user/requests/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UserOrdersIndexRoute = UserOrdersIndexRouteImport.update({
-  id: '/user/orders/',
-  path: '/user/orders/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UserCheckoutIndexRoute = UserCheckoutIndexRouteImport.update({
-  id: '/user/checkout/',
-  path: '/user/checkout/',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const publicVendorsIndexRoute = publicVendorsIndexRouteImport.update({
   id: '/vendors/',
@@ -74,11 +73,6 @@ const publicCommunityIndexRoute = publicCommunityIndexRouteImport.update({
   path: '/community/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const ApiOzowNotifyRoute = ApiOzowNotifyRouteImport.update({
-  id: '/api/ozow/notify',
-  path: '/api/ozow/notify',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const authSignUpSplatRoute = authSignUpSplatRouteImport.update({
   id: '/sign-up/$',
   path: '/sign-up/$',
@@ -89,10 +83,43 @@ const authSignInSplatRoute = authSignInSplatRouteImport.update({
   path: '/sign-in/$',
   getParentRoute: () => authRouteRoute,
 } as any)
-const UserOrdersOrderIdIndexRoute = UserOrdersOrderIdIndexRouteImport.update({
-  id: '/user/orders/$orderId/',
-  path: '/user/orders/$orderId/',
-  getParentRoute: () => rootRouteImport,
+const vendorVendorRequestsIndexRoute =
+  vendorVendorRequestsIndexRouteImport.update({
+    id: '/vendor/requests/',
+    path: '/vendor/requests/',
+    getParentRoute: () => vendorRouteRoute,
+  } as any)
+const vendorVendorProductsIndexRoute =
+  vendorVendorProductsIndexRouteImport.update({
+    id: '/vendor/products/',
+    path: '/vendor/products/',
+    getParentRoute: () => vendorRouteRoute,
+  } as any)
+const vendorVendorOrdersIndexRoute = vendorVendorOrdersIndexRouteImport.update({
+  id: '/vendor/orders/',
+  path: '/vendor/orders/',
+  getParentRoute: () => vendorRouteRoute,
+} as any)
+const vendorVendorDashboardIndexRoute =
+  vendorVendorDashboardIndexRouteImport.update({
+    id: '/vendor/dashboard/',
+    path: '/vendor/dashboard/',
+    getParentRoute: () => vendorRouteRoute,
+  } as any)
+const userUserRequestsIndexRoute = userUserRequestsIndexRouteImport.update({
+  id: '/user/requests/',
+  path: '/user/requests/',
+  getParentRoute: () => userRouteRoute,
+} as any)
+const userUserOrdersIndexRoute = userUserOrdersIndexRouteImport.update({
+  id: '/user/orders/',
+  path: '/user/orders/',
+  getParentRoute: () => userRouteRoute,
+} as any)
+const userUserCheckoutIndexRoute = userUserCheckoutIndexRouteImport.update({
+  id: '/user/checkout/',
+  path: '/user/checkout/',
+  getParentRoute: () => userRouteRoute,
 } as any)
 const publicProductsProductIdIndexRoute =
   publicProductsProductIdIndexRouteImport.update({
@@ -100,63 +127,88 @@ const publicProductsProductIdIndexRoute =
     path: '/products/$productId/',
     getParentRoute: () => publicRouteRoute,
   } as any)
-const UserOrdersOrderIdDeliveryIndexRoute =
-  UserOrdersOrderIdDeliveryIndexRouteImport.update({
+const apiApiOzowNotifyRoute = apiApiOzowNotifyRouteImport.update({
+  id: '/(api)/api/ozow/notify',
+  path: '/api/ozow/notify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const userUserOrdersOrderIdIndexRoute =
+  userUserOrdersOrderIdIndexRouteImport.update({
+    id: '/user/orders/$orderId/',
+    path: '/user/orders/$orderId/',
+    getParentRoute: () => userRouteRoute,
+  } as any)
+const userUserOrdersOrderIdDeliveryIndexRoute =
+  userUserOrdersOrderIdDeliveryIndexRouteImport.update({
     id: '/user/orders/$orderId/delivery/',
     path: '/user/orders/$orderId/delivery/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => userRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
   '/sign-in/$': typeof authSignInSplatRoute
   '/sign-up/$': typeof authSignUpSplatRoute
-  '/api/ozow/notify': typeof ApiOzowNotifyRoute
   '/community': typeof publicCommunityIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
   '/vendors': typeof publicVendorsIndexRoute
-  '/user/checkout': typeof UserCheckoutIndexRoute
-  '/user/orders': typeof UserOrdersIndexRoute
-  '/user/requests': typeof UserRequestsIndexRoute
+  '/api/ozow/notify': typeof apiApiOzowNotifyRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
-  '/user/orders/$orderId': typeof UserOrdersOrderIdIndexRoute
-  '/user/orders/$orderId/delivery': typeof UserOrdersOrderIdDeliveryIndexRoute
+  '/user/checkout': typeof userUserCheckoutIndexRoute
+  '/user/orders': typeof userUserOrdersIndexRoute
+  '/user/requests': typeof userUserRequestsIndexRoute
+  '/vendor/dashboard': typeof vendorVendorDashboardIndexRoute
+  '/vendor/orders': typeof vendorVendorOrdersIndexRoute
+  '/vendor/products': typeof vendorVendorProductsIndexRoute
+  '/vendor/requests': typeof vendorVendorRequestsIndexRoute
+  '/user/orders/$orderId': typeof userUserOrdersOrderIdIndexRoute
+  '/user/orders/$orderId/delivery': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
   '/sign-in/$': typeof authSignInSplatRoute
   '/sign-up/$': typeof authSignUpSplatRoute
-  '/api/ozow/notify': typeof ApiOzowNotifyRoute
   '/community': typeof publicCommunityIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
   '/vendors': typeof publicVendorsIndexRoute
-  '/user/checkout': typeof UserCheckoutIndexRoute
-  '/user/orders': typeof UserOrdersIndexRoute
-  '/user/requests': typeof UserRequestsIndexRoute
+  '/api/ozow/notify': typeof apiApiOzowNotifyRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
-  '/user/orders/$orderId': typeof UserOrdersOrderIdIndexRoute
-  '/user/orders/$orderId/delivery': typeof UserOrdersOrderIdDeliveryIndexRoute
+  '/user/checkout': typeof userUserCheckoutIndexRoute
+  '/user/orders': typeof userUserOrdersIndexRoute
+  '/user/requests': typeof userUserRequestsIndexRoute
+  '/vendor/dashboard': typeof vendorVendorDashboardIndexRoute
+  '/vendor/orders': typeof vendorVendorOrdersIndexRoute
+  '/vendor/products': typeof vendorVendorProductsIndexRoute
+  '/vendor/requests': typeof vendorVendorRequestsIndexRoute
+  '/user/orders/$orderId': typeof userUserOrdersOrderIdIndexRoute
+  '/user/orders/$orderId/delivery': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
+  '/(user)': typeof userRouteRouteWithChildren
+  '/(vendor)': typeof vendorRouteRouteWithChildren
   '/(public)/': typeof publicIndexRoute
   '/(auth)/sign-in/$': typeof authSignInSplatRoute
   '/(auth)/sign-up/$': typeof authSignUpSplatRoute
-  '/api/ozow/notify': typeof ApiOzowNotifyRoute
   '/(public)/community/': typeof publicCommunityIndexRoute
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/products/': typeof publicProductsIndexRoute
   '/(public)/vendors/': typeof publicVendorsIndexRoute
-  '/user/checkout/': typeof UserCheckoutIndexRoute
-  '/user/orders/': typeof UserOrdersIndexRoute
-  '/user/requests/': typeof UserRequestsIndexRoute
+  '/(api)/api/ozow/notify': typeof apiApiOzowNotifyRoute
   '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
-  '/user/orders/$orderId/': typeof UserOrdersOrderIdIndexRoute
-  '/user/orders/$orderId/delivery/': typeof UserOrdersOrderIdDeliveryIndexRoute
+  '/(user)/user/checkout/': typeof userUserCheckoutIndexRoute
+  '/(user)/user/orders/': typeof userUserOrdersIndexRoute
+  '/(user)/user/requests/': typeof userUserRequestsIndexRoute
+  '/(vendor)/vendor/dashboard/': typeof vendorVendorDashboardIndexRoute
+  '/(vendor)/vendor/orders/': typeof vendorVendorOrdersIndexRoute
+  '/(vendor)/vendor/products/': typeof vendorVendorProductsIndexRoute
+  '/(vendor)/vendor/requests/': typeof vendorVendorRequestsIndexRoute
+  '/(user)/user/orders/$orderId/': typeof userUserOrdersOrderIdIndexRoute
+  '/(user)/user/orders/$orderId/delivery/': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -164,15 +216,19 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in/$'
     | '/sign-up/$'
-    | '/api/ozow/notify'
     | '/community'
     | '/contact'
     | '/products'
     | '/vendors'
+    | '/api/ozow/notify'
+    | '/products/$productId'
     | '/user/checkout'
     | '/user/orders'
     | '/user/requests'
-    | '/products/$productId'
+    | '/vendor/dashboard'
+    | '/vendor/orders'
+    | '/vendor/products'
+    | '/vendor/requests'
     | '/user/orders/$orderId'
     | '/user/orders/$orderId/delivery'
   fileRoutesByTo: FileRoutesByTo
@@ -180,50 +236,71 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in/$'
     | '/sign-up/$'
-    | '/api/ozow/notify'
     | '/community'
     | '/contact'
     | '/products'
     | '/vendors'
+    | '/api/ozow/notify'
+    | '/products/$productId'
     | '/user/checkout'
     | '/user/orders'
     | '/user/requests'
-    | '/products/$productId'
+    | '/vendor/dashboard'
+    | '/vendor/orders'
+    | '/vendor/products'
+    | '/vendor/requests'
     | '/user/orders/$orderId'
     | '/user/orders/$orderId/delivery'
   id:
     | '__root__'
     | '/(auth)'
     | '/(public)'
+    | '/(user)'
+    | '/(vendor)'
     | '/(public)/'
     | '/(auth)/sign-in/$'
     | '/(auth)/sign-up/$'
-    | '/api/ozow/notify'
     | '/(public)/community/'
     | '/(public)/contact/'
     | '/(public)/products/'
     | '/(public)/vendors/'
-    | '/user/checkout/'
-    | '/user/orders/'
-    | '/user/requests/'
+    | '/(api)/api/ozow/notify'
     | '/(public)/products/$productId/'
-    | '/user/orders/$orderId/'
-    | '/user/orders/$orderId/delivery/'
+    | '/(user)/user/checkout/'
+    | '/(user)/user/orders/'
+    | '/(user)/user/requests/'
+    | '/(vendor)/vendor/dashboard/'
+    | '/(vendor)/vendor/orders/'
+    | '/(vendor)/vendor/products/'
+    | '/(vendor)/vendor/requests/'
+    | '/(user)/user/orders/$orderId/'
+    | '/(user)/user/orders/$orderId/delivery/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
-  ApiOzowNotifyRoute: typeof ApiOzowNotifyRoute
-  UserCheckoutIndexRoute: typeof UserCheckoutIndexRoute
-  UserOrdersIndexRoute: typeof UserOrdersIndexRoute
-  UserRequestsIndexRoute: typeof UserRequestsIndexRoute
-  UserOrdersOrderIdIndexRoute: typeof UserOrdersOrderIdIndexRoute
-  UserOrdersOrderIdDeliveryIndexRoute: typeof UserOrdersOrderIdDeliveryIndexRoute
+  userRouteRoute: typeof userRouteRouteWithChildren
+  vendorRouteRoute: typeof vendorRouteRouteWithChildren
+  apiApiOzowNotifyRoute: typeof apiApiOzowNotifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(vendor)': {
+      id: '/(vendor)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof vendorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(user)': {
+      id: '/(user)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof userRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(public)': {
       id: '/(public)'
       path: ''
@@ -244,27 +321,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof publicIndexRouteImport
       parentRoute: typeof publicRouteRoute
-    }
-    '/user/requests/': {
-      id: '/user/requests/'
-      path: '/user/requests'
-      fullPath: '/user/requests'
-      preLoaderRoute: typeof UserRequestsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/user/orders/': {
-      id: '/user/orders/'
-      path: '/user/orders'
-      fullPath: '/user/orders'
-      preLoaderRoute: typeof UserOrdersIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/user/checkout/': {
-      id: '/user/checkout/'
-      path: '/user/checkout'
-      fullPath: '/user/checkout'
-      preLoaderRoute: typeof UserCheckoutIndexRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/(public)/vendors/': {
       id: '/(public)/vendors/'
@@ -294,13 +350,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicCommunityIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/api/ozow/notify': {
-      id: '/api/ozow/notify'
-      path: '/api/ozow/notify'
-      fullPath: '/api/ozow/notify'
-      preLoaderRoute: typeof ApiOzowNotifyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(auth)/sign-up/$': {
       id: '/(auth)/sign-up/$'
       path: '/sign-up/$'
@@ -315,12 +364,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignInSplatRouteImport
       parentRoute: typeof authRouteRoute
     }
-    '/user/orders/$orderId/': {
-      id: '/user/orders/$orderId/'
-      path: '/user/orders/$orderId'
-      fullPath: '/user/orders/$orderId'
-      preLoaderRoute: typeof UserOrdersOrderIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/(vendor)/vendor/requests/': {
+      id: '/(vendor)/vendor/requests/'
+      path: '/vendor/requests'
+      fullPath: '/vendor/requests'
+      preLoaderRoute: typeof vendorVendorRequestsIndexRouteImport
+      parentRoute: typeof vendorRouteRoute
+    }
+    '/(vendor)/vendor/products/': {
+      id: '/(vendor)/vendor/products/'
+      path: '/vendor/products'
+      fullPath: '/vendor/products'
+      preLoaderRoute: typeof vendorVendorProductsIndexRouteImport
+      parentRoute: typeof vendorRouteRoute
+    }
+    '/(vendor)/vendor/orders/': {
+      id: '/(vendor)/vendor/orders/'
+      path: '/vendor/orders'
+      fullPath: '/vendor/orders'
+      preLoaderRoute: typeof vendorVendorOrdersIndexRouteImport
+      parentRoute: typeof vendorRouteRoute
+    }
+    '/(vendor)/vendor/dashboard/': {
+      id: '/(vendor)/vendor/dashboard/'
+      path: '/vendor/dashboard'
+      fullPath: '/vendor/dashboard'
+      preLoaderRoute: typeof vendorVendorDashboardIndexRouteImport
+      parentRoute: typeof vendorRouteRoute
+    }
+    '/(user)/user/requests/': {
+      id: '/(user)/user/requests/'
+      path: '/user/requests'
+      fullPath: '/user/requests'
+      preLoaderRoute: typeof userUserRequestsIndexRouteImport
+      parentRoute: typeof userRouteRoute
+    }
+    '/(user)/user/orders/': {
+      id: '/(user)/user/orders/'
+      path: '/user/orders'
+      fullPath: '/user/orders'
+      preLoaderRoute: typeof userUserOrdersIndexRouteImport
+      parentRoute: typeof userRouteRoute
+    }
+    '/(user)/user/checkout/': {
+      id: '/(user)/user/checkout/'
+      path: '/user/checkout'
+      fullPath: '/user/checkout'
+      preLoaderRoute: typeof userUserCheckoutIndexRouteImport
+      parentRoute: typeof userRouteRoute
     }
     '/(public)/products/$productId/': {
       id: '/(public)/products/$productId/'
@@ -329,12 +420,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicProductsProductIdIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/user/orders/$orderId/delivery/': {
-      id: '/user/orders/$orderId/delivery/'
+    '/(api)/api/ozow/notify': {
+      id: '/(api)/api/ozow/notify'
+      path: '/api/ozow/notify'
+      fullPath: '/api/ozow/notify'
+      preLoaderRoute: typeof apiApiOzowNotifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(user)/user/orders/$orderId/': {
+      id: '/(user)/user/orders/$orderId/'
+      path: '/user/orders/$orderId'
+      fullPath: '/user/orders/$orderId'
+      preLoaderRoute: typeof userUserOrdersOrderIdIndexRouteImport
+      parentRoute: typeof userRouteRoute
+    }
+    '/(user)/user/orders/$orderId/delivery/': {
+      id: '/(user)/user/orders/$orderId/delivery/'
       path: '/user/orders/$orderId/delivery'
       fullPath: '/user/orders/$orderId/delivery'
-      preLoaderRoute: typeof UserOrdersOrderIdDeliveryIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof userUserOrdersOrderIdDeliveryIndexRouteImport
+      parentRoute: typeof userRouteRoute
     }
   }
 }
@@ -375,15 +480,51 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
   publicRouteRouteChildren,
 )
 
+interface userRouteRouteChildren {
+  userUserCheckoutIndexRoute: typeof userUserCheckoutIndexRoute
+  userUserOrdersIndexRoute: typeof userUserOrdersIndexRoute
+  userUserRequestsIndexRoute: typeof userUserRequestsIndexRoute
+  userUserOrdersOrderIdIndexRoute: typeof userUserOrdersOrderIdIndexRoute
+  userUserOrdersOrderIdDeliveryIndexRoute: typeof userUserOrdersOrderIdDeliveryIndexRoute
+}
+
+const userRouteRouteChildren: userRouteRouteChildren = {
+  userUserCheckoutIndexRoute: userUserCheckoutIndexRoute,
+  userUserOrdersIndexRoute: userUserOrdersIndexRoute,
+  userUserRequestsIndexRoute: userUserRequestsIndexRoute,
+  userUserOrdersOrderIdIndexRoute: userUserOrdersOrderIdIndexRoute,
+  userUserOrdersOrderIdDeliveryIndexRoute:
+    userUserOrdersOrderIdDeliveryIndexRoute,
+}
+
+const userRouteRouteWithChildren = userRouteRoute._addFileChildren(
+  userRouteRouteChildren,
+)
+
+interface vendorRouteRouteChildren {
+  vendorVendorDashboardIndexRoute: typeof vendorVendorDashboardIndexRoute
+  vendorVendorOrdersIndexRoute: typeof vendorVendorOrdersIndexRoute
+  vendorVendorProductsIndexRoute: typeof vendorVendorProductsIndexRoute
+  vendorVendorRequestsIndexRoute: typeof vendorVendorRequestsIndexRoute
+}
+
+const vendorRouteRouteChildren: vendorRouteRouteChildren = {
+  vendorVendorDashboardIndexRoute: vendorVendorDashboardIndexRoute,
+  vendorVendorOrdersIndexRoute: vendorVendorOrdersIndexRoute,
+  vendorVendorProductsIndexRoute: vendorVendorProductsIndexRoute,
+  vendorVendorRequestsIndexRoute: vendorVendorRequestsIndexRoute,
+}
+
+const vendorRouteRouteWithChildren = vendorRouteRoute._addFileChildren(
+  vendorRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
-  ApiOzowNotifyRoute: ApiOzowNotifyRoute,
-  UserCheckoutIndexRoute: UserCheckoutIndexRoute,
-  UserOrdersIndexRoute: UserOrdersIndexRoute,
-  UserRequestsIndexRoute: UserRequestsIndexRoute,
-  UserOrdersOrderIdIndexRoute: UserOrdersOrderIdIndexRoute,
-  UserOrdersOrderIdDeliveryIndexRoute: UserOrdersOrderIdDeliveryIndexRoute,
+  userRouteRoute: userRouteRouteWithChildren,
+  vendorRouteRoute: vendorRouteRouteWithChildren,
+  apiApiOzowNotifyRoute: apiApiOzowNotifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

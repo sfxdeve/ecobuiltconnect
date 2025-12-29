@@ -38,7 +38,7 @@ import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { getOrderRequests } from "@/server/user/orders";
 
-export const Route = createFileRoute("/user/orders/")({
+export const Route = createFileRoute("/(user)/user/orders/")({
 	validateSearch: z.object({
 		page: z.int("Page must be an integer").default(1),
 		limit: z.int("Limit must be an integer").default(10),

@@ -37,11 +37,10 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-export function AppHeaderUserOptionsMenu() {
+export function AppHeaderUserMenu() {
 	const { isSignedIn } = useUser();
 
-	const [upsertUserProfileDialogOpen, setUpsertUserProfileDialogOpen] =
-		useState(false);
+	const [isUserMenuDialogOpen, setIsUserMenuDialogOpen] = useState(false);
 
 	const getUserProfileFn = useServerFn(getUserProfile);
 	const upsertUserProfileFn = useServerFn(upsertUserProfile);
@@ -65,7 +64,7 @@ export function AppHeaderUserOptionsMenu() {
 				queryKey: ["profile"],
 			});
 
-			setUpsertUserProfileDialogOpen(false);
+			setIsUserMenuDialogOpen(false);
 		},
 		onError: (error) => {
 			toast.error(error.message);
@@ -73,10 +72,7 @@ export function AppHeaderUserOptionsMenu() {
 	});
 
 	return (
-		<Dialog
-			open={upsertUserProfileDialogOpen}
-			onOpenChange={setUpsertUserProfileDialogOpen}
-		>
+		<Dialog open={isUserMenuDialogOpen} onOpenChange={setIsUserMenuDialogOpen}>
 			<DropdownMenu>
 				<DropdownMenuTrigger render={<Button variant="outline" size="icon" />}>
 					<EllipsisVerticalIcon />

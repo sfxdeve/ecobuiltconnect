@@ -6,7 +6,7 @@ import {
 	productSelector,
 } from "@/prisma/selectors";
 
-export const Route = createFileRoute("/api/ozow/notify")({
+export const Route = createFileRoute("/(api)/api/ozow/notify")({
 	server: {
 		handlers: {
 			POST: async ({ request }) => {

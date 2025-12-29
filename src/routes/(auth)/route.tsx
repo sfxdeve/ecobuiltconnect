@@ -1,4 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { AppFooter } from "@/components/blocks/app-footer";
+import { AppHeader } from "@/components/blocks/app-header";
 import { AppPending } from "@/components/blocks/app-pending";
 
 export const Route = createFileRoute("/(auth)")({
@@ -8,12 +10,16 @@ export const Route = createFileRoute("/(auth)")({
 
 function AuthLayout() {
 	return (
-		<main>
-			<section className="container mx-auto py-12 px-4">
-				<div className="flex justify-center">
-					<Outlet />
-				</div>
-			</section>
-		</main>
+		<>
+			<AppHeader />
+			<main>
+				<section className="container mx-auto py-12 px-4">
+					<div className="flex justify-center">
+						<Outlet />
+					</div>
+				</section>
+			</main>
+			<AppFooter />
+		</>
 	);
 }

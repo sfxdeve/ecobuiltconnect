@@ -8,7 +8,7 @@ import { Link } from "@tanstack/react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AppHeaderCart } from "./app-header-cart";
-import { AppHeaderUserOptionsMenu } from "./app-header-user-options-menu";
+import { AppHeaderUserMenu } from "./app-header-user-menu";
 
 export function AppHeader() {
 	return (
@@ -88,7 +88,7 @@ export function AppHeader() {
 						</Button>
 					</SignInButton>
 				</SignedOut>
-				<AppHeaderUserOptionsMenu />
+				<AppHeaderUserMenu />
 			</div>
 		</header>
 	);

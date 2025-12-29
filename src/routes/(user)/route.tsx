@@ -3,12 +3,12 @@ import { AppFooter } from "@/components/blocks/app-footer";
 import { AppHeader } from "@/components/blocks/app-header";
 import { AppPending } from "@/components/blocks/app-pending";
 
-export const Route = createFileRoute("/(public)")({
-	component: PublicLayout,
+export const Route = createFileRoute("/(user)")({
+	component: UserLayout,
 	pendingComponent: AppPending,
 });
 
-function PublicLayout() {
+function UserLayout() {
 	return (
 		<>
 			<AppHeader />

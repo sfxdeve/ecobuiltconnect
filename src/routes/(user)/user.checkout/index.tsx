@@ -42,7 +42,7 @@ import { initiateOrderRequestPayment } from "@/server/user/ozow";
 import { getUserProfile } from "@/server/user/profile";
 import { cartActions, cartStore } from "@/stores/cart";
 
-export const Route = createFileRoute("/user/checkout/")({
+export const Route = createFileRoute("/(user)/user/checkout/")({
 	head: () => ({
 		meta: [
 			{

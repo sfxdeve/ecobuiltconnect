@@ -5,8 +5,6 @@ import {
 	HeadContent,
 	Scripts,
 } from "@tanstack/react-router";
-import { AppFooter } from "@/components/blocks/app-footer";
-import { AppHeader } from "@/components/blocks/app-header";
 import { AppNotFound } from "@/components/blocks/app-not-found";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "@/styles.css?url";
@@ -47,11 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<ClerkProvider>
-					<AppHeader />
-					{children}
-					<AppFooter />
-				</ClerkProvider>
+				<ClerkProvider>{children}</ClerkProvider>
 				<Toaster />
 				<Scripts />
 			</body>

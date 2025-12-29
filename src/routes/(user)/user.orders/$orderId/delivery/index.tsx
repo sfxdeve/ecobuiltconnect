@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppPending } from "@/components/blocks/app-pending";
 
-export const Route = createFileRoute("/user/orders/$orderId/delivery/")({
+export const Route = createFileRoute("/(user)/user/orders/$orderId/delivery/")({
 	head: () => ({
 		meta: [
 			{
