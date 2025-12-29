@@ -58,7 +58,7 @@ import {
 	getOrderRequest,
 	getOrderRequests,
 	updateOrderRequest,
-} from "@/lib/api/vendor.order-requests";
+} from "@/lib/api/vendor.order-request";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 

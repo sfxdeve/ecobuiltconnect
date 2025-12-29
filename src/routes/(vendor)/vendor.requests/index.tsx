@@ -38,7 +38,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getProductRequests } from "@/lib/api/vendor.product-requests";
+import { getProductRequests } from "@/lib/api/vendor.product-request";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 

@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { getCategories } from "@/lib/api/public.categories";
+import { getCategories } from "@/lib/api/public.category";
 
 export const userProductRequestFormSchema = z.object({
 	pictureIds: z

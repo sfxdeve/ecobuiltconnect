@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/carousel";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { getProduct } from "@/lib/api/public.products";
+import { getProduct } from "@/lib/api/public.product";
 import { cartActions } from "@/stores/cart";
 import { formatMoneyFromCents } from "@/utils/formatters";
 

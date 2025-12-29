@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { getProduct } from "@/lib/api/public.products";
+import { getProduct } from "@/lib/api/public.product";
 import { getUserProfile } from "@/lib/api/user.profile";
 import { createOrderRequest } from "@/server/user/order-requests";
 import { initiateOrderRequestPayment } from "@/server/user/ozow";
