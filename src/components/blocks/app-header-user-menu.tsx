@@ -38,7 +38,7 @@ import {
 } from "../ui/dropdown-menu";
 
 export function AppHeaderUserMenu() {
-	const { isSignedIn } = useUser();
+	const { user } = useUser();
 
 	const [isUserMenuDialogOpen, setIsUserMenuDialogOpen] = useState(false);
 
@@ -48,12 +48,8 @@ export function AppHeaderUserMenu() {
 	const queryClient = useQueryClient();
 
 	const userProfileResult = useQuery({
-		queryKey: ["profile"],
-		queryFn: () => {
-			if (isSignedIn) {
-				return getUserProfileFn();
-			}
-		},
+		queryKey: ["user", "profile", user?.id],
+		queryFn: () => getUserProfileFn(),
 	});
 
 	const upsertUserProfileMutation = useMutation({
@@ -61,7 +57,7 @@ export function AppHeaderUserMenu() {
 			upsertUserProfileFn({ data }),
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: ["profile"],
+				queryKey: ["user", "profile", user?.id],
 			});
 
 			setIsUserMenuDialogOpen(false);

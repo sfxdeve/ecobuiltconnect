@@ -71,7 +71,7 @@ function CheckoutPage() {
 	const queryClient = useQueryClient();
 
 	const userProfileResult = useQuery({
-		queryKey: ["profile"],
+		queryKey: ["user", "profile", user?.id],
 		queryFn: () => getUserProfileFn(),
 	});
 
