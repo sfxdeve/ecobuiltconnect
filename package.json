@@ -14,7 +14,8 @@
 		"db:push": "dotenvx run -f .env.local -- prisma db push",
 		"db:migrate": "dotenvx run -f .env.local -- prisma migrate dev",
 		"db:studio": "dotenvx run -f .env.local -- prisma studio",
-		"db:seed": "dotenvx run -f .env.local -- prisma db seed"
+		"db:seed": "dotenvx run -f .env.local -- prisma db seed",
+		"postinstall": "pnpm db:generate"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.0.0",
