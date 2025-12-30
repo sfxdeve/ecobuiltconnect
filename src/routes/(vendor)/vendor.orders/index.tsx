@@ -405,13 +405,19 @@ function UpdateOrderRequestDialogContent({
 			</DialogHeader>
 			<VendorOrderRequestForm
 				defaultValues={{
-					orderRequestId,
 					status: orderRequestResult.data?.orderRequest.status as z.infer<
 						typeof vendorOrderRequestFormSchema
 					>["status"],
 				}}
 				isSubmitting={updateOrderRequestMutation.isPending}
-				submitHandler={updateOrderRequestMutation.mutate}
+				submitHandler={({ data }) =>
+					updateOrderRequestMutation.mutate({
+						data: {
+							...data,
+							orderRequestId,
+						},
+					})
+				}
 			/>
 		</DialogContent>
 	);

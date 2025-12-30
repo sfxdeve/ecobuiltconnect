@@ -19,12 +19,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { OrderStatus } from "@/prisma/generated/enums";
 
 export const vendorOrderRequestFormSchema = z.object({
-	orderRequestId: z.uuid("Order request id must be valid UUID"),
 	status: z.enum(
 		[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
-		{
-			message: "Status must be either 'PROCESSING', 'READY', or 'COMPLETED'",
-		},
+		`Status must be either '${OrderStatus.PROCESSING}', '${OrderStatus.READY}', or '${OrderStatus.COMPLETED}'`,
 	),
 });
 
