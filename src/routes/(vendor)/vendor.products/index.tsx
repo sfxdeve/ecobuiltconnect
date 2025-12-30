@@ -74,9 +74,9 @@ import {
 	getProducts,
 	updateProduct,
 } from "@/lib/api/vendor.product";
+import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
-import { ProductCondition } from "@/prisma/generated/enums";
 
 export const Route = createFileRoute("/(vendor)/vendor/products/")({
 	validateSearch: z.object({
