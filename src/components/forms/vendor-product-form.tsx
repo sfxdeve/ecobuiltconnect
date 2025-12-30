@@ -1,5 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,15 +49,18 @@ export const vendorProductFormSchema = z.object({
 		.positive("Stock must be a positive integer"),
 	price: z
 		.number("Price must be a number")
-		.positive("Price must be a positive number")
-		.transform((val) => val * 100),
+		.positive("Price must be a positive number"),
 	salePrice: z
-		.union([z.null(), z.nan().transform(() => null), z.number()])
+		.union([
+			z.null(),
+			z.nan().transform(() => null),
+			z.literal(0).transform(() => null),
+			z.number(),
+		])
 		.pipe(
 			z
 				.number("Sale price must be a number")
 				.positive("Sale price must be a positive number")
-				.transform((val) => val * 100)
 				.nullable(),
 		),
 	condition: z.enum(
@@ -83,9 +87,11 @@ export function VendorProductForm({
 		data: z.infer<typeof vendorProductFormSchema>;
 	}) => void;
 }) {
+	const getCategoriesFn = useServerFn(getCategories);
+
 	const categoriesResult = useQuery({
 		queryKey: ["categories"],
-		queryFn: () => getCategories({ data: {} }),
+		queryFn: () => getCategoriesFn({ data: {} }),
 	});
 
 	const form = useForm({
@@ -184,7 +190,7 @@ export function VendorProductForm({
 									<Textarea
 										id={field.name}
 										name={field.name}
-										value={field.state.value ?? undefined}
+										value={field.state.value ?? ""}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.value)}
 										aria-invalid={isInvalid}
@@ -207,7 +213,7 @@ export function VendorProductForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(value as ProductCondition)
+											field.handleChange(value ?? ProductCondition.GOOD)
 										}
 									>
 										<SelectTrigger
@@ -217,7 +223,7 @@ export function VendorProductForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue>
-												{field.state.value || "Select condition"}
+												{field.state.value ?? "Select condition"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
@@ -253,7 +259,9 @@ export function VendorProductForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(value as string)
+											field.handleChange(
+												value ?? categoriesResult.data.categories[0].id,
+											)
 										}
 									>
 										<SelectTrigger
@@ -340,7 +348,7 @@ export function VendorProductForm({
 										id={field.name}
 										name={field.name}
 										type="number"
-										value={field.state.value ?? undefined}
+										value={field.state.value ?? 0}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
 										aria-invalid={isInvalid}

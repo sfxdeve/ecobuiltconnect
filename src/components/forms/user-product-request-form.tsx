@@ -25,7 +25,7 @@ import { getCategories } from "@/lib/api/public.category";
 export const userProductRequestFormSchema = z.object({
 	pictureIds: z
 		.array(z.string("Picture id must be a string"))
-		.min(1, "At least one picture is required"),
+		.min(1, "At least one picture id is required"),
 	name: z
 		.string("Name must be a string")
 		.min(3, "Name must be at least 3 characters"),
@@ -34,9 +34,15 @@ export const userProductRequestFormSchema = z.object({
 		.min(10, "Description must be at least 10 characters"),
 	quantity: z
 		.int("Quantity must be an integer")
-		.min(1, "Quantity must be at least 1"),
-	price: z.number("Price must be a number").min(1, "Price must be at least 1"),
-	categoryId: z.uuid("Category id must be valid UUID"),
+		.positive("Quantity must be a positive integer"),
+	price: z
+		.number("Price must be a number")
+		.positive("Price must be a positive number"),
+	category: z.object({
+		connect: z.object({
+			id: z.uuid("Category id must be valid UUID"),
+		}),
+	}),
 });
 
 export function UserProductRequestForm({
@@ -46,11 +52,15 @@ export function UserProductRequestForm({
 }: {
 	defaultValues: z.infer<typeof userProductRequestFormSchema>;
 	isSubmitting: boolean;
-	submitHandler: (data: z.infer<typeof userProductRequestFormSchema>) => void;
+	submitHandler: ({
+		data,
+	}: {
+		data: z.infer<typeof userProductRequestFormSchema>;
+	}) => void;
 }) {
 	const getCategoriesFn = useServerFn(getCategories);
 
-	const categories = useQuery({
+	const categoriesResult = useQuery({
 		queryKey: ["categories"],
 		queryFn: () => getCategoriesFn({ data: {} }),
 	});
@@ -61,7 +71,7 @@ export function UserProductRequestForm({
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {
-			submitHandler(data);
+			submitHandler({ data });
 		},
 	});
 
@@ -88,7 +98,7 @@ export function UserProductRequestForm({
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.value)}
 										aria-invalid={isInvalid}
-										placeholder="Enter product name"
+										placeholder="Enter name"
 									/>
 									{isInvalid && <FieldError errors={field.state.meta.errors} />}
 								</Field>
@@ -111,7 +121,7 @@ export function UserProductRequestForm({
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.value)}
 										aria-invalid={isInvalid}
-										placeholder="Enter product description"
+										placeholder="Enter description"
 									/>
 									{isInvalid && <FieldError errors={field.state.meta.errors} />}
 								</Field>
@@ -120,13 +130,13 @@ export function UserProductRequestForm({
 					</form.Field>
 				</div>
 				<div className="flex gap-2 items-start">
-					<form.Field name="categoryId">
+					<form.Field name="category.connect.id">
 						{(field) => {
-							if (categories.isPending) {
+							if (categoriesResult.isPending) {
 								return <Spinner />;
 							}
 
-							if (categories.isError) {
+							if (categoriesResult.isError) {
 								return null;
 							}
 
@@ -138,7 +148,9 @@ export function UserProductRequestForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(value as string)
+											field.handleChange(
+												value ?? categoriesResult.data.categories[0].id,
+											)
 										}
 									>
 										<SelectTrigger
@@ -148,14 +160,14 @@ export function UserProductRequestForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue>
-												{categories.data.categories.find(
+												{categoriesResult.data.categories.find(
 													(category) => category.id === field.state.value,
-												)?.name ?? "Select category"}
+												)?.name || "Select category"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>
-												{categories.data.categories.map((category) => (
+												{categoriesResult.data.categories.map((category) => (
 													<SelectItem key={category.id} value={category.id}>
 														{category.name}
 													</SelectItem>
@@ -170,28 +182,6 @@ export function UserProductRequestForm({
 					</form.Field>
 				</div>
 				<div className="flex gap-2 items-start">
-					<form.Field name="price">
-						{(field) => {
-							const isInvalid =
-								field.state.meta.isTouched && !field.state.meta.isValid;
-							return (
-								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Price</FieldLabel>
-									<Input
-										id={field.name}
-										type="number"
-										name={field.name}
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
-										aria-invalid={isInvalid}
-										placeholder="Enter product price"
-									/>
-									{isInvalid && <FieldError errors={field.state.meta.errors} />}
-								</Field>
-							);
-						}}
-					</form.Field>
 					<form.Field name="quantity">
 						{(field) => {
 							const isInvalid =
@@ -201,13 +191,35 @@ export function UserProductRequestForm({
 									<FieldLabel htmlFor={field.name}>Quantity</FieldLabel>
 									<Input
 										id={field.name}
-										type="number"
 										name={field.name}
+										type="number"
 										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
 										aria-invalid={isInvalid}
-										placeholder="Enter product quantity"
+										placeholder="Enter quantity"
+									/>
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+					<form.Field name="price">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={field.name}>Price</FieldLabel>
+									<Input
+										id={field.name}
+										name={field.name}
+										type="number"
+										value={field.state.value}
+										onBlur={field.handleBlur}
+										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+										aria-invalid={isInvalid}
+										placeholder="Enter price"
 									/>
 									{isInvalid && <FieldError errors={field.state.meta.errors} />}
 								</Field>

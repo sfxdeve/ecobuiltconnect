@@ -13,8 +13,7 @@ import { Spinner } from "@/components/ui/spinner";
 export const userLogisticRequestFormSchema = z.object({
 	requestedPrice: z
 		.number("Requested price must be a number")
-		.min(1, "Requested price must be at least 1"),
-	orderRequestId: z.uuid("Order request id must be valid UUID"),
+		.positive("Requested price must be a positive number"),
 });
 
 export function UserLogisticRequestForm({
@@ -24,7 +23,11 @@ export function UserLogisticRequestForm({
 }: {
 	defaultValues: z.infer<typeof userLogisticRequestFormSchema>;
 	isSubmitting: boolean;
-	submitHandler: (data: z.infer<typeof userLogisticRequestFormSchema>) => void;
+	submitHandler: ({
+		data,
+	}: {
+		data: z.infer<typeof userLogisticRequestFormSchema>;
+	}) => void;
 }) {
 	const form = useForm({
 		validators: {
@@ -32,7 +35,7 @@ export function UserLogisticRequestForm({
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {
-			submitHandler(data);
+			submitHandler({ data });
 		},
 	});
 
@@ -54,8 +57,8 @@ export function UserLogisticRequestForm({
 									<FieldLabel htmlFor={field.name}>Price</FieldLabel>
 									<Input
 										id={field.name}
-										type="number"
 										name={field.name}
+										type="number"
 										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
@@ -76,7 +79,7 @@ export function UserLogisticRequestForm({
 						size="lg"
 						className="flex-1"
 					>
-						{isSubmitting ? <Spinner /> : "Request Logistic"}
+						{isSubmitting ? <Spinner /> : "Submit"}
 					</Button>
 				</div>
 			</FieldGroup>

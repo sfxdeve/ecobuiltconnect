@@ -187,7 +187,7 @@ export function VendorProfileForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(value as string)
+											field.handleChange(value ?? cities.data[0])
 										}
 									>
 										<SelectTrigger
@@ -197,7 +197,7 @@ export function VendorProfileForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue>
-												{field.state.value || "Select city"}
+												{field.state.value ?? "Select city"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
@@ -224,7 +224,7 @@ export function VendorProfileForm({
 						size="lg"
 						className="flex-1"
 					>
-						{isSubmitting ? <Spinner /> : "Update Profile"}
+						{isSubmitting ? <Spinner /> : "Submit"}
 					</Button>
 				</div>
 			</FieldGroup>

@@ -63,9 +63,18 @@ export const Route = createFileRoute("/(vendor)/vendor/requests/")({
 			})
 			.default("desc"),
 		searchTerm: z.string("Search term must be a string").optional(),
-		minQuantity: z.int("Minimum quantity must be an integer").optional(),
-		minPrice: z.number("Minimum price must be a number").optional(),
-		maxPrice: z.number("Maximum price must be a number").optional(),
+		minQuantity: z
+			.int("Minimum quantity must be an integer")
+			.positive("Minimum quantity must be a positive integer")
+			.optional(),
+		minPrice: z
+			.number("Minimum price must be a number")
+			.positive("Minimum price must be a positive number")
+			.optional(),
+		maxPrice: z
+			.number("Maximum price must be a number")
+			.positive("Maximum price must be a positive number")
+			.optional(),
 		categoryId: z.uuid("Category id must be valid UUID").optional(),
 	}),
 	loaderDeps: ({ search }) => search,

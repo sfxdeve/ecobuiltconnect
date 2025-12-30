@@ -76,6 +76,7 @@ import {
 } from "@/lib/api/vendor.product";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
+import { ProductCondition } from "@/prisma/generated/enums";
 
 export const Route = createFileRoute("/(vendor)/vendor/products/")({
 	validateSearch: z.object({
@@ -98,17 +99,30 @@ export const Route = createFileRoute("/(vendor)/vendor/products/")({
 			})
 			.default("desc"),
 		searchTerm: z.string("Search term must be a string").optional(),
-		minStock: z.int("Minimum stock must be an integer").optional(),
-		minPrice: z.number("Minimum price must be a number").optional(),
-		maxPrice: z.number("Maximum price must be a number").optional(),
+		minStock: z
+			.int("Minimum stock must be an integer")
+			.positive("Minimum stock must be a positive integer")
+			.optional(),
+		minPrice: z
+			.number("Minimum price must be a number")
+			.positive("Minimum price must be a positive number")
+			.optional(),
+		maxPrice: z
+			.number("Maximum price must be a number")
+			.positive("Maximum price must be a positive number")
+			.optional(),
 		condition: z
-			.enum(["EXCELLENT", "GOOD", "FAIR"], {
-				message: "Condition must be either 'EXCELLENT', 'GOOD', or 'FAIR'",
-			})
+			.enum(
+				[
+					ProductCondition.EXCELLENT,
+					ProductCondition.GOOD,
+					ProductCondition.FAIR,
+				],
+				`Condition must be either '${ProductCondition.EXCELLENT}', '${ProductCondition.GOOD}', or '${ProductCondition.FAIR}'`,
+			)
 			.optional(),
 		isVerified: z.boolean("Is verified must be a boolean").optional(),
 		categoryId: z.uuid("Category id must be valid UUID").optional(),
-		vendorProfileId: z.uuid("Vendor profile id must be valid UUID").optional(),
 		productRequestId: z
 			.uuid("Product request id must be valid UUID")
 			.optional(),

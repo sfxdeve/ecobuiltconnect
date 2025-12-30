@@ -7,10 +7,7 @@ import { useId, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
-import {
-	UserProductRequestForm,
-	type userProductRequestFormSchema,
-} from "@/components/forms/user-product-request-form";
+import { UserProductRequestForm } from "@/components/forms/user-product-request-form";
 import { UserProductRequestsFiltersForm } from "@/components/forms/user-product-requests-filter-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -159,8 +156,7 @@ function ProductRequestsPageSearch() {
 	const createProductRequestFn = useServerFn(createProductRequest);
 
 	const createProductRequestMutation = useMutation({
-		mutationFn: (data: z.infer<typeof userProductRequestFormSchema>) =>
-			createProductRequestFn({ data }),
+		mutationFn: createProductRequestFn,
 		onSuccess: async () => {
 			setIsProductRequestDialogOpen(false);
 
@@ -273,11 +269,15 @@ function ProductRequestsPageSearch() {
 							description: "",
 							quantity: 0,
 							price: 0,
-							categoryId: "",
+							category: {
+								connect: {
+									id: "",
+								},
+							},
 						}}
 						isSubmitting={createProductRequestMutation.isPending}
-						submitHandler={(data) => {
-							createProductRequestMutation.mutate(data);
+						submitHandler={({ data }) => {
+							createProductRequestMutation.mutate({ data });
 						}}
 					/>
 				</DialogContent>

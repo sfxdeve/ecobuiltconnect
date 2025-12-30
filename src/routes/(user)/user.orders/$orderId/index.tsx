@@ -4,12 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { CalendarIcon, ExternalLinkIcon, PackageIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
-import {
-	UserLogisticRequestForm,
-	type userLogisticRequestFormSchema,
-} from "@/components/forms/user-logistic-request-form";
+import { UserLogisticRequestForm } from "@/components/forms/user-logistic-request-form";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -73,8 +69,7 @@ function OrderDetailsPage() {
 	const createLogisticRequestFn = useServerFn(createLogisticRequest);
 
 	const createLogisticRequestMutation = useMutation({
-		mutationFn: (data: z.infer<typeof userLogisticRequestFormSchema>) =>
-			createLogisticRequestFn({ data }),
+		mutationFn: createLogisticRequestFn,
 		onSuccess: async () => {
 			setIsLogisticRequestDialogOpen(false);
 
@@ -287,12 +282,16 @@ function OrderDetailsPage() {
 									</DialogHeader>
 									<UserLogisticRequestForm
 										defaultValues={{
-											orderRequestId: orderRequest.id,
 											requestedPrice: 0,
 										}}
 										isSubmitting={createLogisticRequestMutation.isPending}
-										submitHandler={(data) => {
-											createLogisticRequestMutation.mutate(data);
+										submitHandler={({ data }) => {
+											createLogisticRequestMutation.mutate({
+												data: {
+													...data,
+													orderRequestId: orderRequest.id,
+												},
+											});
 										}}
 									/>
 								</DialogContent>

@@ -29,17 +29,44 @@ export const userProductRequestsFiltersFormSchema = z.object({
 		})
 		.optional(),
 	minQuantity: z
-		.int("Minimum quantity must be an integer")
-		.min(1, "Minimum quantity must be at least 1")
-		.optional(),
+		.union([
+			z.undefined(),
+			z.nan().transform(() => undefined),
+			z.literal(0).transform(() => undefined),
+			z.number(),
+		])
+		.pipe(
+			z
+				.int("Minimum quantity must be an integer")
+				.positive("Minimum quantity must be a positive integer")
+				.optional(),
+		),
 	minPrice: z
-		.number("Minimum price must be a number")
-		.min(1, "Minimum price must be at least 1")
-		.optional(),
+		.union([
+			z.undefined(),
+			z.nan().transform(() => undefined),
+			z.literal(0).transform(() => undefined),
+			z.number(),
+		])
+		.pipe(
+			z
+				.number("Minimum price must be a number")
+				.positive("Minimum price must be a positive number")
+				.optional(),
+		),
 	maxPrice: z
-		.number("Maximum price must be a number")
-		.min(1, "Maximum price must be at least 1")
-		.optional(),
+		.union([
+			z.undefined(),
+			z.nan().transform(() => undefined),
+			z.literal(0).transform(() => undefined),
+			z.number(),
+		])
+		.pipe(
+			z
+				.number("Maximum price must be a number")
+				.positive("Maximum price must be a positive number")
+				.optional(),
+		),
 });
 
 export function UserProductRequestsFiltersForm({
@@ -48,12 +75,16 @@ export function UserProductRequestsFiltersForm({
 	resetHandler,
 }: {
 	defaultValues: z.infer<typeof userProductRequestsFiltersFormSchema>;
-	submitHandler: (
-		data: z.infer<typeof userProductRequestsFiltersFormSchema>,
-	) => void;
-	resetHandler: (
-		data: z.infer<typeof userProductRequestsFiltersFormSchema>,
-	) => void;
+	submitHandler: ({
+		data,
+	}: {
+		data: z.infer<typeof userProductRequestsFiltersFormSchema>;
+	}) => void;
+	resetHandler: ({
+		data,
+	}: {
+		data: z.infer<typeof userProductRequestsFiltersFormSchema>;
+	}) => void;
 }) {
 	const form = useForm({
 		validators: {
@@ -61,7 +92,7 @@ export function UserProductRequestsFiltersForm({
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {
-			submitHandler(data);
+			submitHandler({ data });
 		},
 	});
 
@@ -82,7 +113,7 @@ export function UserProductRequestsFiltersForm({
 								<Field data-invalid={isInvalid}>
 									<FieldLabel htmlFor={field.name}>Sort by</FieldLabel>
 									<Select
-										value={field.state.value ?? null}
+										value={field.state.value}
 										onValueChange={(value) =>
 											field.handleChange(value ?? undefined)
 										}
@@ -94,17 +125,20 @@ export function UserProductRequestsFiltersForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue className="capitalize">
-												{field.state.value || "Select sort by"}
+												{field.state.value ?? "Select sort by"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>
-												<SelectItem value="name" className="capitalize">
-													name
-												</SelectItem>
-												<SelectItem value="createdAt" className="capitalize">
-													createdAt
-												</SelectItem>
+												{["name", "createdAt"].map((value) => (
+													<SelectItem
+														key={value}
+														value={value}
+														className="capitalize"
+													>
+														{value}
+													</SelectItem>
+												))}
 											</SelectGroup>
 										</SelectContent>
 									</Select>
@@ -121,7 +155,7 @@ export function UserProductRequestsFiltersForm({
 								<Field data-invalid={isInvalid}>
 									<FieldLabel htmlFor={field.name}>Sort order</FieldLabel>
 									<Select
-										value={field.state.value ?? null}
+										value={field.state.value}
 										onValueChange={(value) =>
 											field.handleChange(value ?? undefined)
 										}
@@ -133,17 +167,20 @@ export function UserProductRequestsFiltersForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue className="capitalize">
-												{field.state.value || "Select sort order"}
+												{field.state.value ?? "Select sort order"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>
-												<SelectItem value="asc" className="capitalize">
-													Asc
-												</SelectItem>
-												<SelectItem value="desc" className="capitalize">
-													Desc
-												</SelectItem>
+												{["asc", "desc"].map((value) => (
+													<SelectItem
+														key={value}
+														value={value}
+														className="capitalize"
+													>
+														{value}
+													</SelectItem>
+												))}
 											</SelectGroup>
 										</SelectContent>
 									</Select>
@@ -163,9 +200,9 @@ export function UserProductRequestsFiltersForm({
 									<FieldLabel htmlFor={field.name}>Minimum quantity</FieldLabel>
 									<Input
 										id={field.name}
-										type="number"
 										name={field.name}
-										value={field.state.value ?? 0}
+										type="number"
+										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
 										aria-invalid={isInvalid}
@@ -186,9 +223,9 @@ export function UserProductRequestsFiltersForm({
 									<FieldLabel htmlFor={field.name}>Minimum price</FieldLabel>
 									<Input
 										id={field.name}
-										type="number"
 										name={field.name}
-										value={field.state.value ?? 0}
+										type="number"
+										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
 										aria-invalid={isInvalid}
@@ -207,9 +244,9 @@ export function UserProductRequestsFiltersForm({
 									<FieldLabel htmlFor={field.name}>Maximum price</FieldLabel>
 									<Input
 										id={field.name}
-										type="number"
 										name={field.name}
-										value={field.state.value ?? 0}
+										type="number"
+										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
 										aria-invalid={isInvalid}
@@ -231,7 +268,7 @@ export function UserProductRequestsFiltersForm({
 								maxPrice: undefined,
 							});
 
-							resetHandler(form.state.values);
+							resetHandler({ data: form.state.values });
 						}}
 						variant="outline"
 						size="lg"

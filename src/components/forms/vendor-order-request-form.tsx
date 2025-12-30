@@ -69,11 +69,7 @@ export function VendorOrderRequestForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(
-												value as z.infer<
-													typeof vendorOrderRequestFormSchema
-												>["status"],
-											)
+											field.handleChange(value ?? undefined)
 										}
 									>
 										<SelectTrigger
@@ -83,7 +79,7 @@ export function VendorOrderRequestForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue>
-												{field.state.value || "Select status"}
+												{field.state.value ?? "Select status"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">

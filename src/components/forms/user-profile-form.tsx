@@ -39,7 +39,11 @@ export function UserProfileForm({
 }: {
 	defaultValues: z.infer<typeof userProfileFormSchema>;
 	isSubmitting: boolean;
-	submitHandler: (data: z.infer<typeof userProfileFormSchema>) => void;
+	submitHandler: ({
+		data,
+	}: {
+		data: z.infer<typeof userProfileFormSchema>;
+	}) => void;
 }) {
 	const cities = useQuery({
 		queryKey: ["cities"],
@@ -54,7 +58,7 @@ export function UserProfileForm({
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {
-			submitHandler(data);
+			submitHandler({ data });
 		},
 	});
 
@@ -108,7 +112,7 @@ export function UserProfileForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(value as string)
+											field.handleChange(value ?? cities.data[0])
 										}
 									>
 										<SelectTrigger
@@ -118,7 +122,7 @@ export function UserProfileForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue>
-												{field.state.value || "Select city"}
+												{field.state.value ?? "Select city"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
@@ -168,7 +172,7 @@ export function UserProfileForm({
 						size="lg"
 						className="flex-1"
 					>
-						{isSubmitting ? <Spinner /> : "Update Profile"}
+						{isSubmitting ? <Spinner /> : "Submit"}
 					</Button>
 				</div>
 			</FieldGroup>

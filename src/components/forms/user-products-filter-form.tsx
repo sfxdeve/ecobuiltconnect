@@ -33,17 +33,44 @@ export const userProductsFiltersFormSchema = z.object({
 		})
 		.optional(),
 	minStock: z
-		.int("Minimum stock must be an integer")
-		.min(1, "Minimum stock must be at least 1")
-		.optional(),
+		.union([
+			z.undefined(),
+			z.nan().transform(() => undefined),
+			z.literal(0).transform(() => undefined),
+			z.number(),
+		])
+		.pipe(
+			z
+				.int("Minimum stock must be an integer")
+				.positive("Minimum stock must be a positive integer")
+				.optional(),
+		),
 	minPrice: z
-		.number("Minimum price must be a number")
-		.min(1, "Minimum price must be at least 1")
-		.optional(),
+		.union([
+			z.undefined(),
+			z.nan().transform(() => undefined),
+			z.literal(0).transform(() => undefined),
+			z.number(),
+		])
+		.pipe(
+			z
+				.number("Minimum price must be a number")
+				.positive("Minimum price must be a positive number")
+				.optional(),
+		),
 	maxPrice: z
-		.number("Maximum price must be a number")
-		.min(1, "Maximum price must be at least 1")
-		.optional(),
+		.union([
+			z.undefined(),
+			z.nan().transform(() => undefined),
+			z.literal(0).transform(() => undefined),
+			z.number(),
+		])
+		.pipe(
+			z
+				.number("Maximum price must be a number")
+				.positive("Maximum price must be a positive number")
+				.optional(),
+		),
 	isVerified: z.boolean("Is verified must be a boolean").optional(),
 });
 
@@ -53,8 +80,16 @@ export function UserProductsFiltersForm({
 	resetHandler,
 }: {
 	defaultValues: z.infer<typeof userProductsFiltersFormSchema>;
-	submitHandler: (data: z.infer<typeof userProductsFiltersFormSchema>) => void;
-	resetHandler: (data: z.infer<typeof userProductsFiltersFormSchema>) => void;
+	submitHandler: ({
+		data,
+	}: {
+		data: z.infer<typeof userProductsFiltersFormSchema>;
+	}) => void;
+	resetHandler: ({
+		data,
+	}: {
+		data: z.infer<typeof userProductsFiltersFormSchema>;
+	}) => void;
 }) {
 	const form = useForm({
 		validators: {
@@ -62,7 +97,7 @@ export function UserProductsFiltersForm({
 		},
 		defaultValues,
 		onSubmit: ({ value: data }) => {
-			submitHandler(data);
+			submitHandler({ data });
 		},
 	});
 
@@ -95,17 +130,20 @@ export function UserProductsFiltersForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue className="capitalize">
-												{field.state.value || "Select sort by"}
+												{field.state.value ?? "Select sort by"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>
-												<SelectItem value="name" className="capitalize">
-													name
-												</SelectItem>
-												<SelectItem value="createdAt" className="capitalize">
-													createdAt
-												</SelectItem>
+												{["name", "createdAt"].map((value) => (
+													<SelectItem
+														key={value}
+														value={value}
+														className="capitalize"
+													>
+														{value}
+													</SelectItem>
+												))}
 											</SelectGroup>
 										</SelectContent>
 									</Select>
@@ -134,17 +172,20 @@ export function UserProductsFiltersForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue className="capitalize">
-												{field.state.value || "Select sort order"}
+												{field.state.value ?? "Select sort order"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>
-												<SelectItem value="asc" className="capitalize">
-													Asc
-												</SelectItem>
-												<SelectItem value="desc" className="capitalize">
-													Desc
-												</SelectItem>
+												{["asc", "desc"].map((value) => (
+													<SelectItem
+														key={value}
+														value={value}
+														className="capitalize"
+													>
+														{value}
+													</SelectItem>
+												))}
 											</SelectGroup>
 										</SelectContent>
 									</Select>
@@ -164,9 +205,9 @@ export function UserProductsFiltersForm({
 									<FieldLabel htmlFor={field.name}>Minimum stock</FieldLabel>
 									<Input
 										id={field.name}
-										type="number"
 										name={field.name}
-										value={field.state.value ?? 0}
+										type="number"
+										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
 										aria-invalid={isInvalid}
@@ -189,7 +230,7 @@ export function UserProductsFiltersForm({
 										id={field.name}
 										type="number"
 										name={field.name}
-										value={field.state.value ?? 0}
+										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
 										aria-invalid={isInvalid}
@@ -210,7 +251,7 @@ export function UserProductsFiltersForm({
 										id={field.name}
 										type="number"
 										name={field.name}
-										value={field.state.value ?? 0}
+										value={field.state.value}
 										onBlur={field.handleBlur}
 										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
 										aria-invalid={isInvalid}
@@ -263,7 +304,7 @@ export function UserProductsFiltersForm({
 								isVerified: undefined,
 							});
 
-							resetHandler(form.state.values);
+							resetHandler({ data: form.state.values });
 						}}
 						variant="outline"
 						size="lg"
