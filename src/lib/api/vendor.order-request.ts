@@ -37,6 +37,22 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 				})
 				.default("desc"),
 			searchTerm: z.string("Search term must be a string").optional(),
+			minTotal: z
+				.number("Minimum total must be a number")
+				.positive("Minimum total must be a positive number")
+				.transform((val) => val * 100)
+				.optional(),
+			maxTotal: z
+				.number("Maximum total must be a number")
+				.positive("Maximum total must be a positive number")
+				.transform((val) => val * 100)
+				.optional(),
+			status: z
+				.enum(
+					[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
+					`Status must be either '${OrderStatus.PROCESSING}', '${OrderStatus.READY}', or '${OrderStatus.COMPLETED}'`,
+				)
+				.optional(),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -64,7 +80,16 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 					},
 				},
 			},
+			AND: [],
 		};
+
+		const eqFields = ["status"] as const;
+
+		eqFields.forEach((field) => {
+			if (data[field] !== undefined) {
+				where[field] = data[field];
+			}
+		});
 
 		const searchFields = [
 			"name",
@@ -78,6 +103,17 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 				OR: searchFields.map((field) => ({
 					[field]: { contains: data.searchTerm, mode: "insensitive" },
 				})),
+			});
+		}
+
+		if (data.minTotal !== undefined || data.maxTotal !== undefined) {
+			const priceRange = {
+				gte: data.minTotal,
+				lte: data.maxTotal,
+			};
+
+			(where.AND as OrderRequestWhereInput[]).push({
+				total: priceRange,
 			});
 		}
 
@@ -165,19 +201,21 @@ export const updateOrderRequest = createServerFn({ method: "POST" })
 			orderRequestId: z.uuid("Order request id must be valid UUID"),
 			status: z.enum(
 				[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
-				{
-					message:
-						"Status must be either 'PROCESSING', 'READY', or 'COMPLETED'",
-				},
+				`Status must be either '${OrderStatus.PROCESSING}', '${OrderStatus.READY}', or '${OrderStatus.COMPLETED}'`,
 			),
 		}),
 	)
 	.handler(async ({ data }) => {
 		const { vendorProfile } = await getVendorProfile();
 
+		const { orderRequestId, ...orderRequestData } = data;
+
 		const orderRequest = await prisma.orderRequest.update({
 			where: {
-				id: data.orderRequestId,
+				id: orderRequestId,
+				status: {
+					notIn: [OrderStatus.PENDING, OrderStatus.CANCELLED],
+				},
 				orderItems: {
 					every: {
 						product: {
@@ -189,7 +227,7 @@ export const updateOrderRequest = createServerFn({ method: "POST" })
 				},
 			},
 			data: {
-				status: data.status,
+				...orderRequestData,
 			},
 		});
 

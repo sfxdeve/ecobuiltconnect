@@ -1,5 +1,5 @@
 import { debounce } from "@tanstack/pacer";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -54,7 +54,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { deleteProduct, getProducts } from "@/lib/api/vendor.product";
+import {
+	deleteProduct,
+	getProduct,
+	getProducts,
+} from "@/lib/api/vendor.product";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
@@ -251,6 +255,39 @@ function VendorProductsPage() {
 }
 
 function ViewProductDialogContent({ productId }: { productId: string }) {
+	const getProductFn = useServerFn(getProduct);
+
+	const productResult = useQuery({
+		queryKey: ["product", productId],
+		queryFn: () => getProductFn({ data: { productId } }),
+	});
+
+	if (productResult.isPending) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>View Product</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-muted-foreground">
+					Loading product details...
+				</div>
+			</DialogContent>
+		);
+	}
+
+	if (productResult.isError) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>View Product</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-destructive">
+					Error loading product: {productResult.error.message}
+				</div>
+			</DialogContent>
+		);
+	}
+
 	return (
 		<DialogContent>
 			<DialogHeader>
@@ -267,6 +304,39 @@ function UpdateProductDialogContent({
 	productId: string;
 	closeDialog: () => void;
 }) {
+	const getProductFn = useServerFn(getProduct);
+
+	const productResult = useQuery({
+		queryKey: ["product", productId],
+		queryFn: () => getProductFn({ data: { productId } }),
+	});
+
+	if (productResult.isPending) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Update Product</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-muted-foreground">
+					Loading product details...
+				</div>
+			</DialogContent>
+		);
+	}
+
+	if (productResult.isError) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Update Product</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-destructive">
+					Error loading product: {productResult.error.message}
+				</div>
+			</DialogContent>
+		);
+	}
+
 	return (
 		<DialogContent>
 			<DialogHeader>

@@ -55,21 +55,11 @@ export const upsertVendorProfile = createServerFn({
 				clerkId,
 			},
 			update: {
-				pictureId: data.pictureId,
-				name: data.name,
-				description: data.description,
-				address: data.address,
-				city: data.city,
-				postcode: data.postcode,
+				...data,
 			},
 			create: {
 				clerkId,
-				pictureId: data.pictureId,
-				name: data.name,
-				description: data.description,
-				address: data.address,
-				city: data.city,
-				postcode: data.postcode,
+				...data,
 			},
 			select: vendorProfileSelector,
 		});

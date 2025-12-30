@@ -113,7 +113,7 @@ model Product {
   stock         Int
   price         Int
   salePrice     Int?             @map("sale_price")
-  condition     ProductCondition @default(GOOD)
+  condition     ProductCondition
   isVerified    Boolean          @default(false) @map("is_verified")
   isDeleted     Boolean          @default(false) @map("is_deleted")
 
