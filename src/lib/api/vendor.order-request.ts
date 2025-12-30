@@ -199,10 +199,12 @@ export const updateOrderRequest = createServerFn({ method: "POST" })
 	.inputValidator(
 		z.object({
 			orderRequestId: z.uuid("Order request id must be valid UUID"),
-			status: z.enum(
-				[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
-				`Status must be either '${OrderStatus.PROCESSING}', '${OrderStatus.READY}', or '${OrderStatus.COMPLETED}'`,
-			),
+			status: z
+				.enum(
+					[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
+					`Status must be either '${OrderStatus.PROCESSING}', '${OrderStatus.READY}', or '${OrderStatus.COMPLETED}'`,
+				)
+				.optional(),
 		}),
 	)
 	.handler(async ({ data }) => {

@@ -19,10 +19,12 @@ import { Spinner } from "@/components/ui/spinner";
 import { OrderStatus } from "@/prisma/generated/enums";
 
 export const vendorOrderRequestFormSchema = z.object({
-	status: z.enum(
-		[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
-		`Status must be either '${OrderStatus.PROCESSING}', '${OrderStatus.READY}', or '${OrderStatus.COMPLETED}'`,
-	),
+	status: z
+		.enum(
+			[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
+			`Status must be either '${OrderStatus.PROCESSING}', '${OrderStatus.READY}', or '${OrderStatus.COMPLETED}'`,
+		)
+		.optional(),
 });
 
 export function VendorOrderRequestForm({
@@ -67,7 +69,7 @@ export function VendorOrderRequestForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(value ?? "READY")
+											field.handleChange(value ?? undefined)
 										}
 									>
 										<SelectTrigger

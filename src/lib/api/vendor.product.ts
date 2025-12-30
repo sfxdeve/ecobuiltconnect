@@ -269,7 +269,7 @@ export const updateProduct = createServerFn({
 			previousUsage: z
 				.string("Previous usage must be a string")
 				.min(10, "Previous usage must be at least 10 characters")
-				.nullable(),
+				.nullish(),
 			sku: z
 				.string("SKU must be a string")
 				.min(3, "SKU must be at least 3 characters")
@@ -287,7 +287,7 @@ export const updateProduct = createServerFn({
 				.number("Sale price must be a number")
 				.positive("Sale price must be a positive number")
 				.transform((val) => val * 100)
-				.nullable(),
+				.nullish(),
 			condition: z
 				.enum(
 					[

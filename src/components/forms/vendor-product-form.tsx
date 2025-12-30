@@ -33,7 +33,7 @@ export const vendorProductFormSchema = z.object({
 		.string("Description must be a string")
 		.min(10, "Description must be at least 10 characters"),
 	previousUsage: z
-		.union([z.literal("").transform(() => null), z.string()])
+		.union([z.null(), z.literal("").transform(() => null), z.string()])
 		.pipe(
 			z
 				.string("Previous usage must be a string")
@@ -50,13 +50,15 @@ export const vendorProductFormSchema = z.object({
 		.number("Price must be a number")
 		.positive("Price must be a positive number")
 		.transform((val) => val * 100),
-	salePrice: z.union([z.nan().transform(() => null), z.number()]).pipe(
-		z
-			.number("Sale price must be a number")
-			.positive("Sale price must be a positive number")
-			.transform((val) => val * 100)
-			.nullable(),
-	),
+	salePrice: z
+		.union([z.null(), z.nan().transform(() => null), z.number()])
+		.pipe(
+			z
+				.number("Sale price must be a number")
+				.positive("Sale price must be a positive number")
+				.transform((val) => val * 100)
+				.nullable(),
+		),
 	condition: z.enum(
 		[ProductCondition.EXCELLENT, ProductCondition.GOOD, ProductCondition.FAIR],
 		`Condition must be either '${ProductCondition.EXCELLENT}', '${ProductCondition.GOOD}', or '${ProductCondition.FAIR}'`,
