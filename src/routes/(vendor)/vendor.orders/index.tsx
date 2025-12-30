@@ -387,7 +387,7 @@ function UpdateOrderRequestDialogContent({
 	const updateOrderRequestMutation = useMutation({
 		mutationFn: updateOrderRequestFn,
 		onSuccess: () => {
-			toast.success("Order Request updated successfully");
+			toast.success("Order updated successfully");
 
 			router.invalidate();
 
@@ -401,7 +401,7 @@ function UpdateOrderRequestDialogContent({
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Update Order Request</DialogTitle>
+				<DialogTitle>Update Order</DialogTitle>
 			</DialogHeader>
 			<VendorOrderRequestForm
 				defaultValues={{
