@@ -37,6 +37,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { getProducts } from "@/lib/api/public.product";
+import { ProductCondition } from "@/prisma/generated/enums";
 import { cartActions } from "@/stores/cart";
 import { cn } from "@/utils";
 import { formatMoneyFromCents } from "@/utils/formatters";
@@ -61,21 +62,35 @@ export const Route = createFileRoute("/(public)/products/")({
 				message: "Sort order must be either 'asc' or 'desc'",
 			})
 			.default("desc"),
-		searchTerm: z.string("Search term must be a string").nullable(),
-		minStock: z.int("Minimum stock must be an integer").nullable(),
-		minPrice: z.number("Minimum price must be a number").nullable(),
-		maxPrice: z.number("Maximum price must be a number").nullable(),
+		searchTerm: z.string("Search term must be a string").optional(),
+		minStock: z
+			.int("Minimum stock must be an integer")
+			.positive("Minimum stock must be a positive integer")
+			.optional(),
+		minPrice: z
+			.number("Minimum price must be a number")
+			.positive("Minimum price must be a positive number")
+			.optional(),
+		maxPrice: z
+			.number("Maximum price must be a number")
+			.positive("Maximum price must be a positive number")
+			.optional(),
 		condition: z
-			.enum(["EXCELLENT", "GOOD", "FAIR"], {
-				message: "Condition must be either 'EXCELLENT', 'GOOD', or 'FAIR'",
-			})
-			.nullable(),
-		isVerified: z.boolean("Is verified must be a boolean").nullable(),
-		categoryId: z.uuid("Category id must be valid UUID").nullable(),
-		vendorProfileId: z.uuid("Vendor profile id must be valid UUID").nullable(),
+			.enum(
+				[
+					ProductCondition.EXCELLENT,
+					ProductCondition.GOOD,
+					ProductCondition.FAIR,
+				],
+				`Condition must be either '${ProductCondition.EXCELLENT}', '${ProductCondition.GOOD}', or '${ProductCondition.FAIR}'`,
+			)
+			.optional(),
+		isVerified: z.boolean("Is verified must be a boolean").optional(),
+		categoryId: z.uuid("Category id must be valid UUID").optional(),
+		vendorProfileId: z.uuid("Vendor profile id must be valid UUID").optional(),
 		productRequestId: z
 			.uuid("Product request id must be valid UUID")
-			.nullable(),
+			.optional(),
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: ({ deps }) => getProducts({ data: deps }),

@@ -128,7 +128,7 @@ function VendorOrderRequestsPage() {
 						<Table>
 							<TableHeader>
 								<TableRow>
-									<TableHead>Order Id</TableHead>
+									<TableHead>Order Ref</TableHead>
 									<TableHead>Items</TableHead>
 									<TableHead>Status</TableHead>
 									<TableHead>Total</TableHead>
@@ -156,7 +156,7 @@ function VendorOrderRequestsPage() {
 									return (
 										<TableRow key={orderRequest.id}>
 											<TableCell className="uppercase">
-												{orderRequest.id.slice(24)}
+												#{orderRequest.id.slice(24)}
 											</TableCell>
 											<TableCell>{orderRequest._count.orderItems}</TableCell>
 											<TableCell>
@@ -312,10 +312,10 @@ function ViewOrderRequestDialogContent({
 					<Item variant="muted">
 						<ItemContent>
 							<ItemDescription className="text-sm text-muted-foreground">
-								Order ID
+								Order Ref
 							</ItemDescription>
 							<ItemTitle className="font-medium uppercase">
-								{orderRequest.id.slice(24)}
+								#{orderRequest.id.slice(24)}
 							</ItemTitle>
 						</ItemContent>
 					</Item>

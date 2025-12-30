@@ -97,7 +97,6 @@ function VendorRequestsPage() {
 					<Table>
 						<TableHeader>
 							<TableRow>
-								<TableHead>Request Id</TableHead>
 								<TableHead>Name</TableHead>
 								<TableHead>Category</TableHead>
 								<TableHead>Quantity</TableHead>
@@ -109,9 +108,6 @@ function VendorRequestsPage() {
 							{loaderData.productRequests.map((productRequest) => {
 								return (
 									<TableRow key={productRequest.id}>
-										<TableCell className="uppercase">
-											{productRequest.id.slice(24)}
-										</TableCell>
 										<TableCell>{productRequest.name}</TableCell>
 										<TableCell>{productRequest.category.name}</TableCell>
 										<TableCell>{productRequest.quantity}</TableCell>

@@ -150,9 +150,9 @@ function VendorProductsPage() {
 						<Table>
 							<TableHeader>
 								<TableRow>
-									<TableHead>Product Id</TableHead>
 									<TableHead>Name</TableHead>
 									<TableHead>SKU</TableHead>
+									<TableHead>Category</TableHead>
 									<TableHead>Stock</TableHead>
 									<TableHead>Price</TableHead>
 									<TableHead>Date</TableHead>
@@ -163,11 +163,9 @@ function VendorProductsPage() {
 								{loaderData.products.map((product) => {
 									return (
 										<TableRow key={product.id}>
-											<TableCell className="uppercase">
-												{product.id.slice(24)}
-											</TableCell>
 											<TableCell>{product.name}</TableCell>
 											<TableCell>{product.sku}</TableCell>
+											<TableCell>{product.category.name}</TableCell>
 											<TableCell>{product.stock}</TableCell>
 											<TableCell>
 												{formatMoneyFromCents(
