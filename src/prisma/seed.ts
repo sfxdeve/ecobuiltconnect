@@ -26,9 +26,7 @@ async function main() {
 	await prisma.vendorProfile.deleteMany();
 	await prisma.logisticProfile.deleteMany();
 	await prisma.adminProfile.deleteMany();
-	// await prisma.userProfile.deleteMany();
-
-	const userProfiles = await prisma.userProfile.findMany();
+	await prisma.userProfile.deleteMany();
 
 	// Create 5 fake vendors
 	const vendorProfilesData = Array.from({ length: 5 }, () => ({
@@ -75,22 +73,6 @@ async function main() {
 	// const products = await prisma.product.findMany();
 
 	console.log(`✅ Created ${productsData.length} products`);
-
-	// Create 5 fake product requests
-	const productRequestsData = Array.from({ length: 5 }, () => ({
-		pictureIds: ["/test.jpg"],
-		name: faker.commerce.productName(),
-		description: faker.commerce.productDescription(),
-		quantity: faker.number.int({ min: 1, max: 10 }),
-		price: Math.round(
-			parseFloat(faker.commerce.price({ min: 10, max: 500 })) * 100,
-		),
-		categoryId: faker.helpers.arrayElement(categories).id,
-		userProfileId: faker.helpers.arrayElement(userProfiles).id,
-	}));
-	await prisma.productRequest.createMany({ data: productRequestsData });
-
-	console.log(`✅ Created ${productRequestsData.length} product requests`);
 }
 
 main()
