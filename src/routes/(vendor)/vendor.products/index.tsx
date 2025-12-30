@@ -17,6 +17,13 @@ import { UserProductsFiltersForm } from "@/components/forms/user-products-filter
 import { VendorProductForm } from "@/components/forms/vendor-product-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
@@ -39,6 +46,12 @@ import {
 } from "@/components/ui/empty";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+	Item,
+	ItemContent,
+	ItemDescription,
+	ItemTitle,
+} from "@/components/ui/item";
 import {
 	Select,
 	SelectContent,
@@ -290,11 +303,93 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 		);
 	}
 
+	const { product } = productResult.data;
+
 	return (
-		<DialogContent>
+		<DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
 			<DialogHeader>
 				<DialogTitle>Product Details</DialogTitle>
 			</DialogHeader>
+			<div className="space-y-6">
+				{/* Image Carousel */}
+				<Carousel className="w-full">
+					<CarouselContent>
+						{product.pictureIds.map((pictureId, index) => (
+							<CarouselItem key={pictureId}>
+								<img
+									className="aspect-square object-contain w-full rounded-lg"
+									src={pictureId}
+									alt={`${product.name} - View ${index + 1}`}
+								/>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+					<CarouselPrevious className="left-4" />
+					<CarouselNext className="right-4" />
+				</Carousel>
+				<div className="space-y-4">
+					<Item variant="muted">
+						<ItemContent>
+							<ItemTitle className="text-lg font-semibold">
+								Description
+							</ItemTitle>
+							<ItemDescription className="text-muted-foreground leading-relaxed">
+								{product.description}
+							</ItemDescription>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemTitle className="text-lg font-semibold">
+								Previous Usage
+							</ItemTitle>
+							<ItemDescription className="text-muted-foreground leading-relaxed">
+								{product.previousUsage}
+							</ItemDescription>
+						</ItemContent>
+					</Item>
+				</div>
+				<div className="grid grid-cols-2 gap-4">
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								SKU
+							</ItemDescription>
+							<ItemTitle className="font-medium">{product.sku}</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Stock
+							</ItemDescription>
+							<ItemTitle className="font-medium text-green-600">
+								{product.stock} in stock
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Category
+							</ItemDescription>
+							<ItemTitle className="font-medium">
+								{product.category.name}
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Date
+							</ItemDescription>
+							<ItemTitle className="font-medium">
+								{formatDate(product.createdAt)}
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+				</div>
+			</div>
 		</DialogContent>
 	);
 }
