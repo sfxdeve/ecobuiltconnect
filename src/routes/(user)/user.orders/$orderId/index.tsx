@@ -31,8 +31,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { createLogisticRequest } from "@/lib/api/user.logistic-request";
 import { getOrderRequest } from "@/lib/api/user.order-request";
-import { createLogisticRequest } from "@/server/user/logistic-requests";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
