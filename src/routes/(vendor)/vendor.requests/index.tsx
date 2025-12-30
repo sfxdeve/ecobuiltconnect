@@ -194,7 +194,7 @@ function ProductRequestsPageSearch() {
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle className="text-xl font-semibold">
-							Filter Product Requests
+							Filter Requests
 						</DialogTitle>
 					</DialogHeader>
 					<UserProductRequestsFiltersForm
@@ -233,7 +233,7 @@ function ProductRequestsPageSearch() {
 				</DialogContent>
 			</Dialog>
 			<Input
-				placeholder="Search Product Requests"
+				placeholder="Search Requests"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
@@ -258,7 +258,7 @@ function ProductRequestsPagePagination() {
 			<Field orientation="horizontal" className="w-fit">
 				<FieldLabel htmlFor={limitSelectId}>
 					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
-					{loaderData.total} product requests
+					{loaderData.total} requests
 				</FieldLabel>
 				<Select
 					key={loaderData.limit}

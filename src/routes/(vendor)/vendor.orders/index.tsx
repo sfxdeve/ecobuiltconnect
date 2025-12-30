@@ -116,7 +116,7 @@ function VendorOrderRequestsPage() {
 
 	return (
 		<>
-			<DashboardHeader title="Order Requests" />
+			<DashboardHeader title="Orders" />
 			<section className="p-4 space-y-6 min-h-screen">
 				<OrderRequestsPageSearch />
 				{loaderData.orderRequests.length > 0 ? (
@@ -288,7 +288,7 @@ function ViewOrderRequestDialogContent({
 	return (
 		<DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
 			<DialogHeader>
-				<DialogTitle>Order Request Details</DialogTitle>
+				<DialogTitle>Order Details</DialogTitle>
 			</DialogHeader>
 			<div className="space-y-6">
 				<div className="grid grid-cols-2 gap-4">
@@ -437,7 +437,7 @@ function OrderRequestsPageSearch() {
 	return (
 		<div className="flex gap-2 items-center justify-between">
 			<Input
-				placeholder="Search Order Requests"
+				placeholder="Search Orders"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
@@ -462,7 +462,7 @@ function OrderRequestsPagePagination() {
 			<Field orientation="horizontal" className="w-fit">
 				<FieldLabel htmlFor={limitSelectId}>
 					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
-					{loaderData.total} orderRequests
+					{loaderData.total} orders
 				</FieldLabel>
 				<Select
 					key={loaderData.limit}
