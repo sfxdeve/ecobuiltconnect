@@ -69,7 +69,11 @@ export function VendorOrderRequestForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(value ?? undefined)
+											field.handleChange(
+												value as z.infer<
+													typeof vendorOrderRequestFormSchema
+												>["status"],
+											)
 										}
 									>
 										<SelectTrigger
@@ -79,14 +83,20 @@ export function VendorOrderRequestForm({
 											aria-invalid={isInvalid}
 										>
 											<SelectValue>
-												{field.state.value || "Select city"}
+												{field.state.value || "Select status"}
 											</SelectValue>
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>
-												<SelectItem value="READY">Ready</SelectItem>
-												<SelectItem value="COMPLETED">Completed</SelectItem>
-												<SelectItem value="PROCESSING">Processing</SelectItem>
+												<SelectItem value={OrderStatus.PROCESSING}>
+													{OrderStatus.PROCESSING}
+												</SelectItem>
+												<SelectItem value={OrderStatus.READY}>
+													{OrderStatus.READY}
+												</SelectItem>
+												<SelectItem value={OrderStatus.COMPLETED}>
+													{OrderStatus.COMPLETED}
+												</SelectItem>
 											</SelectGroup>
 										</SelectContent>
 									</Select>
@@ -104,7 +114,7 @@ export function VendorOrderRequestForm({
 						size="lg"
 						className="flex-1"
 					>
-						{isSubmitting ? <Spinner /> : "Update Order Request"}
+						{isSubmitting ? <Spinner /> : "Submit"}
 					</Button>
 				</div>
 			</FieldGroup>

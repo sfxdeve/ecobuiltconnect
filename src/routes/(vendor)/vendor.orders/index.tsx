@@ -111,8 +111,12 @@ export const Route = createFileRoute("/(vendor)/vendor/orders/")({
 function VendorOrderRequestsPage() {
 	const loaderData = Route.useLoaderData();
 
-	const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-	const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+	const [selectedOrderRequestId, setSelectedOrderRequestId] = useState<
+		string | null
+	>(null);
+	const [selectedAction, setSelectedAction] = useState<
+		"view" | "update" | null
+	>(null);
 
 	return (
 		<>
@@ -120,100 +124,113 @@ function VendorOrderRequestsPage() {
 			<section className="p-4 space-y-6 min-h-screen">
 				<OrderRequestsPageSearch />
 				{loaderData.orderRequests.length > 0 ? (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Order Id</TableHead>
-								<TableHead>Items</TableHead>
-								<TableHead>Status</TableHead>
-								<TableHead>Total</TableHead>
-								<TableHead>Date</TableHead>
-								<TableHead>Actions</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{loaderData.orderRequests.map((orderRequest) => {
-								let statusBadgeVariant: "default" | "outline" | "destructive";
+					<>
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Order Id</TableHead>
+									<TableHead>Items</TableHead>
+									<TableHead>Status</TableHead>
+									<TableHead>Total</TableHead>
+									<TableHead>Date</TableHead>
+									<TableHead>Actions</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{loaderData.orderRequests.map((orderRequest) => {
+									let statusBadgeVariant: "default" | "outline" | "destructive";
 
-								switch (orderRequest.status) {
-									case "PAID":
-									case "COMPLETED":
-										statusBadgeVariant = "default";
-										break;
-									case "CANCELLED":
-										statusBadgeVariant = "destructive";
-										break;
-									default:
-										statusBadgeVariant = "outline";
-										break;
+									switch (orderRequest.status) {
+										case "PAID":
+										case "COMPLETED":
+											statusBadgeVariant = "default";
+											break;
+										case "CANCELLED":
+											statusBadgeVariant = "destructive";
+											break;
+										default:
+											statusBadgeVariant = "outline";
+											break;
+									}
+
+									return (
+										<TableRow key={orderRequest.id}>
+											<TableCell className="uppercase">
+												{orderRequest.id.slice(24)}
+											</TableCell>
+											<TableCell>{orderRequest._count.orderItems}</TableCell>
+											<TableCell>
+												<Badge variant={statusBadgeVariant}>
+													{orderRequest.status}
+												</Badge>
+											</TableCell>
+											<TableCell>
+												{formatMoneyFromCents(orderRequest.total, {
+													locale: "en-ZA",
+													currency: "ZAR",
+												})}
+											</TableCell>
+											<TableCell>
+												{formatDate(orderRequest.createdAt)}
+											</TableCell>
+											<TableCell>
+												<DropdownMenu>
+													<DropdownMenuTrigger
+														render={<Button variant="ghost" size="icon" />}
+													>
+														<MoreHorizontalIcon />
+														<span className="sr-only">Open actions menu</span>
+													</DropdownMenuTrigger>
+													<DropdownMenuContent align="end">
+														<DropdownMenuItem
+															onClick={() => {
+																setSelectedOrderRequestId(orderRequest.id);
+																setSelectedAction("view");
+															}}
+														>
+															View
+														</DropdownMenuItem>
+														<DropdownMenuItem
+															onClick={() => {
+																setSelectedOrderRequestId(orderRequest.id);
+																setSelectedAction("update");
+															}}
+														>
+															Update
+														</DropdownMenuItem>
+													</DropdownMenuContent>
+												</DropdownMenu>
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							</TableBody>
+						</Table>
+						<Dialog
+							open={selectedAction !== null}
+							onOpenChange={(open) => {
+								if (!open) {
+									setSelectedOrderRequestId(null);
+									setSelectedAction(null);
 								}
-
-								return (
-									<TableRow key={orderRequest.id}>
-										<TableCell className="uppercase">
-											{orderRequest.id.slice(24)}
-										</TableCell>
-										<TableCell>{orderRequest._count.orderItems}</TableCell>
-										<TableCell>
-											<Badge variant={statusBadgeVariant}>
-												{orderRequest.status}
-											</Badge>
-										</TableCell>
-										<TableCell>
-											{formatMoneyFromCents(orderRequest.total, {
-												locale: "en-ZA",
-												currency: "ZAR",
-											})}
-										</TableCell>
-										<TableCell>{formatDate(orderRequest.createdAt)}</TableCell>
-										<TableCell>
-											<DropdownMenu>
-												<DropdownMenuTrigger
-													render={<Button variant="ghost" size="icon" />}
-												>
-													<MoreHorizontalIcon />
-													<span className="sr-only">Open actions menu</span>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													<DropdownMenuItem
-														onClick={() => {
-															setIsViewDialogOpen(true);
-														}}
-													>
-														View
-													</DropdownMenuItem>
-													<DropdownMenuItem
-														onClick={() => {
-															setIsUpdateDialogOpen(true);
-														}}
-													>
-														Update
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-											<Dialog
-												open={isViewDialogOpen}
-												onOpenChange={setIsViewDialogOpen}
-											>
-												<ViewOrderRequestDialogContent
-													orderRequestId={orderRequest.id}
-												/>
-											</Dialog>
-											<Dialog
-												open={isUpdateDialogOpen}
-												onOpenChange={setIsUpdateDialogOpen}
-											>
-												<UpdateOrderRequestDialogContent
-													orderRequestId={orderRequest.id}
-													setIsDialogOpen={setIsUpdateDialogOpen}
-												/>
-											</Dialog>
-										</TableCell>
-									</TableRow>
-								);
-							})}
-						</TableBody>
-					</Table>
+							}}
+						>
+							{selectedOrderRequestId && selectedAction === "view" && (
+								<ViewOrderRequestDialogContent
+									orderRequestId={selectedOrderRequestId}
+								/>
+							)}
+							{selectedOrderRequestId && selectedAction === "update" && (
+								<UpdateOrderRequestDialogContent
+									orderRequestId={selectedOrderRequestId}
+									closeDialog={() => {
+										setSelectedOrderRequestId(null);
+										setSelectedAction(null);
+									}}
+								/>
+							)}
+						</Dialog>
+					</>
 				) : (
 					<Empty className="bg-muted">
 						<EmptyHeader>
@@ -247,10 +264,10 @@ function ViewOrderRequestDialogContent({
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>View Order Request</DialogTitle>
+					<DialogTitle>View Order</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-muted-foreground">
-					Loading order request details...
+					Loading order details...
 				</div>
 			</DialogContent>
 		);
@@ -260,10 +277,10 @@ function ViewOrderRequestDialogContent({
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>View Order Request</DialogTitle>
+					<DialogTitle>View Order</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-destructive">
-					Error loading order request: {orderRequestResult.error.message}
+					Error loading order: {orderRequestResult.error.message}
 				</div>
 			</DialogContent>
 		);
@@ -369,10 +386,10 @@ function ViewOrderRequestDialogContent({
 
 function UpdateOrderRequestDialogContent({
 	orderRequestId,
-	setIsDialogOpen,
+	closeDialog,
 }: {
 	orderRequestId: string;
-	setIsDialogOpen: (open: boolean) => void;
+	closeDialog: () => void;
 }) {
 	const router = useRouter();
 
@@ -391,12 +408,38 @@ function UpdateOrderRequestDialogContent({
 
 			router.invalidate();
 
-			setIsDialogOpen(false);
+			closeDialog();
 		},
 		onError: (error) => {
 			toast.error(error.message);
 		},
 	});
+
+	if (orderRequestResult.isPending) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Update Order</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-muted-foreground">
+					Loading order details...
+				</div>
+			</DialogContent>
+		);
+	}
+
+	if (orderRequestResult.isError) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Update Order</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-destructive">
+					Error loading order: {orderRequestResult.error.message}
+				</div>
+			</DialogContent>
+		);
+	}
 
 	return (
 		<DialogContent>
@@ -405,7 +448,7 @@ function UpdateOrderRequestDialogContent({
 			</DialogHeader>
 			<VendorOrderRequestForm
 				defaultValues={{
-					status: orderRequestResult.data?.orderRequest.status as z.infer<
+					status: orderRequestResult.data.orderRequest.status as z.infer<
 						typeof vendorOrderRequestFormSchema
 					>["status"],
 				}}
