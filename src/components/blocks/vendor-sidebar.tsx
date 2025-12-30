@@ -4,7 +4,6 @@ import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
 	FileTextIcon,
-	LayoutDashboardIcon,
 	type LucideIcon,
 	PackageIcon,
 	ShoppingBagIcon,
@@ -36,11 +35,6 @@ import {
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 const items = [
-	{
-		label: "Dashboard",
-		href: "/vendor/dashboard",
-		icon: LayoutDashboardIcon,
-	},
 	{
 		label: "Orders",
 		href: "/vendor/orders",
