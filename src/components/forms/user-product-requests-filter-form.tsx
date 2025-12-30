@@ -29,12 +29,7 @@ export const userProductRequestsFiltersFormSchema = z.object({
 		})
 		.optional(),
 	minQuantity: z
-		.union([
-			z.undefined(),
-			z.nan().transform(() => undefined),
-			z.literal(0).transform(() => undefined),
-			z.number(),
-		])
+		.union([z.undefined(), z.nan().transform(() => undefined), z.number()])
 		.pipe(
 			z
 				.int("Minimum quantity must be an integer")
@@ -42,12 +37,7 @@ export const userProductRequestsFiltersFormSchema = z.object({
 				.optional(),
 		),
 	minPrice: z
-		.union([
-			z.undefined(),
-			z.nan().transform(() => undefined),
-			z.literal(0).transform(() => undefined),
-			z.number(),
-		])
+		.union([z.undefined(), z.nan().transform(() => undefined), z.number()])
 		.pipe(
 			z
 				.number("Minimum price must be a number")
@@ -55,12 +45,7 @@ export const userProductRequestsFiltersFormSchema = z.object({
 				.optional(),
 		),
 	maxPrice: z
-		.union([
-			z.undefined(),
-			z.nan().transform(() => undefined),
-			z.literal(0).transform(() => undefined),
-			z.number(),
-		])
+		.union([z.undefined(), z.nan().transform(() => undefined), z.number()])
 		.pipe(
 			z
 				.number("Maximum price must be a number")
@@ -202,9 +187,15 @@ export function UserProductRequestsFiltersForm({
 										id={field.name}
 										name={field.name}
 										type="number"
-										value={field.state.value}
+										value={field.state.value ?? ""}
 										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+										onChange={(e) =>
+											field.handleChange(
+												Number.isFinite(e.target.valueAsNumber)
+													? e.target.valueAsNumber
+													: undefined,
+											)
+										}
 										aria-invalid={isInvalid}
 									/>
 									{isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -225,9 +216,15 @@ export function UserProductRequestsFiltersForm({
 										id={field.name}
 										name={field.name}
 										type="number"
-										value={field.state.value}
+										value={field.state.value ?? ""}
 										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+										onChange={(e) =>
+											field.handleChange(
+												Number.isFinite(e.target.valueAsNumber)
+													? e.target.valueAsNumber
+													: undefined,
+											)
+										}
 										aria-invalid={isInvalid}
 									/>
 									{isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -246,9 +243,15 @@ export function UserProductRequestsFiltersForm({
 										id={field.name}
 										name={field.name}
 										type="number"
-										value={field.state.value}
+										value={field.state.value ?? ""}
 										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+										onChange={(e) =>
+											field.handleChange(
+												Number.isFinite(e.target.valueAsNumber)
+													? e.target.valueAsNumber
+													: undefined,
+											)
+										}
 										aria-invalid={isInvalid}
 									/>
 									{isInvalid && <FieldError errors={field.state.meta.errors} />}

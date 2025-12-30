@@ -51,12 +51,7 @@ export const vendorProductFormSchema = z.object({
 		.number("Price must be a number")
 		.positive("Price must be a positive number"),
 	salePrice: z
-		.union([
-			z.null(),
-			z.nan().transform(() => null),
-			z.literal(0).transform(() => null),
-			z.number(),
-		])
+		.union([z.null(), z.nan().transform(() => null), z.number()])
 		.pipe(
 			z
 				.number("Sale price must be a number")
@@ -306,7 +301,13 @@ export function VendorProductForm({
 										type="number"
 										value={field.state.value}
 										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+										onChange={(e) =>
+											field.handleChange(
+												Number.isFinite(e.target.valueAsNumber)
+													? e.target.valueAsNumber
+													: 0,
+											)
+										}
 										aria-invalid={isInvalid}
 										placeholder="Enter stock"
 									/>
@@ -328,7 +329,13 @@ export function VendorProductForm({
 										type="number"
 										value={field.state.value}
 										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+										onChange={(e) =>
+											field.handleChange(
+												Number.isFinite(e.target.valueAsNumber)
+													? e.target.valueAsNumber
+													: 0,
+											)
+										}
 										aria-invalid={isInvalid}
 										placeholder="Enter price"
 									/>
@@ -348,9 +355,15 @@ export function VendorProductForm({
 										id={field.name}
 										name={field.name}
 										type="number"
-										value={field.state.value ?? 0}
+										value={field.state.value ?? ""}
 										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+										onChange={(e) =>
+											field.handleChange(
+												Number.isFinite(e.target.valueAsNumber)
+													? e.target.valueAsNumber
+													: null,
+											)
+										}
 										aria-invalid={isInvalid}
 										placeholder="Enter sale price"
 									/>
