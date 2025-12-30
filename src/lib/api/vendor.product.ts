@@ -164,3 +164,33 @@ export const getProduct = createServerFn({
 
 		return { product };
 	});
+
+export const deleteProduct = createServerFn({
+	method: "POST",
+})
+	.inputValidator(
+		z.object({
+			productId: z.uuid("Product id must be valid UUID"),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { vendorProfile } = await getVendorProfile();
+
+		const product = await prisma.product.update({
+			where: {
+				id: data.productId,
+				isDeleted: false,
+				vendorProfile: { id: vendorProfile.id },
+			},
+			data: {
+				isDeleted: true,
+			},
+			select: productSelector,
+		});
+
+		if (!product) {
+			throw new Error("Product not found");
+		}
+
+		return { product };
+	});

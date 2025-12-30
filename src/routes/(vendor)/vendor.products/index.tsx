@@ -1,5 +1,7 @@
 import { debounce } from "@tanstack/pacer";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
@@ -7,6 +9,7 @@ import {
 	MoreHorizontalIcon,
 } from "lucide-react";
 import { useId, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
@@ -15,6 +18,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -49,7 +54,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getProducts } from "@/lib/api/vendor.product";
+import { deleteProduct, getProducts } from "@/lib/api/vendor.product";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
@@ -109,9 +114,12 @@ export const Route = createFileRoute("/(vendor)/vendor/products/")({
 function VendorProductsPage() {
 	const loaderData = Route.useLoaderData();
 
-	const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-	const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
-	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+	const [selectedProductId, setSelectedProductId] = useState<string | null>(
+		null,
+	);
+	const [selectedAction, setSelectedAction] = useState<
+		"view" | "update" | "delete" | null
+	>(null);
 
 	return (
 		<>
@@ -119,97 +127,112 @@ function VendorProductsPage() {
 			<section className="p-4 space-y-6 min-h-screen">
 				<ProductsPageSearch />
 				{loaderData.products.length > 0 ? (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Product Id</TableHead>
-								<TableHead>Name</TableHead>
-								<TableHead>SKU</TableHead>
-								<TableHead>Stock</TableHead>
-								<TableHead>Price</TableHead>
-								<TableHead>Date</TableHead>
-								<TableHead>Actions</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{loaderData.products.map((product) => {
-								return (
-									<TableRow key={product.id}>
-										<TableCell className="uppercase">
-											{product.id.slice(24)}
-										</TableCell>
-										<TableCell>{product.name}</TableCell>
-										<TableCell>{product.sku}</TableCell>
-										<TableCell>{product.stock}</TableCell>
-										<TableCell>
-											{formatMoneyFromCents(
-												product.salePrice ? product.salePrice : product.price,
-												{
-													locale: "en-ZA",
-													currency: "ZAR",
-												},
-											)}
-										</TableCell>
-										<TableCell>{formatDate(product.createdAt)}</TableCell>
-										<TableCell>
-											<DropdownMenu>
-												<DropdownMenuTrigger
-													render={<Button variant="ghost" size="icon" />}
-												>
-													<MoreHorizontalIcon />
-													<span className="sr-only">Open actions menu</span>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													<DropdownMenuItem
-														onClick={() => {
-															setIsViewDialogOpen(true);
-														}}
+					<>
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Product Id</TableHead>
+									<TableHead>Name</TableHead>
+									<TableHead>SKU</TableHead>
+									<TableHead>Stock</TableHead>
+									<TableHead>Price</TableHead>
+									<TableHead>Date</TableHead>
+									<TableHead>Actions</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{loaderData.products.map((product) => {
+									return (
+										<TableRow key={product.id}>
+											<TableCell className="uppercase">
+												{product.id.slice(24)}
+											</TableCell>
+											<TableCell>{product.name}</TableCell>
+											<TableCell>{product.sku}</TableCell>
+											<TableCell>{product.stock}</TableCell>
+											<TableCell>
+												{formatMoneyFromCents(
+													product.salePrice ? product.salePrice : product.price,
+													{
+														locale: "en-ZA",
+														currency: "ZAR",
+													},
+												)}
+											</TableCell>
+											<TableCell>{formatDate(product.createdAt)}</TableCell>
+											<TableCell>
+												<DropdownMenu>
+													<DropdownMenuTrigger
+														render={<Button variant="ghost" size="icon" />}
 													>
-														View
-													</DropdownMenuItem>
-													<DropdownMenuItem
-														onClick={() => {
-															setIsUpdateDialogOpen(true);
-														}}
-													>
-														Update
-													</DropdownMenuItem>
-													<DropdownMenuItem
-														onClick={() => {
-															setIsDeleteDialogOpen(true);
-														}}
-													>
-														Delete
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-											<Dialog
-												open={isViewDialogOpen}
-												onOpenChange={setIsViewDialogOpen}
-											>
-												{/* <ViewProductDialogContent productId={product.id} /> */}
-											</Dialog>
-											<Dialog
-												open={isUpdateDialogOpen}
-												onOpenChange={setIsUpdateDialogOpen}
-											>
-												{/* <UpdateProductDialogContent
-													productId={product.id}
-													setIsDialogOpen={setIsUpdateDialogOpen}
-												/> */}
-											</Dialog>
-											<Dialog
-												open={isDeleteDialogOpen}
-												onOpenChange={setIsDeleteDialogOpen}
-											>
-												{/* <DeleteProductDialogContent productId={product.id} /> */}
-											</Dialog>
-										</TableCell>
-									</TableRow>
-								);
-							})}
-						</TableBody>
-					</Table>
+														<MoreHorizontalIcon />
+														<span className="sr-only">Open actions menu</span>
+													</DropdownMenuTrigger>
+													<DropdownMenuContent align="end">
+														<DropdownMenuItem
+															onClick={() => {
+																setSelectedProductId(product.id);
+																setSelectedAction("view");
+															}}
+														>
+															View
+														</DropdownMenuItem>
+														<DropdownMenuItem
+															onClick={() => {
+																setSelectedProductId(product.id);
+																setSelectedAction("update");
+															}}
+														>
+															Update
+														</DropdownMenuItem>
+														<DropdownMenuItem
+															onClick={() => {
+																setSelectedProductId(product.id);
+																setSelectedAction("delete");
+															}}
+														>
+															Delete
+														</DropdownMenuItem>
+													</DropdownMenuContent>
+												</DropdownMenu>
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							</TableBody>
+						</Table>
+						<Dialog
+							open={selectedAction !== null}
+							onOpenChange={(open) => {
+								if (!open) {
+									setSelectedProductId(null);
+									setSelectedAction(null);
+								}
+							}}
+						>
+							{selectedProductId && selectedAction === "view" && (
+								<ViewProductDialogContent productId={selectedProductId} />
+							)}
+							{selectedProductId && selectedAction === "update" && (
+								<UpdateProductDialogContent
+									productId={selectedProductId}
+									closeDialog={() => {
+										setSelectedProductId(null);
+										setSelectedAction(null);
+									}}
+								/>
+							)}
+							{selectedProductId && selectedAction === "delete" && (
+								<DeleteProductDialogContent
+									productId={selectedProductId}
+									closeDialog={() => {
+										setSelectedProductId(null);
+										setSelectedAction(null);
+									}}
+								/>
+							)}
+						</Dialog>
+					</>
 				) : (
 					<Empty className="bg-muted">
 						<EmptyHeader>
@@ -224,6 +247,85 @@ function VendorProductsPage() {
 				<ProductsPagePagination />
 			</section>
 		</>
+	);
+}
+
+function ViewProductDialogContent({ productId }: { productId: string }) {
+	return (
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>Product Details</DialogTitle>
+			</DialogHeader>
+		</DialogContent>
+	);
+}
+
+function UpdateProductDialogContent({
+	productId,
+	closeDialog,
+}: {
+	productId: string;
+	closeDialog: () => void;
+}) {
+	return (
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>Update Product</DialogTitle>
+			</DialogHeader>
+		</DialogContent>
+	);
+}
+
+function DeleteProductDialogContent({
+	productId,
+	closeDialog,
+}: {
+	productId: string;
+	closeDialog: () => void;
+}) {
+	const router = useRouter();
+
+	const deleteProductFn = useServerFn(deleteProduct);
+
+	const deleteProductMutation = useMutation({
+		mutationFn: deleteProductFn,
+		onSuccess: () => {
+			toast.success("Product deleted successfully");
+
+			router.invalidate();
+
+			closeDialog();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
+	return (
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>Delete Product</DialogTitle>
+				<DialogDescription>
+					Are you sure you want to delete this product?
+				</DialogDescription>
+			</DialogHeader>
+			<DialogFooter>
+				<Button
+					onClick={closeDialog}
+					disabled={deleteProductMutation.isPending}
+					variant="secondary"
+				>
+					Cancel
+				</Button>
+				<Button
+					onClick={() => deleteProductMutation.mutate({ data: { productId } })}
+					disabled={deleteProductMutation.isPending}
+					variant="destructive"
+				>
+					{deleteProductMutation.isPending ? "Deleting..." : "Delete"}
+				</Button>
+			</DialogFooter>
+		</DialogContent>
 	);
 }
 
