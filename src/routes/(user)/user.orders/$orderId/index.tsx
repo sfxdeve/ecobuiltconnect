@@ -36,13 +36,13 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { createLogisticRequest } from "@/server/user/logistic-requests";
-import { getOrderRequestById } from "@/server/user/order-requests";
+import { getOrderRequest } from "@/lib/api/user.order-request";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(user)/user/orders/$orderId/")({
 	loader: ({ params }) =>
-		getOrderRequestById({
+		getOrderRequest({
 			data: {
 				orderRequestId: params.orderId,
 			},

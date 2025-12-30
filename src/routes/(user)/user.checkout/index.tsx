@@ -36,9 +36,9 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { getProduct } from "@/lib/api/public.product";
+import { initiateOrderRequestPayment } from "@/lib/api/user.ozow";
 import { getUserProfile } from "@/lib/api/user.profile";
 import { createOrderRequest } from "@/server/user/order-requests";
-import { initiateOrderRequestPayment } from "@/server/user/ozow";
 import { cartActions, cartStore } from "@/stores/cart";
 import { formatMoneyFromCents } from "@/utils/formatters";
 

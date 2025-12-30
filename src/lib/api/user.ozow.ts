@@ -1,8 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { env } from "@/lib/env/server";
 import { generateOzowHash } from "@/utils/ozow";
-import { getOrderRequestById } from "./order-requests";
+import { env } from "../env/server";
+import { getOrderRequest } from "./user.order-request";
 
 export const initiateOrderRequestPayment = createServerFn({
 	method: "POST",
@@ -13,7 +13,7 @@ export const initiateOrderRequestPayment = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { orderRequest } = await getOrderRequestById({
+		const { orderRequest } = await getOrderRequest({
 			data: { orderRequestId: data.orderRequestId },
 		});
 
@@ -23,7 +23,7 @@ export const initiateOrderRequestPayment = createServerFn({
 			currencyCode: "ZAR",
 			amount: orderRequest.total / 100,
 			transactionReference: orderRequest.id,
-			bankReference: orderRequest.id.slice(0, 18),
+			bankReference: orderRequest.id.slice(24),
 			cancelUrl: env.APP_URL + env.OZOW_CANCEL_URL,
 			errorUrl: env.APP_URL + env.OZOW_ERROR_URL,
 			successUrl: env.APP_URL + env.OZOW_SUCCESS_URL,
