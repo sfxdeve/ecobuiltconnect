@@ -73,8 +73,8 @@ export const Route = createFileRoute("/(user)/user/orders/")({
 			},
 		],
 	}),
-	component: OrdersPage,
 	pendingComponent: AppPending,
+	component: OrdersPage,
 });
 
 function OrdersPage() {

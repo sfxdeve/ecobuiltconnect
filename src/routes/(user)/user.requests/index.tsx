@@ -44,17 +44,21 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import {
-	createProductRequest,
-	getProductRequests,
-} from "@/server/user/product-requests";
+import { getProductRequests } from "@/lib/api/user.product-request";
+import { createProductRequest } from "@/server/user/product-requests";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(user)/user/requests/")({
 	validateSearch: z.object({
-		page: z.int("Page must be an integer").default(1),
-		limit: z.int("Limit must be an integer").default(10),
+		page: z
+			.int("Page must be an integer")
+			.positive("Page must be a positive integer")
+			.default(1),
+		limit: z
+			.int("Limit must be an integer")
+			.positive("Limit must be a positive integer")
+			.default(10),
 		sortBy: z
 			.enum(["name", "createdAt"], {
 				message: "Sort by must be either 'name' or 'createdAt'",
@@ -65,11 +69,11 @@ export const Route = createFileRoute("/(user)/user/requests/")({
 				message: "Sort order must be either 'asc' or 'desc'",
 			})
 			.default("desc"),
-		searchTerm: z.string("Search term must be a string").nullable(),
-		minQuantity: z.int("Minimum quantity must be an integer").nullable(),
-		minPrice: z.number("Minimum price must be a number").nullable(),
-		maxPrice: z.number("Maximum price must be a number").nullable(),
-		categoryId: z.uuid("Category id must be valid UUID").nullable(),
+		searchTerm: z.string("Search term must be a string").optional(),
+		minQuantity: z.int("Minimum quantity must be an integer").optional(),
+		minPrice: z.number("Minimum price must be a number").optional(),
+		maxPrice: z.number("Maximum price must be a number").optional(),
+		categoryId: z.uuid("Category id must be valid UUID").optional(),
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: ({ deps }) => getProductRequests({ data: deps }),
@@ -84,36 +88,31 @@ export const Route = createFileRoute("/(user)/user/requests/")({
 			},
 		],
 	}),
-	component: ProductRequestsPage,
 	pendingComponent: AppPending,
+	component: ProductRequestsPage,
 });
 
 function ProductRequestsPage() {
 	const loaderData = Route.useLoaderData();
 
 	return (
-		<section className="container mx-auto py-12 px-4 space-y-6">
+		<section className="container mx-auto py-12 px-4 pt-28 space-y-6">
 			<ProductRequestsPageSearch />
 			{loaderData.productRequests.length > 0 ? (
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead>Request Id</TableHead>
 							<TableHead>Name</TableHead>
 							<TableHead>Category</TableHead>
 							<TableHead>Quantity</TableHead>
 							<TableHead>Price</TableHead>
 							<TableHead>Date</TableHead>
-							<TableHead></TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{loaderData.productRequests.map((productRequest) => {
 							return (
 								<TableRow key={productRequest.id}>
-									<TableCell className="uppercase">
-										{productRequest.id.slice(24)}
-									</TableCell>
 									<TableCell>{productRequest.name}</TableCell>
 									<TableCell>{productRequest.category.name}</TableCell>
 									<TableCell>{productRequest.quantity}</TableCell>
@@ -124,7 +123,6 @@ function ProductRequestsPage() {
 										})}
 									</TableCell>
 									<TableCell>{formatDate(productRequest.createdAt)}</TableCell>
-									<TableCell></TableCell>
 								</TableRow>
 							);
 						})}
