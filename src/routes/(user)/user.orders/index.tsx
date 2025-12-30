@@ -34,14 +34,20 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getOrderRequests } from "@/server/user/order-requests";
+import { getOrderRequests } from "@/lib/api/user.order-request";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(user)/user/orders/")({
 	validateSearch: z.object({
-		page: z.int("Page must be an integer").default(1),
-		limit: z.int("Limit must be an integer").default(10),
+		page: z
+			.int("Page must be an integer")
+			.positive("Page must be a positive integer")
+			.default(1),
+		limit: z
+			.int("Limit must be an integer")
+			.positive("Limit must be a positive integer")
+			.default(10),
 		sortBy: z
 			.enum(["name", "createdAt"], {
 				message: "Sort by must be either 'name' or 'createdAt'",
@@ -52,7 +58,7 @@ export const Route = createFileRoute("/(user)/user/orders/")({
 				message: "Sort order must be either 'asc' or 'desc'",
 			})
 			.default("desc"),
-		searchTerm: z.string("Search term must be a string").nullable(),
+		searchTerm: z.string("Search term must be a string").optional(),
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: ({ deps }) => getOrderRequests({ data: deps }),
@@ -75,13 +81,13 @@ function OrdersPage() {
 	const loaderData = Route.useLoaderData();
 
 	return (
-		<section className="container mx-auto py-12 px-4 space-y-6">
+		<section className="container mx-auto py-12 px-4 pt-28 space-y-6">
 			<OrdersPageSearch />
 			{loaderData.orderRequests.length > 0 ? (
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead>Order Id</TableHead>
+							<TableHead>Order Ref</TableHead>
 							<TableHead>Items</TableHead>
 							<TableHead>Status</TableHead>
 							<TableHead>Total</TableHead>
@@ -111,7 +117,7 @@ function OrdersPage() {
 									<TableCell className="uppercase">
 										{orderRequest.id.slice(24)}
 									</TableCell>
-									<TableCell>{orderRequest.orderItems.length}</TableCell>
+									<TableCell>{orderRequest._count.orderItems}</TableCell>
 									<TableCell>
 										<Badge variant={statusBadgeVariant}>
 											{orderRequest.status}

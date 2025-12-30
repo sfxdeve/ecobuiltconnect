@@ -35,8 +35,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { createLogisticRequest } from "@/server/user/logistic-requests";
 import { getOrderRequest } from "@/lib/api/user.order-request";
+import { createLogisticRequest } from "@/server/user/logistic-requests";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
@@ -115,7 +115,7 @@ function OrderDetailsPage() {
 	}
 
 	return (
-		<section className="container mx-auto py-6 md:py-12 px-4 flex flex-col-reverse md:flex-row gap-6 items-start">
+		<section className="container mx-auto py-12 px-4 pt-28 flex flex-col-reverse md:flex-row gap-6 items-start">
 			<Card className="flex-1">
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
@@ -231,9 +231,9 @@ function OrderDetailsPage() {
 				</CardHeader>
 				<CardContent className="space-y-3">
 					<div className="space-y-1">
-						<p className="text-sm font-medium">Order ID</p>
+						<p className="text-sm font-medium">Order Ref</p>
 						<p className="text-sm text-muted-foreground break-all">
-							{orderRequest.id}
+							{orderRequest.id.slice(24)}
 						</p>
 					</div>
 					<Separator />

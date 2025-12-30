@@ -231,6 +231,7 @@ export const updateOrderRequest = createServerFn({ method: "POST" })
 			data: {
 				...orderRequestData,
 			},
+			select: orderRequestSelector,
 		});
 
 		return {
