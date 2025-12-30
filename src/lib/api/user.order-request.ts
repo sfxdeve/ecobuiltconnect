@@ -174,3 +174,118 @@ export const getOrderRequest = createServerFn({
 
 		return { orderRequest };
 	});
+
+export const createOrderRequest = createServerFn({
+	method: "POST",
+})
+	.inputValidator(
+		z.object({
+			items: z
+				.array(
+					z.object({
+						quantity: z
+							.int("Quantity must be an integer")
+							.positive("Quantity must be a positive integer"),
+						productId: z.uuid("Product id must be valid UUID"),
+					}),
+				)
+				.min(1, "At least one item is required"),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { userProfile } = await getUserProfile();
+
+		const itemsMap = new Map<string, number>();
+
+		for (const item of data.items) {
+			itemsMap.set(item.productId, item.quantity);
+		}
+
+		const productIds = [...itemsMap.keys()];
+
+		const products = await prisma.product.findMany({
+			where: {
+				id: { in: productIds },
+				isDeleted: false,
+				category: { status: "APPROVED", isDeleted: false },
+				vendorProfile: { status: "APPROVED" },
+			},
+			select: productSelector,
+		});
+
+		if (products.length !== productIds.length) {
+			throw new Error("Some products not found");
+		}
+
+		const stockIssues: {
+			name: string;
+			requested: number;
+			available: number;
+		}[] = [];
+
+		for (const product of products) {
+			// biome-ignore lint/style/noNonNullAssertion: itemsMap.get(product.id) is never null
+			const requested = itemsMap.get(product.id)!;
+
+			if (product.stock < requested) {
+				stockIssues.push({
+					name: product.name,
+					requested,
+					available: product.stock,
+				});
+			}
+		}
+
+		if (stockIssues.length > 0) {
+			throw new Error(
+				`Insufficient stock: ${stockIssues
+					.map((i) => `${i.name} (${i.requested}/${i.available})`)
+					.join(", ")}`,
+			);
+		}
+
+		const totalPrice = products.reduce(
+			(acc, product) =>
+				// biome-ignore lint/style/noNonNullAssertion: itemsMap.get(product.id) is never null
+				acc + (product.salePrice ?? product.price) * itemsMap.get(product.id)!,
+			0,
+		);
+
+		const { orderRequest } = await prisma.$transaction(async (tx) => {
+			const orderRequest = await tx.orderRequest.create({
+				data: {
+					total: totalPrice,
+					userProfileId: userProfile.id,
+					orderItems: {
+						createMany: {
+							data: products.map((product) => ({
+								// biome-ignore lint/style/noNonNullAssertion: itemsMap.get(product.id) is never null
+								quantity: itemsMap.get(product.id)!,
+								price: product.salePrice ?? product.price,
+								productId: product.id,
+							})),
+						},
+					},
+				},
+				select: orderRequestSelector,
+			});
+
+			await Promise.all(
+				products.map((product) =>
+					tx.product.update({
+						where: { id: product.id },
+						data: {
+							stock: {
+								// biome-ignore lint/style/noNonNullAssertion: itemsMap.get(product.id) is never null
+								decrement: itemsMap.get(product.id)!,
+							},
+						},
+					}),
+				),
+			);
+
+			return { orderRequest };
+		});
+
+		return { orderRequest };
+	});
