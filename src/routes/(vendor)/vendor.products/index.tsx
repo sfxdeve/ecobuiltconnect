@@ -58,6 +58,7 @@ import {
 	deleteProduct,
 	getProduct,
 	getProducts,
+	updateProduct,
 } from "@/lib/api/vendor.product";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
@@ -304,11 +305,28 @@ function UpdateProductDialogContent({
 	productId: string;
 	closeDialog: () => void;
 }) {
+	const router = useRouter();
+
 	const getProductFn = useServerFn(getProduct);
+	const updateProductFn = useServerFn(updateProduct);
 
 	const productResult = useQuery({
 		queryKey: ["product", productId],
 		queryFn: () => getProductFn({ data: { productId } }),
+	});
+
+	const _updateProductMutation = useMutation({
+		mutationFn: updateProductFn,
+		onSuccess: () => {
+			toast.success("Product updated successfully");
+
+			router.invalidate();
+
+			closeDialog();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
 	});
 
 	if (productResult.isPending) {
@@ -342,6 +360,11 @@ function UpdateProductDialogContent({
 			<DialogHeader>
 				<DialogTitle>Update Product</DialogTitle>
 			</DialogHeader>
+			{/* <VendorProductForm
+				defaultValues={{}}
+				isSubmitting={updateProductMutation.isPending}
+				submitHandler={updateProductMutation.mutate}
+			/> */}
 		</DialogContent>
 	);
 }
