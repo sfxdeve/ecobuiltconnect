@@ -52,7 +52,7 @@ export const Route = createFileRoute("/(user)/user/orders/")({
 				message: "Sort order must be either 'asc' or 'desc'",
 			})
 			.default("desc"),
-		searchTerm: z.string("Search term must be a string").optional(),
+		searchTerm: z.string("Search term must be a string").nullable(),
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: ({ deps }) => getOrderRequests({ data: deps }),

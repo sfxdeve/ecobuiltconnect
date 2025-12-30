@@ -61,21 +61,21 @@ export const Route = createFileRoute("/(public)/products/")({
 				message: "Sort order must be either 'asc' or 'desc'",
 			})
 			.default("desc"),
-		searchTerm: z.string("Search term must be a string").optional(),
-		minStock: z.int("Minimum stock must be an integer").optional(),
-		minPrice: z.number("Minimum price must be a number").optional(),
-		maxPrice: z.number("Maximum price must be a number").optional(),
+		searchTerm: z.string("Search term must be a string").nullable(),
+		minStock: z.int("Minimum stock must be an integer").nullable(),
+		minPrice: z.number("Minimum price must be a number").nullable(),
+		maxPrice: z.number("Maximum price must be a number").nullable(),
 		condition: z
 			.enum(["EXCELLENT", "GOOD", "FAIR"], {
 				message: "Condition must be either 'EXCELLENT', 'GOOD', or 'FAIR'",
 			})
-			.optional(),
-		isVerified: z.boolean("Is verified must be a boolean").optional(),
-		categoryId: z.uuid("Category id must be valid UUID").optional(),
-		vendorProfileId: z.uuid("Vendor profile id must be valid UUID").optional(),
+			.nullable(),
+		isVerified: z.boolean("Is verified must be a boolean").nullable(),
+		categoryId: z.uuid("Category id must be valid UUID").nullable(),
+		vendorProfileId: z.uuid("Vendor profile id must be valid UUID").nullable(),
 		productRequestId: z
 			.uuid("Product request id must be valid UUID")
-			.optional(),
+			.nullable(),
 	}),
 	loaderDeps: ({ search }) => search,
 	loader: ({ deps }) => getProducts({ data: deps }),

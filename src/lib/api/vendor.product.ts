@@ -188,7 +188,8 @@ export const createProduct = createServerFn({
 				.min(10, "Description must be at least 10 characters"),
 			previousUsage: z
 				.string("Previous usage must be a string")
-				.min(10, "Previous usage must be at least 10 characters"),
+				.min(10, "Previous usage must be at least 10 characters")
+				.nullable(),
 			sku: z
 				.string("SKU must be a string")
 				.min(3, "SKU must be at least 3 characters"),
@@ -203,7 +204,7 @@ export const createProduct = createServerFn({
 				.number("Sale price must be a number")
 				.positive("Sale price must be a positive number")
 				.transform((val) => val * 100)
-				.optional(),
+				.nullable(),
 			condition: z.enum(
 				[
 					ProductCondition.EXCELLENT,
@@ -212,7 +213,6 @@ export const createProduct = createServerFn({
 				],
 				`Condition must be either '${ProductCondition.EXCELLENT}', '${ProductCondition.GOOD}', or '${ProductCondition.FAIR}'`,
 			),
-			isVerified: z.boolean("Is verified must be a boolean").optional(),
 			category: z.object({
 				connect: z.object({
 					id: z.uuid("Category id must be valid UUID"),
@@ -269,7 +269,7 @@ export const updateProduct = createServerFn({
 			previousUsage: z
 				.string("Previous usage must be a string")
 				.min(10, "Previous usage must be at least 10 characters")
-				.optional(),
+				.nullable(),
 			sku: z
 				.string("SKU must be a string")
 				.min(3, "SKU must be at least 3 characters")
@@ -287,7 +287,7 @@ export const updateProduct = createServerFn({
 				.number("Sale price must be a number")
 				.positive("Sale price must be a positive number")
 				.transform((val) => val * 100)
-				.optional(),
+				.nullable(),
 			condition: z
 				.enum(
 					[
@@ -298,7 +298,6 @@ export const updateProduct = createServerFn({
 					`Condition must be either '${ProductCondition.EXCELLENT}', '${ProductCondition.GOOD}', or '${ProductCondition.FAIR}'`,
 				)
 				.optional(),
-			isVerified: z.boolean("Is verified must be a boolean").optional(),
 			category: z
 				.object({
 					connect: z

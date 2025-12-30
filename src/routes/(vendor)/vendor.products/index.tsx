@@ -14,6 +14,7 @@ import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
 import { UserProductsFiltersForm } from "@/components/forms/user-products-filter-form";
+import { VendorProductForm } from "@/components/forms/vendor-product-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
@@ -315,7 +316,7 @@ function UpdateProductDialogContent({
 		queryFn: () => getProductFn({ data: { productId } }),
 	});
 
-	const _updateProductMutation = useMutation({
+	const updateProductMutation = useMutation({
 		mutationFn: updateProductFn,
 		onSuccess: () => {
 			toast.success("Product updated successfully");
@@ -360,11 +361,20 @@ function UpdateProductDialogContent({
 			<DialogHeader>
 				<DialogTitle>Update Product</DialogTitle>
 			</DialogHeader>
-			{/* <VendorProductForm
-				defaultValues={{}}
+			<VendorProductForm
+				defaultValues={{
+					...productResult.data.product,
+					price: productResult.data.product.price / 100,
+					salePrice: productResult.data.product.salePrice
+						? productResult.data.product.salePrice / 100
+						: null,
+					category: { connect: { id: productResult.data.product.category.id } },
+				}}
 				isSubmitting={updateProductMutation.isPending}
-				submitHandler={updateProductMutation.mutate}
-			/> */}
+				submitHandler={({ data }) =>
+					updateProductMutation.mutate({ data: { ...data, productId } })
+				}
+			/>
 		</DialogContent>
 	);
 }

@@ -48,15 +48,11 @@ export const upsertUserProfile = createServerFn({
 				clerkId,
 			},
 			update: {
-				address: data.address,
-				city: data.city,
-				postcode: data.postcode,
+				...data,
 			},
 			create: {
 				clerkId,
-				address: data.address,
-				city: data.city,
-				postcode: data.postcode,
+				...data,
 			},
 			select: userProfileSelector,
 		});

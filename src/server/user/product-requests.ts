@@ -28,17 +28,17 @@ export const getProductRequests = createServerFn({
 					message: "Sort order must be either 'asc' or 'desc'",
 				})
 				.default("desc"),
-			searchTerm: z.string("Search term must be a string").optional(),
-			minQuantity: z.int("Minimum quantity must be an integer").optional(),
+			searchTerm: z.string("Search term must be a string").nullable(),
+			minQuantity: z.int("Minimum quantity must be an integer").nullable(),
 			minPrice: z
 				.number("Minimum price must be a number")
 				.transform((val) => val * 100)
-				.optional(),
+				.nullable(),
 			maxPrice: z
 				.number("Maximum price must be a number")
 				.transform((val) => val * 100)
-				.optional(),
-			categoryId: z.uuid("Category id must be valid UUID").optional(),
+				.nullable(),
+			categoryId: z.uuid("Category id must be valid UUID").nullable(),
 		}),
 	)
 	.handler(async ({ data }) => {
