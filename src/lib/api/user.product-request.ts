@@ -110,7 +110,7 @@ export const getProductRequests = createServerFn({
 		};
 	});
 
-export const createProductRequest = createServerFn({})
+export const createProductRequest = createServerFn({ method: "POST" })
 	.inputValidator(
 		z.object({
 			pictureIds: z
