@@ -223,18 +223,16 @@ export const createProduct = createServerFn({
 	.handler(async ({ data }) => {
 		const { vendorProfile } = await getVendorProfile();
 
-		if (data.category?.connect) {
-			const category = await prisma.category.findUnique({
-				where: {
-					id: data.category.connect.id,
-					status: "APPROVED",
-					isDeleted: false,
-				},
-			});
+		const category = await prisma.category.findUnique({
+			where: {
+				id: data.category.connect.id,
+				status: "APPROVED",
+				isDeleted: false,
+			},
+		});
 
-			if (!category) {
-				throw new Error("Category not found");
-			}
+		if (!category) {
+			throw new Error("Category not found");
 		}
 
 		const product = await prisma.product.create({

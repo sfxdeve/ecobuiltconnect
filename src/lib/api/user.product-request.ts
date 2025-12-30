@@ -109,3 +109,55 @@ export const getProductRequests = createServerFn({
 			page: data.page,
 		};
 	});
+
+export const createProductRequest = createServerFn({})
+	.inputValidator(
+		z.object({
+			pictureIds: z
+				.array(z.string("Picture id must be a string"))
+				.min(1, "At least one picture id is required"),
+			name: z
+				.string("Name must be a string")
+				.min(3, "Name must be at least 3 characters"),
+			description: z
+				.string("Description must be a string")
+				.min(10, "Description must be at least 10 characters"),
+			quantity: z
+				.int("Quantity must be an integer")
+				.positive("Quantity must be a positive integer"),
+			price: z
+				.number("Price must be a number")
+				.positive("Price must be a positive number")
+				.transform((val) => val * 100),
+			category: z.object({
+				connect: z.object({
+					id: z.uuid("Category id must be valid UUID"),
+				}),
+			}),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { userProfile } = await getUserProfile();
+
+		const category = await prisma.category.findUnique({
+			where: {
+				id: data.category.connect.id,
+				status: "APPROVED",
+				isDeleted: false,
+			},
+		});
+
+		if (!category) {
+			throw new Error("Category not found");
+		}
+
+		const productRequest = await prisma.productRequest.create({
+			data: {
+				...data,
+				userProfile: { connect: { id: userProfile.id } },
+			},
+			select: productRequestSelector,
+		});
+
+		return { productRequest };
+	});
