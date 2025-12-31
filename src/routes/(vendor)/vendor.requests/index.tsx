@@ -1,11 +1,15 @@
 import { debounce } from "@tanstack/pacer";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
 import { useId, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
 import { UserProductRequestsFiltersForm } from "@/components/forms/user-product-requests-filter-form";
+import { VendorProductForm } from "@/components/forms/vendor-product-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
@@ -38,7 +42,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getProductRequests } from "@/lib/api/vendor.product-request";
+import { createProduct } from "@/lib/api/vendor.product";
+import {
+	getProductRequest,
+	getProductRequests,
+} from "@/lib/api/vendor.product-request";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
@@ -148,6 +156,89 @@ function VendorRequestsPage() {
 				<ProductRequestsPagePagination />
 			</section>
 		</>
+	);
+}
+
+function CreateProductDialogContent({
+	productRequestId,
+	closeDialog,
+}: {
+	productRequestId: string;
+	closeDialog: () => void;
+}) {
+	const router = useRouter();
+
+	const getProductRequestFn = useServerFn(getProductRequest);
+	const createProductFn = useServerFn(createProduct);
+
+	const productRequestResult = useQuery({
+		queryKey: ["product-request", productRequestId],
+		queryFn: () => getProductRequestFn({ data: { productRequestId } }),
+	});
+
+	const createProductMutation = useMutation({
+		mutationFn: createProductFn,
+		onSuccess: () => {
+			toast.success("Product created successfully");
+
+			router.invalidate();
+
+			closeDialog();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
+	if (productRequestResult.isPending) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Create Product</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-muted-foreground">
+					Loading request details...
+				</div>
+			</DialogContent>
+		);
+	}
+
+	if (productRequestResult.isError) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Create Product</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-destructive">
+					Error loading request: {productRequestResult.error.message}
+				</div>
+			</DialogContent>
+		);
+	}
+
+	return (
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>Create Product</DialogTitle>
+			</DialogHeader>
+			<VendorProductForm
+				defaultValues={{
+					pictureIds: [""],
+					name: "",
+					description: "",
+					previousUsage: null,
+					sku: "",
+					stock: 0,
+					price: 0,
+					salePrice: null,
+					condition: "GOOD",
+					categoryId: "",
+					productRequestId: null,
+				}}
+				isSubmitting={createProductMutation.isPending}
+				submitHandler={createProductMutation.mutate}
+			/>
+		</DialogContent>
 	);
 }
 

@@ -127,6 +127,7 @@ export const getProducts = createServerFn({
 					...productSelector,
 					category: { select: categorySelector },
 					vendorProfile: { select: vendorProfileSelector },
+					productRequestId: true,
 				},
 			}),
 			prisma.product.count({ where }),
@@ -162,6 +163,7 @@ export const getProduct = createServerFn({
 				...productSelector,
 				category: { select: categorySelector },
 				vendorProfile: { select: vendorProfileSelector },
+				productRequestId: true,
 			},
 		});
 
@@ -213,11 +215,10 @@ export const createProduct = createServerFn({
 				],
 				`Condition must be either '${ProductCondition.EXCELLENT}', '${ProductCondition.GOOD}', or '${ProductCondition.FAIR}'`,
 			),
-			category: z.object({
-				connect: z.object({
-					id: z.uuid("Category id must be valid UUID"),
-				}),
-			}),
+			categoryId: z.uuid("Category id must be valid UUID"),
+			productRequestId: z
+				.uuid("Product Request id must be valid UUID")
+				.nullable(),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -225,7 +226,7 @@ export const createProduct = createServerFn({
 
 		const category = await prisma.category.findUnique({
 			where: {
-				id: data.category.connect.id,
+				id: data.categoryId,
 				status: "APPROVED",
 				isDeleted: false,
 			},
@@ -238,7 +239,7 @@ export const createProduct = createServerFn({
 		const product = await prisma.product.create({
 			data: {
 				...data,
-				vendorProfile: { connect: { id: vendorProfile.id } },
+				vendorProfileId: vendorProfile.id,
 			},
 			select: productSelector,
 		});
@@ -296,24 +297,19 @@ export const updateProduct = createServerFn({
 					`Condition must be either '${ProductCondition.EXCELLENT}', '${ProductCondition.GOOD}', or '${ProductCondition.FAIR}'`,
 				)
 				.optional(),
-			category: z
-				.object({
-					connect: z
-						.object({
-							id: z.uuid("Category id must be valid UUID"),
-						})
-						.optional(),
-				})
-				.optional(),
+			categoryId: z.uuid("Category id must be valid UUID").optional(),
+			productRequestId: z
+				.uuid("Product Request id must be valid UUID")
+				.nullish(),
 		}),
 	)
 	.handler(async ({ data }) => {
 		const { vendorProfile } = await getVendorProfile();
 
-		if (data.category?.connect) {
+		if (data.categoryId) {
 			const category = await prisma.category.findUnique({
 				where: {
-					id: data.category.connect.id,
+					id: data.categoryId,
 					status: "APPROVED",
 					isDeleted: false,
 				},

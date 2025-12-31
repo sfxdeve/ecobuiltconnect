@@ -446,7 +446,8 @@ function CreateProductDialogContent({
 					price: 0,
 					salePrice: null,
 					condition: "GOOD",
-					category: { connect: { id: "" } },
+					categoryId: "",
+					productRequestId: null,
 				}}
 				isSubmitting={createProductMutation.isPending}
 				submitHandler={createProductMutation.mutate}
@@ -519,12 +520,19 @@ function UpdateProductDialogContent({
 			</DialogHeader>
 			<VendorProductForm
 				defaultValues={{
-					...productResult.data.product,
+					pictureIds: productResult.data.product.pictureIds,
+					name: productResult.data.product.name,
+					description: productResult.data.product.description,
+					previousUsage: productResult.data.product.previousUsage,
+					sku: productResult.data.product.sku,
+					stock: productResult.data.product.stock,
 					price: productResult.data.product.price / 100,
 					salePrice: productResult.data.product.salePrice
 						? productResult.data.product.salePrice / 100
 						: null,
-					category: { connect: { id: productResult.data.product.category.id } },
+					condition: productResult.data.product.condition,
+					categoryId: productResult.data.product.category.id,
+					productRequestId: productResult.data.product.productRequestId,
 				}}
 				isSubmitting={updateProductMutation.isPending}
 				submitHandler={({ data }) =>

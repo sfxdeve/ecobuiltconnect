@@ -115,3 +115,40 @@ export const getProductRequests = createServerFn({
 			page: data.page,
 		};
 	});
+
+export const getProductRequest = createServerFn({
+	method: "GET",
+})
+	.inputValidator(
+		z.object({
+			productRequestId: z.uuid("Product request id must be valid UUID"),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const { vendorProfile } = await getVendorProfile();
+
+		const product = await prisma.productRequest.findUnique({
+			where: {
+				id: data.productRequestId,
+				isDeleted: false,
+				category: { status: "APPROVED", isDeleted: false },
+				products: {
+					none: {
+						vendorProfile: {
+							id: vendorProfile.id,
+						},
+					},
+				},
+			},
+			select: {
+				...productRequestSelector,
+				category: { select: categorySelector },
+			},
+		});
+
+		if (!product) {
+			throw new Error("Product not found");
+		}
+
+		return { product };
+	});

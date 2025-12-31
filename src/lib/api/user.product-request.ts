@@ -51,7 +51,6 @@ export const getProductRequests = createServerFn({
 
 		const where: ProductRequestWhereInput = {
 			isDeleted: false,
-			category: { status: "APPROVED", isDeleted: false },
 			userProfile: { id: userProfile.id },
 			AND: [],
 		};

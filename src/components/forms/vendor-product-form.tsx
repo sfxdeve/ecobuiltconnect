@@ -62,11 +62,8 @@ export const vendorProductFormSchema = z.object({
 		[ProductCondition.EXCELLENT, ProductCondition.GOOD, ProductCondition.FAIR],
 		`Condition must be either '${ProductCondition.EXCELLENT}', '${ProductCondition.GOOD}', or '${ProductCondition.FAIR}'`,
 	),
-	category: z.object({
-		connect: z.object({
-			id: z.uuid("Category id must be valid UUID"),
-		}),
-	}),
+	categoryId: z.uuid("Category id must be valid UUID"),
+	productRequestId: z.uuid("Product Request id must be valid UUID").nullable(),
 });
 
 export function VendorProductForm({
@@ -236,7 +233,7 @@ export function VendorProductForm({
 							);
 						}}
 					</form.Field>
-					<form.Field name="category.connect.id">
+					<form.Field name="categoryId">
 						{(field) => {
 							if (categoriesResult.isPending) {
 								return <Spinner />;
