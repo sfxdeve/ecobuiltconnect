@@ -23,13 +23,13 @@ async function main() {
 	await prisma.productRequest.deleteMany();
 	await prisma.product.deleteMany();
 	await prisma.category.deleteMany();
-	await prisma.vendorProfile.deleteMany();
 	await prisma.logisticProfile.deleteMany();
+	await prisma.vendorProfile.deleteMany();
 	await prisma.adminProfile.deleteMany();
 	await prisma.userProfile.deleteMany();
 
-	// Create 5 fake vendors
-	const vendorProfilesData = Array.from({ length: 5 }, () => ({
+	// Create 1 fake vendors
+	const vendorProfilesData = Array.from({ length: 1 }, () => ({
 		clerkId: faker.string.uuid(),
 		pictureId: "/test.jpg",
 		name: faker.company.name(),
@@ -37,7 +37,7 @@ async function main() {
 		postcode: faker.location.zipCode(),
 		city: faker.location.city(),
 		address: faker.location.streetAddress(),
-		status: faker.helpers.enumValue(ProfileStatus),
+		status: ProfileStatus.APPROVED,
 	}));
 	await prisma.vendorProfile.createMany({ data: vendorProfilesData });
 	const vendorProfiles = await prisma.vendorProfile.findMany();
@@ -47,7 +47,7 @@ async function main() {
 	// Create 5 fake categories
 	const categoriesData = Array.from({ length: 5 }, () => ({
 		name: faker.commerce.department(),
-		status: faker.helpers.enumValue(CategoryStatus),
+		status: CategoryStatus.APPROVED,
 	}));
 	await prisma.category.createMany({ data: categoriesData });
 	const categories = await prisma.category.findMany();
