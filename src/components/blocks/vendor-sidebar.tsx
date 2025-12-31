@@ -36,24 +36,24 @@ import type { FileRouteTypes } from "@/routeTree.gen";
 
 const items = [
 	{
-		label: "Orders",
-		href: "/vendor/orders",
 		icon: ShoppingBagIcon,
+		label: "Orders",
+		to: "/vendor/orders",
 	},
 	{
-		label: "Requests",
-		href: "/vendor/requests",
 		icon: FileTextIcon,
+		label: "Requests",
+		to: "/vendor/requests",
 	},
 	{
-		label: "Products",
-		href: "/vendor/products",
 		icon: PackageIcon,
+		label: "Products",
+		to: "/vendor/products",
 	},
 ] satisfies {
-	label: string;
-	href: FileRouteTypes["to"];
 	icon: LucideIcon;
+	label: string;
+	to: FileRouteTypes["to"];
 }[];
 
 export function VendorSidebar() {
@@ -94,13 +94,10 @@ export function VendorSidebar() {
 			<SidebarContent className="p-2">
 				<SidebarMenu>
 					{items.map((item) => (
-						<SidebarMenuItem key={item.href}>
+						<SidebarMenuItem key={item.to}>
 							<SidebarMenuButton
 								render={
-									<Link
-										to={item.href}
-										activeProps={{ className: "bg-muted" }}
-									/>
+									<Link to={item.to} activeProps={{ className: "bg-muted" }} />
 								}
 							>
 								<item.icon />

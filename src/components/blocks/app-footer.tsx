@@ -2,19 +2,24 @@ import { Link } from "@tanstack/react-router";
 import {
 	FacebookIcon,
 	InstagramIcon,
+	type LucideIcon,
 	MailIcon,
 	MapPinIcon,
 	PhoneIcon,
 	TwitterIcon,
 	YoutubeIcon,
 } from "lucide-react";
+import type { FileRouteTypes } from "@/routeTree.gen";
 
 const SOCIAL_LINKS = [
 	{ icon: FacebookIcon, href: "https://facebook.com" },
 	{ icon: InstagramIcon, href: "https://instagram.com" },
 	{ icon: YoutubeIcon, href: "https://youtube.com" },
 	{ icon: TwitterIcon, href: "https://twitter.com" },
-];
+] satisfies {
+	icon: LucideIcon;
+	href: string;
+}[];
 
 const QUICK_LINKS = [
 	{ label: "Home", to: "/" },
@@ -22,15 +27,21 @@ const QUICK_LINKS = [
 	{ label: "Vendors", to: "/vendors" },
 	{ label: "Community", to: "/community" },
 	{ label: "Contact", to: "/contact" },
-];
+] satisfies {
+	label: string;
+	to: FileRouteTypes["to"];
+}[];
 
 const LEGAL_LINKS = [
-	{ label: "Privacy Policy", href: "/privacy" },
-	{ label: "Cookies Policy", href: "/cookies" },
-	{ label: "Terms of Use", href: "/terms" },
-	{ label: "Terms of Sale", href: "/terms-of-sale" },
-	{ label: "Returns & Refunds Policy", href: "/returns" },
-];
+	{ label: "Privacy Policy", to: "/" },
+	{ label: "Cookies Policy", to: "/" },
+	{ label: "Terms of Use", to: "/" },
+	{ label: "Terms of Sale", to: "/" },
+	{ label: "Returns & Refunds Policy", to: "/" },
+] satisfies {
+	label: string;
+	to: FileRouteTypes["to"];
+}[];
 
 export function AppFooter() {
 	return (
@@ -79,13 +90,13 @@ export function AppFooter() {
 					<h3 className="mb-6 text-lg font-semibold">Legal</h3>
 					<ul className="text-muted-foreground space-y-4 text-sm">
 						{LEGAL_LINKS.map((link) => (
-							<li key={link.href}>
-								<a
-									href={link.href}
+							<li key={link.to}>
+								<Link
+									to={link.to}
 									className="hover:text-primary transition-colors"
 								>
 									{link.label}
-								</a>
+								</Link>
 							</li>
 						))}
 					</ul>
