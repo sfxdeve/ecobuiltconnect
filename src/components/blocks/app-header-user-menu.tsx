@@ -15,11 +15,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { z } from "zod";
-import {
-	UserProfileForm,
-	type userProfileFormSchema,
-} from "@/components/forms/user-profile-form";
+import { UserProfileForm } from "@/components/forms/user-profile-form";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -53,8 +49,7 @@ export function AppHeaderUserMenu() {
 	});
 
 	const upsertUserProfileMutation = useMutation({
-		mutationFn: (data: z.infer<typeof userProfileFormSchema>) =>
-			upsertUserProfileFn({ data }),
+		mutationFn: upsertUserProfileFn,
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({
 				queryKey: ["user-profile", user?.id],
@@ -159,8 +154,8 @@ export function AppHeaderUserMenu() {
 						postcode: userProfileResult.data?.userProfile?.postcode ?? "",
 					}}
 					isSubmitting={upsertUserProfileMutation.isPending}
-					submitHandler={(data) => {
-						upsertUserProfileMutation.mutate(data);
+					submitHandler={({ data }) => {
+						upsertUserProfileMutation.mutate({ data });
 					}}
 				/>
 			</DialogContent>
