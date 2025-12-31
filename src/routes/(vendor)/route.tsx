@@ -1,6 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppFooter } from "@/components/blocks/app-footer";
-import { AppPending } from "@/components/blocks/app-pending";
 import { VendorSidebar } from "@/components/blocks/vendor-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getVendorProfile } from "@/lib/api/vendor.profile";
@@ -13,7 +12,6 @@ export const Route = createFileRoute("/(vendor)")({
 			throw redirect({ to: "/" });
 		}
 	},
-	pendingComponent: AppPending,
 	component: VendorLayout,
 });
 

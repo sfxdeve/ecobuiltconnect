@@ -1,11 +1,13 @@
 import { useUser } from "@clerk/tanstack-react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { AppHeader } from "@/components/blocks/app-header";
-import { AppPending } from "@/components/blocks/app-pending";
+import { UserProfileForm } from "@/components/forms/user-profile-form";
+import { VendorProfileForm } from "@/components/forms/vendor-profile-form";
 import {
 	Dialog,
 	DialogContent,
@@ -14,9 +16,10 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getProfile } from "@/lib/api/shared.profile";
+import { upsertUserProfile } from "@/lib/api/user.profile";
+import { upsertVendorProfile } from "@/lib/api/vendor.profile";
 
 export const Route = createFileRoute("/(public)")({
-	pendingComponent: AppPending,
 	component: PublicLayout,
 });
 
@@ -24,7 +27,7 @@ function PublicLayout() {
 	const { user } = useUser();
 
 	const [profileDialogType, setProfileDialogType] = useState<
-		"create" | "info" | null
+		"create-profile" | "prodile-status-info" | null
 	>(null);
 
 	const getProfileFn = useServerFn(getProfile);
@@ -37,9 +40,9 @@ function PublicLayout() {
 	useEffect(() => {
 		if (profileResult.data) {
 			if (!profileResult.data.profile) {
-				setProfileDialogType("create");
+				setProfileDialogType("create-profile");
 			} else if (profileResult.data.profile.status !== "APPROVED") {
-				setProfileDialogType("info");
+				setProfileDialogType("prodile-status-info");
 			}
 		}
 	}, [profileResult.data]);
@@ -59,14 +62,61 @@ function PublicLayout() {
 					}
 				}}
 			>
-				{profileDialogType === "create" && <CreateProfileDialogContent />}
-				{profileDialogType === "info" && <ProfileInfoDialogContent />}
+				{profileDialogType === "create-profile" && (
+					<CreateProfileDialogContent
+						closeDialog={() => {
+							setProfileDialogType(null);
+						}}
+					/>
+				)}
+				{profileDialogType === "prodile-status-info" && (
+					<ProfileStatusInfoDialogContent />
+				)}
 			</Dialog>
 		</>
 	);
 }
 
-function CreateProfileDialogContent() {
+function CreateProfileDialogContent({
+	closeDialog,
+}: {
+	closeDialog: () => void;
+}) {
+	const { user } = useUser();
+
+	const upsertUserProfileFn = useServerFn(upsertUserProfile);
+	const upsertVendorProfileFn = useServerFn(upsertVendorProfile);
+
+	const queryClient = useQueryClient();
+
+	const upsertUserProfileMutation = useMutation({
+		mutationFn: upsertUserProfileFn,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: ["user-profile", user?.id],
+			});
+
+			closeDialog();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
+	const upsertVendorProfileMutation = useMutation({
+		mutationFn: upsertVendorProfileFn,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: ["vendor-profile", user?.id],
+			});
+
+			closeDialog();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
 	return (
 		<DialogContent>
 			<DialogHeader>
@@ -74,13 +124,36 @@ function CreateProfileDialogContent() {
 				<Tabs>
 					<TabsList>
 						<TabsTrigger value="user">User</TabsTrigger>
-						<TabsTrigger value="admin">Admin</TabsTrigger>
+						{/* <TabsTrigger value="admin">Admin</TabsTrigger> */}
 						<TabsTrigger value="vendor">Vendor</TabsTrigger>
-						<TabsTrigger value="logistic">Logistic</TabsTrigger>
+						{/* <TabsTrigger value="logistic">Logistic</TabsTrigger> */}
 					</TabsList>
-					<TabsContent value="user"></TabsContent>
+					<TabsContent value="user">
+						<UserProfileForm
+							defaultValues={{
+								address: "",
+								city: "",
+								postcode: "",
+							}}
+							isSubmitting={upsertUserProfileMutation.isPending}
+							submitHandler={upsertUserProfileMutation.mutate}
+						/>
+					</TabsContent>
 					<TabsContent value="admin"></TabsContent>
-					<TabsContent value="vendor"></TabsContent>
+					<TabsContent value="vendor">
+						<VendorProfileForm
+							defaultValues={{
+								pictureId: "/test.jpg",
+								name: "",
+								description: "",
+								address: "",
+								city: "",
+								postcode: "",
+							}}
+							isSubmitting={upsertVendorProfileMutation.isPending}
+							submitHandler={upsertVendorProfileMutation.mutate}
+						/>
+					</TabsContent>
 					<TabsContent value="logistic"></TabsContent>
 				</Tabs>
 			</DialogHeader>
@@ -88,11 +161,15 @@ function CreateProfileDialogContent() {
 	);
 }
 
-function ProfileInfoDialogContent() {
+function ProfileStatusInfoDialogContent() {
+	// const navigate = Route.useNavigate();
+
+	// const { user } = useUser();
+
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Profile Info</DialogTitle>
+				<DialogTitle>Profile Status Info</DialogTitle>
 			</DialogHeader>
 		</DialogContent>
 	);
