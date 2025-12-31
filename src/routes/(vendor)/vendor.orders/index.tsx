@@ -286,10 +286,8 @@ function ViewOrderRequestDialogContent({
 		);
 	}
 
-	const { orderRequest } = orderRequestResult.data;
-
 	let statusBadgeVariant: "default" | "outline" | "destructive";
-	switch (orderRequest.status) {
+	switch (orderRequestResult.data.orderRequest.status) {
 		case "PAID":
 		case "COMPLETED":
 			statusBadgeVariant = "default";
@@ -315,7 +313,7 @@ function ViewOrderRequestDialogContent({
 								Order Ref
 							</ItemDescription>
 							<ItemTitle className="font-medium uppercase">
-								#{orderRequest.id.slice(24)}
+								#{orderRequestResult.data.orderRequest.id.slice(24)}
 							</ItemTitle>
 						</ItemContent>
 					</Item>
@@ -326,7 +324,7 @@ function ViewOrderRequestDialogContent({
 							</ItemDescription>
 							<ItemTitle>
 								<Badge variant={statusBadgeVariant}>
-									{orderRequest.status}
+									{orderRequestResult.data.orderRequest.status}
 								</Badge>
 							</ItemTitle>
 						</ItemContent>
@@ -337,7 +335,7 @@ function ViewOrderRequestDialogContent({
 								Date
 							</ItemDescription>
 							<ItemTitle className="font-medium">
-								{formatDate(orderRequest.createdAt)}
+								{formatDate(orderRequestResult.data.orderRequest.createdAt)}
 							</ItemTitle>
 						</ItemContent>
 					</Item>
@@ -347,16 +345,19 @@ function ViewOrderRequestDialogContent({
 								Total
 							</ItemDescription>
 							<ItemTitle className="font-medium">
-								{formatMoneyFromCents(orderRequest.total, {
-									locale: "en-ZA",
-									currency: "ZAR",
-								})}
+								{formatMoneyFromCents(
+									orderRequestResult.data.orderRequest.total,
+									{
+										locale: "en-ZA",
+										currency: "ZAR",
+									},
+								)}
 							</ItemTitle>
 						</ItemContent>
 					</Item>
 				</div>
 				<div className="space-y-4">
-					{orderRequest.orderItems.map((item) => (
+					{orderRequestResult.data.orderRequest.orderItems.map((item) => (
 						<Item key={item.id} variant="muted" className="flex gap-3">
 							<ItemMedia variant="image" className="size-20">
 								<img src={item.product.pictureIds[0]} alt={item.product.name} />

@@ -267,17 +267,17 @@ function CreateProductDialogContent({
 			</DialogHeader>
 			<VendorProductForm
 				defaultValues={{
-					pictureIds: [""],
-					name: "",
-					description: "",
+					pictureIds: productRequestResult.data.productRequest.pictureIds,
+					name: productRequestResult.data.productRequest.name,
+					description: productRequestResult.data.productRequest.description,
 					previousUsage: null,
 					sku: "",
-					stock: 0,
-					price: 0,
+					stock: productRequestResult.data.productRequest.quantity,
+					price: productRequestResult.data.productRequest.price / 100,
 					salePrice: null,
 					condition: "GOOD",
-					categoryId: "",
-					productRequestId: null,
+					categoryId: productRequestResult.data.productRequest.category.id,
+					productRequestId,
 				}}
 				isSubmitting={createProductMutation.isPending}
 				submitHandler={createProductMutation.mutate}

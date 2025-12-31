@@ -316,8 +316,6 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 		);
 	}
 
-	const { product } = productResult.data;
-
 	return (
 		<DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
 			<DialogHeader>
@@ -327,12 +325,12 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 				{/* Image Carousel */}
 				<Carousel className="w-full">
 					<CarouselContent>
-						{product.pictureIds.map((pictureId, index) => (
+						{productResult.data.product.pictureIds.map((pictureId, index) => (
 							<CarouselItem key={pictureId}>
 								<img
 									className="aspect-square object-contain w-full rounded-lg"
 									src={pictureId}
-									alt={`${product.name} - View ${index + 1}`}
+									alt={`${productResult.data.product.name} - View ${index + 1}`}
 								/>
 							</CarouselItem>
 						))}
@@ -347,7 +345,7 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 								Description
 							</ItemTitle>
 							<ItemDescription className="text-muted-foreground leading-relaxed">
-								{product.description}
+								{productResult.data.product.description}
 							</ItemDescription>
 						</ItemContent>
 					</Item>
@@ -357,7 +355,7 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 								Previous Usage
 							</ItemTitle>
 							<ItemDescription className="text-muted-foreground leading-relaxed">
-								{product.previousUsage}
+								{productResult.data.product.previousUsage}
 							</ItemDescription>
 						</ItemContent>
 					</Item>
@@ -368,7 +366,9 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 							<ItemDescription className="text-sm text-muted-foreground">
 								SKU
 							</ItemDescription>
-							<ItemTitle className="font-medium">{product.sku}</ItemTitle>
+							<ItemTitle className="font-medium">
+								{productResult.data.product.sku}
+							</ItemTitle>
 						</ItemContent>
 					</Item>
 					<Item variant="muted">
@@ -377,7 +377,7 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 								Stock
 							</ItemDescription>
 							<ItemTitle className="font-medium text-green-600">
-								{product.stock} in stock
+								{productResult.data.product.stock} in stock
 							</ItemTitle>
 						</ItemContent>
 					</Item>
@@ -387,7 +387,7 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 								Category
 							</ItemDescription>
 							<ItemTitle className="font-medium">
-								{product.category.name}
+								{productResult.data.product.category.name}
 							</ItemTitle>
 						</ItemContent>
 					</Item>
@@ -397,7 +397,7 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 								Date
 							</ItemDescription>
 							<ItemTitle className="font-medium">
-								{formatDate(product.createdAt)}
+								{formatDate(productResult.data.product.createdAt)}
 							</ItemTitle>
 						</ItemContent>
 					</Item>

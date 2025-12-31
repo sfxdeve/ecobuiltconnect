@@ -127,7 +127,7 @@ export const getProductRequest = createServerFn({
 	.handler(async ({ data }) => {
 		const { vendorProfile } = await getVendorProfile();
 
-		const product = await prisma.productRequest.findUnique({
+		const productRequest = await prisma.productRequest.findUnique({
 			where: {
 				id: data.productRequestId,
 				isDeleted: false,
@@ -146,9 +146,9 @@ export const getProductRequest = createServerFn({
 			},
 		});
 
-		if (!product) {
+		if (!productRequest) {
 			throw new Error("Product not found");
 		}
 
-		return { product };
+		return { productRequest };
 	});
