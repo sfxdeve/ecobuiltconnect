@@ -2,7 +2,12 @@ import { debounce } from "@tanstack/pacer";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	ExternalLinkIcon,
+	FilterIcon,
+} from "lucide-react";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -105,43 +110,82 @@ export const Route = createFileRoute("/(vendor)/vendor/requests/")({
 function VendorRequestsPage() {
 	const loaderData = Route.useLoaderData();
 
+	const [selectedProductRequestId, setSelectedProductRequestId] = useState<
+		string | null
+	>(null);
+	const [selectedAction, setSelectedAction] = useState<"create" | null>(null);
+
 	return (
 		<>
 			<DashboardHeader title="Requests" />
 			<section className="p-4 space-y-6 min-h-screen">
 				<ProductRequestsPageSearch />
 				{loaderData.productRequests.length > 0 ? (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Name</TableHead>
-								<TableHead>Category</TableHead>
-								<TableHead>Quantity</TableHead>
-								<TableHead>Price</TableHead>
-								<TableHead>Date</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{loaderData.productRequests.map((productRequest) => {
-								return (
-									<TableRow key={productRequest.id}>
-										<TableCell>{productRequest.name}</TableCell>
-										<TableCell>{productRequest.category.name}</TableCell>
-										<TableCell>{productRequest.quantity}</TableCell>
-										<TableCell>
-											{formatMoneyFromCents(productRequest.price, {
-												locale: "en-ZA",
-												currency: "ZAR",
-											})}
-										</TableCell>
-										<TableCell>
-											{formatDate(productRequest.createdAt)}
-										</TableCell>
-									</TableRow>
-								);
-							})}
-						</TableBody>
-					</Table>
+					<>
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Name</TableHead>
+									<TableHead>Category</TableHead>
+									<TableHead>Quantity</TableHead>
+									<TableHead>Price</TableHead>
+									<TableHead>Date</TableHead>
+									<TableHead></TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{loaderData.productRequests.map((productRequest) => {
+									return (
+										<TableRow key={productRequest.id}>
+											<TableCell>{productRequest.name}</TableCell>
+											<TableCell>{productRequest.category.name}</TableCell>
+											<TableCell>{productRequest.quantity}</TableCell>
+											<TableCell>
+												{formatMoneyFromCents(productRequest.price, {
+													locale: "en-ZA",
+													currency: "ZAR",
+												})}
+											</TableCell>
+											<TableCell>
+												{formatDate(productRequest.createdAt)}
+											</TableCell>
+											<TableCell>
+												<Button
+													onClick={() => {
+														setSelectedProductRequestId(productRequest.id);
+														setSelectedAction("create");
+													}}
+													variant="ghost"
+													size="icon"
+												>
+													<ExternalLinkIcon />
+												</Button>
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							</TableBody>
+						</Table>
+						<Dialog
+							open={selectedAction !== null}
+							onOpenChange={(open) => {
+								if (!open) {
+									setSelectedProductRequestId(null);
+									setSelectedAction(null);
+								}
+							}}
+						>
+							{selectedProductRequestId && selectedAction === "create" && (
+								<CreateProductDialogContent
+									productRequestId={selectedProductRequestId}
+									closeDialog={() => {
+										setSelectedProductRequestId(null);
+										setSelectedAction(null);
+									}}
+								/>
+							)}
+						</Dialog>
+					</>
 				) : (
 					<Empty className="bg-muted">
 						<EmptyHeader>

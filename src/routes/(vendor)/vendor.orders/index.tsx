@@ -133,7 +133,7 @@ function VendorOrderRequestsPage() {
 									<TableHead>Status</TableHead>
 									<TableHead>Total</TableHead>
 									<TableHead>Date</TableHead>
-									<TableHead>Actions</TableHead>
+									<TableHead></TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>

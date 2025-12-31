@@ -171,7 +171,7 @@ function VendorProductsPage() {
 									<TableHead>Stock</TableHead>
 									<TableHead>Price</TableHead>
 									<TableHead>Date</TableHead>
-									<TableHead>Actions</TableHead>
+									<TableHead></TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
