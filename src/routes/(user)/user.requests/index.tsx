@@ -69,9 +69,18 @@ export const Route = createFileRoute("/(user)/user/requests/")({
 			})
 			.default("desc"),
 		searchTerm: z.string("Search term must be a string").optional(),
-		minQuantity: z.int("Minimum quantity must be an integer").optional(),
-		minPrice: z.number("Minimum price must be a number").optional(),
-		maxPrice: z.number("Maximum price must be a number").optional(),
+		minQuantity: z
+			.int("Minimum quantity must be an integer")
+			.positive("Minimum quantity must be a positive integer")
+			.optional(),
+		minPrice: z
+			.number("Minimum price must be a number")
+			.positive("Minimum price must be a positive number")
+			.optional(),
+		maxPrice: z
+			.number("Maximum price must be a number")
+			.positive("Maximum price must be a positive number")
+			.optional(),
 		categoryId: z.uuid("Category id must be valid UUID").optional(),
 	}),
 	loaderDeps: ({ search }) => search,
@@ -79,11 +88,11 @@ export const Route = createFileRoute("/(user)/user/requests/")({
 	head: () => ({
 		meta: [
 			{
-				title: "Product Requests - EcobuiltConnect",
+				title: "Requests - EcobuiltConnect",
 			},
 			{
 				name: "description",
-				content: "Manage your service and product requests on EcobuiltConnect.",
+				content: "Manage your product requests on EcobuiltConnect.",
 			},
 		],
 	}),
@@ -152,7 +161,7 @@ function ProductRequestsPageSearch() {
 		isProductRequestsFiltersDialogOpen,
 		setIsProductRequestsFiltersDialogOpen,
 	] = useState(false);
-	const [isProductRequestDialogOpen, setIsProductRequestDialogOpen] =
+	const [isUserProductRequestDialogOpen, setIsUserProductRequestDialogOpen] =
 		useState(false);
 
 	const createProductRequestFn = useServerFn(createProductRequest);
@@ -160,7 +169,7 @@ function ProductRequestsPageSearch() {
 	const createProductRequestMutation = useMutation({
 		mutationFn: createProductRequestFn,
 		onSuccess: async () => {
-			setIsProductRequestDialogOpen(false);
+			setIsUserProductRequestDialogOpen(false);
 
 			router.invalidate();
 		},
@@ -247,13 +256,13 @@ function ProductRequestsPageSearch() {
 				</DialogContent>
 			</Dialog>
 			<Input
-				placeholder="Search Product Requests"
+				placeholder="Search Requests"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
 			<Dialog
-				open={isProductRequestDialogOpen}
-				onOpenChange={setIsProductRequestDialogOpen}
+				open={isUserProductRequestDialogOpen}
+				onOpenChange={setIsUserProductRequestDialogOpen}
 			>
 				<DialogTrigger render={<Button variant="default" />}>
 					New Request
@@ -305,7 +314,7 @@ function ProductRequestsPagePagination() {
 			<Field orientation="horizontal" className="w-fit">
 				<FieldLabel htmlFor={limitSelectId}>
 					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
-					{loaderData.total} product requests
+					{loaderData.total} requests
 				</FieldLabel>
 				<Select
 					key={loaderData.limit}

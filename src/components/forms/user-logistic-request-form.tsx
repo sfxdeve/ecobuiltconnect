@@ -61,7 +61,13 @@ export function UserLogisticRequestForm({
 										type="number"
 										value={field.state.value}
 										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+										onChange={(e) =>
+											field.handleChange(
+												Number.isFinite(e.target.valueAsNumber)
+													? e.target.valueAsNumber
+													: 0,
+											)
+										}
 										aria-invalid={isInvalid}
 										placeholder="Enter price"
 									/>

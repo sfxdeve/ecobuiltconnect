@@ -59,7 +59,7 @@ export const Route = createFileRoute("/(user)/user/orders/$orderId/")({
 });
 
 function OrderDetailsPage() {
-	const { orderRequest } = Route.useLoaderData();
+	const loaderData = Route.useLoaderData();
 
 	const router = useRouter();
 
@@ -83,7 +83,7 @@ function OrderDetailsPage() {
 	let orderStatusBadgeVariant: "default" | "outline" | "destructive";
 	let deliveryStatusBadgeVariant: "default" | "outline" | "destructive";
 
-	switch (orderRequest.status) {
+	switch (loaderData.orderRequest.status) {
 		case "PAID":
 		case "COMPLETED":
 			orderStatusBadgeVariant = "default";
@@ -96,7 +96,7 @@ function OrderDetailsPage() {
 			break;
 	}
 
-	switch (orderRequest.logisticRequest?.status) {
+	switch (loaderData.orderRequest.logisticRequest?.status) {
 		case "PAID":
 		case "DELIVERED":
 			deliveryStatusBadgeVariant = "default";
@@ -118,8 +118,9 @@ function OrderDetailsPage() {
 						Order Items
 					</CardTitle>
 					<CardDescription>
-						{orderRequest.orderItems.length} item
-						{orderRequest.orderItems.length !== 1 ? "s" : ""} in this order
+						{loaderData.orderRequest.orderItems.length} item
+						{loaderData.orderRequest.orderItems.length !== 1 ? "s" : ""} in this
+						order
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -134,7 +135,7 @@ function OrderDetailsPage() {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{orderRequest.orderItems.map((item) => (
+								{loaderData.orderRequest.orderItems.map((item) => (
 									<TableRow key={item.id}>
 										<TableCell>
 											<div className="flex gap-3 items-center">
@@ -172,7 +173,7 @@ function OrderDetailsPage() {
 						</Table>
 					</div>
 					<div className="md:hidden space-y-4">
-						{orderRequest.orderItems.map((item) => (
+						{loaderData.orderRequest.orderItems.map((item) => (
 							<div key={item.id} className="border rounded-lg p-4 space-y-3">
 								<div className="flex gap-3">
 									<img
@@ -228,34 +229,34 @@ function OrderDetailsPage() {
 					<div className="space-y-1">
 						<p className="text-sm font-medium">Order Ref</p>
 						<p className="text-sm text-muted-foreground break-all">
-							{orderRequest.id.slice(24)}
+							{loaderData.orderRequest.id.slice(24)}
 						</p>
 					</div>
 					<Separator />
 					<div className="space-y-1">
 						<p className="text-sm font-medium">Order Date</p>
 						<p className="text-sm text-muted-foreground">
-							{formatDate(orderRequest.createdAt)}
+							{formatDate(loaderData.orderRequest.createdAt)}
 						</p>
 					</div>
 					<Separator />
 					<div className="space-y-1">
 						<p className="text-sm font-medium">Order Status</p>
 						<Badge variant={orderStatusBadgeVariant}>
-							{orderRequest.status}
+							{loaderData.orderRequest.status}
 						</Badge>
 					</div>
 					<Separator />
 					<div className="space-y-1">
 						<p className="text-sm font-medium">Delivery Status</p>
-						{orderRequest.logisticRequest ? (
+						{loaderData.orderRequest.logisticRequest ? (
 							<div className="flex gap-1 items-center">
 								<Badge variant={deliveryStatusBadgeVariant}>
-									{orderRequest.logisticRequest.status}
+									{loaderData.orderRequest.logisticRequest.status}
 								</Badge>
 								<Link
 									to="/user/orders/$orderId/delivery"
-									params={{ orderId: orderRequest.id }}
+									params={{ orderId: loaderData.orderRequest.id }}
 									className={cn(
 										buttonVariants({
 											variant: "ghost",
@@ -266,7 +267,7 @@ function OrderDetailsPage() {
 									<ExternalLinkIcon />
 								</Link>
 							</div>
-						) : orderRequest.status === "COMPLETED" ? (
+						) : loaderData.orderRequest.status === "COMPLETED" ? (
 							<Dialog
 								open={isLogisticRequestDialogOpen}
 								onOpenChange={setIsLogisticRequestDialogOpen}
@@ -289,7 +290,7 @@ function OrderDetailsPage() {
 											createLogisticRequestMutation.mutate({
 												data: {
 													...data,
-													orderRequestId: orderRequest.id,
+													orderRequestId: loaderData.orderRequest.id,
 												},
 											});
 										}}
@@ -304,7 +305,7 @@ function OrderDetailsPage() {
 					<div className="space-y-1">
 						<p className="text-sm font-medium">Total Price</p>
 						<p className="text-lg font-semibold">
-							{formatMoneyFromCents(orderRequest.total, {
+							{formatMoneyFromCents(loaderData.orderRequest.total, {
 								locale: "en-ZA",
 								currency: "ZAR",
 							})}

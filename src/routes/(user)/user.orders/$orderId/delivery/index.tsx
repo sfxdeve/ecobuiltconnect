@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AppComingSoon } from "@/components/blocks/app-coming-soon";
 import { AppPending } from "@/components/blocks/app-pending";
 
 export const Route = createFileRoute("/(user)/user/orders/$orderId/delivery/")({
@@ -13,10 +14,10 @@ export const Route = createFileRoute("/(user)/user/orders/$orderId/delivery/")({
 			},
 		],
 	}),
-	component: DeliveryPage,
 	pendingComponent: AppPending,
+	component: DeliveryPage,
 });
 
 function DeliveryPage() {
-	return <section className="container mx-auto py-12 px-4 space-y-6"></section>;
+	return <AppComingSoon />;
 }

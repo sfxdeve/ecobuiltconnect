@@ -1,10 +1,5 @@
 import { useUser } from "@clerk/tanstack-react-start";
-import {
-	useMutation,
-	useQueries,
-	useQuery,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useStore } from "@tanstack/react-store";
@@ -54,8 +49,8 @@ export const Route = createFileRoute("/(user)/user/checkout/")({
 			},
 		],
 	}),
-	component: CheckoutPage,
 	pendingComponent: AppPending,
+	component: CheckoutPage,
 });
 
 function CheckoutPage() {
@@ -64,11 +59,11 @@ function CheckoutPage() {
 	const cartState = useStore(cartStore);
 
 	const getUserProfileFn = useServerFn(getUserProfile);
-	const getPublicProductByIdFn = useServerFn(getProduct);
-	const createUserOrderFn = useServerFn(createOrderRequest);
-	const initiateOzowPaymentFn = useServerFn(initiateOrderRequestPayment);
-
-	const queryClient = useQueryClient();
+	const getProductFn = useServerFn(getProduct);
+	const createOrderFn = useServerFn(createOrderRequest);
+	const initiateOrderRequestPaymentFn = useServerFn(
+		initiateOrderRequestPayment,
+	);
 
 	const userProfileResult = useQuery({
 		queryKey: ["user-profile", user?.id],
@@ -78,27 +73,24 @@ function CheckoutPage() {
 	const productsResults = useQueries({
 		queries: cartState.items.map((item) => ({
 			queryKey: ["product", item.productId],
-			queryFn: () =>
-				getPublicProductByIdFn({ data: { productId: item.productId } }),
+			queryFn: () => getProductFn({ data: { productId: item.productId } }),
 		})),
 	});
 
 	const createUserOrderMutation = useMutation({
 		mutationFn: (items: typeof cartState.items) =>
-			createUserOrderFn({ data: { items } }),
+			createOrderFn({ data: { items } }),
 		onSuccess: async ({ orderRequest }) => {
-			queryClient.invalidateQueries({ queryKey: ["orders", user?.id] });
-
-			cartActions.clearCart();
-
-			const { redirectUrl } = await initiateOzowPaymentFn({
+			const { redirectUrl } = await initiateOrderRequestPaymentFn({
 				data: { orderRequestId: orderRequest.id },
 			});
+
+			cartActions.clearCart();
 
 			location.assign(redirectUrl);
 		},
 		onError: (error) => {
-			toast.error(error.message || "Failed to create order");
+			toast.error(error.message);
 		},
 	});
 
@@ -113,7 +105,7 @@ function CheckoutPage() {
 	}, 0);
 
 	return (
-		<section className="container mx-auto py-12 px-4">
+		<section className="container mx-auto py-12 px-4 pt-28">
 			{cartState.items.length > 0 ? (
 				<div className="flex gap-4 items-start">
 					<Card className="flex-1 hidden md:block">
