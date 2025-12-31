@@ -69,6 +69,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import {
+	createProduct,
 	deleteProduct,
 	getProduct,
 	getProducts,
@@ -406,6 +407,54 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 	);
 }
 
+function CreateProductDialogContent({
+	closeDialog,
+}: {
+	closeDialog: () => void;
+}) {
+	const router = useRouter();
+
+	const createProductFn = useServerFn(createProduct);
+
+	const createProductMutation = useMutation({
+		mutationFn: createProductFn,
+		onSuccess: () => {
+			toast.success("Product created successfully");
+
+			router.invalidate();
+
+			closeDialog();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
+	return (
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>Create Product</DialogTitle>
+			</DialogHeader>
+			<VendorProductForm
+				defaultValues={{
+					pictureIds: [""],
+					name: "",
+					description: "",
+					previousUsage: null,
+					sku: "",
+					stock: 0,
+					price: 0,
+					salePrice: null,
+					condition: "GOOD",
+					category: { connect: { id: "" } },
+				}}
+				isSubmitting={createProductMutation.isPending}
+				submitHandler={createProductMutation.mutate}
+			/>
+		</DialogContent>
+	);
+}
+
 function UpdateProductDialogContent({
 	productId,
 	closeDialog,
@@ -545,6 +594,8 @@ function ProductsPageSearch() {
 
 	const [isProductsFiltersDialogOpen, setIsProductsFiltersDialogOpen] =
 		useState(false);
+	const [isCreateProductDialogOpen, setIsCreateProductDialogOpen] =
+		useState(false);
 
 	const areProductsFiltersActive =
 		search.sortBy !== "createdAt" ||
@@ -578,6 +629,7 @@ function ProductsPageSearch() {
 					render={
 						<Button
 							variant={areProductsFiltersActive ? "default" : "outline"}
+							size="icon"
 						/>
 					}
 				>
@@ -630,6 +682,15 @@ function ProductsPageSearch() {
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
+			<Dialog
+				open={isCreateProductDialogOpen}
+				onOpenChange={setIsCreateProductDialogOpen}
+			>
+				<DialogTrigger render={<Button variant="default" />}>New</DialogTrigger>
+				<CreateProductDialogContent
+					closeDialog={() => setIsCreateProductDialogOpen(false)}
+				/>
+			</Dialog>
 		</div>
 	);
 }
