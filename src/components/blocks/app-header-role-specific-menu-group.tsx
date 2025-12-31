@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getProfile } from "@/lib/api/shared.profile";
 
-export function AppHeaderUserMenu({
+export function AppHeaderRoleSpecificMenuGroup({
 	setProfileDialogType,
 }: {
 	setProfileDialogType: Dispatch<SetStateAction<"create-profile" | null>>;
@@ -31,6 +31,8 @@ export function AppHeaderUserMenu({
 	) {
 		return null;
 	}
+
+	console.log(profileResult.data);
 
 	if (profileResult.data.role === "user") {
 		return (
@@ -65,7 +67,7 @@ export function AppHeaderUserMenu({
 
 	if (profileResult.data.role === "vendor") {
 		return (
-			<DropdownMenuGroup className="space-y-1">
+			<DropdownMenuGroup className="mb-0">
 				<DropdownMenuItem
 					render={
 						<Link to="/vendor/orders" activeProps={{ className: "bg-muted" }} />

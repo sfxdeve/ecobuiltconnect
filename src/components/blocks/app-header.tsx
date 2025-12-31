@@ -19,7 +19,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { AppHeaderCart } from "@/components/blocks/app-header-cart";
-import { AppHeaderUserMenu } from "@/components/blocks/app-header-role-specific-menu-group";
+import { AppHeaderRoleSpecificMenuGroup } from "@/components/blocks/app-header-role-specific-menu-group";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { getUserProfile, upsertUserProfile } from "@/lib/api/user.profile";
 import { cn } from "@/utils";
@@ -172,7 +172,7 @@ export function AppHeader() {
 								</DropdownMenuItem>
 							</DropdownMenuGroup>
 							<SignedIn>
-								<AppHeaderUserMenu
+								<AppHeaderRoleSpecificMenuGroup
 									setProfileDialogType={setProfileDialogType}
 								/>
 							</SignedIn>

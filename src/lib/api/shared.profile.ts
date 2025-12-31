@@ -71,7 +71,7 @@ export const getProfile = createServerFn({ method: "GET" }).handler(
 			role = "vendor";
 		}
 
-		const logisticProfile = await prisma.vendorProfile.findUnique({
+		const logisticProfile = await prisma.logisticProfile.findUnique({
 			where: {
 				clerkId,
 			},
