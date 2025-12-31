@@ -164,7 +164,7 @@ function ContactPage() {
 				title="Goodwood, Cape Town, 7460"
 				width="100%"
 				height="100%"
-				className="flex-1 hidden md:block h-[512px] rounded-3xl"
+				className="flex-1 hidden md:block h-128 rounded-3xl"
 			></iframe>
 		</section>
 	);

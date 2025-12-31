@@ -32,8 +32,6 @@ export function AppHeaderRoleSpecificMenuGroup({
 		return null;
 	}
 
-	console.log(profileResult.data);
-
 	if (profileResult.data.role === "user") {
 		return (
 			<DropdownMenuGroup className="space-y-1">
