@@ -598,7 +598,7 @@ function ProductsPageSearch() {
 							maxPrice: search.maxPrice,
 							isVerified: search.isVerified,
 						}}
-						submitHandler={(data) => {
+						submitHandler={({ data }) => {
 							navigate({
 								search: (prev) => ({
 									...prev,
@@ -610,7 +610,7 @@ function ProductsPageSearch() {
 
 							setIsProductsFiltersDialogOpen(false);
 						}}
-						resetHandler={(data) => {
+						resetHandler={({ data }) => {
 							navigate({
 								search: (prev) => ({
 									...prev,

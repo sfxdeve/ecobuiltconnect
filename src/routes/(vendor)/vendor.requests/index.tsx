@@ -210,7 +210,7 @@ function ProductRequestsPageSearch() {
 							minPrice: search.minPrice,
 							maxPrice: search.maxPrice,
 						}}
-						submitHandler={(data) => {
+						submitHandler={({ data }) => {
 							navigate({
 								search: (prev) => ({
 									...prev,
@@ -222,7 +222,7 @@ function ProductRequestsPageSearch() {
 
 							setIsProductRequestsFiltersDialogOpen(false);
 						}}
-						resetHandler={(data) => {
+						resetHandler={({ data }) => {
 							navigate({
 								search: (prev) => ({
 									...prev,

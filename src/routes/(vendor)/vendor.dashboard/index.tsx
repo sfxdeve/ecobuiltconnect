@@ -23,7 +23,7 @@ function VendorDashboardPage() {
 	return (
 		<>
 			<DashboardHeader title="Dashboard" />
-			<section className="min-h-screen"></section>
+			<section className="p-4 min-h-screen"></section>
 		</>
 	);
 }
