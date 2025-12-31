@@ -121,42 +121,42 @@ function CreateProfileDialogContent({
 		<DialogContent>
 			<DialogHeader>
 				<DialogTitle>Create Profile</DialogTitle>
-				<Tabs>
-					<TabsList>
-						<TabsTrigger value="user">User</TabsTrigger>
-						{/* <TabsTrigger value="admin">Admin</TabsTrigger> */}
-						<TabsTrigger value="vendor">Vendor</TabsTrigger>
-						{/* <TabsTrigger value="logistic">Logistic</TabsTrigger> */}
-					</TabsList>
-					<TabsContent value="user">
-						<UserProfileForm
-							defaultValues={{
-								address: "",
-								city: "",
-								postcode: "",
-							}}
-							isSubmitting={upsertUserProfileMutation.isPending}
-							submitHandler={upsertUserProfileMutation.mutate}
-						/>
-					</TabsContent>
-					<TabsContent value="admin"></TabsContent>
-					<TabsContent value="vendor">
-						<VendorProfileForm
-							defaultValues={{
-								pictureId: "/test.jpg",
-								name: "",
-								description: "",
-								address: "",
-								city: "",
-								postcode: "",
-							}}
-							isSubmitting={upsertVendorProfileMutation.isPending}
-							submitHandler={upsertVendorProfileMutation.mutate}
-						/>
-					</TabsContent>
-					<TabsContent value="logistic"></TabsContent>
-				</Tabs>
 			</DialogHeader>
+			<Tabs>
+				<TabsList>
+					<TabsTrigger value="user">User</TabsTrigger>
+					{/* <TabsTrigger value="admin">Admin</TabsTrigger> */}
+					<TabsTrigger value="vendor">Vendor</TabsTrigger>
+					{/* <TabsTrigger value="logistic">Logistic</TabsTrigger> */}
+				</TabsList>
+				<TabsContent value="user">
+					<UserProfileForm
+						defaultValues={{
+							address: "",
+							city: "",
+							postcode: "",
+						}}
+						isSubmitting={upsertUserProfileMutation.isPending}
+						submitHandler={upsertUserProfileMutation.mutate}
+					/>
+				</TabsContent>
+				<TabsContent value="admin"></TabsContent>
+				<TabsContent value="vendor">
+					<VendorProfileForm
+						defaultValues={{
+							pictureId: "/test.jpg",
+							name: "",
+							description: "",
+							address: "",
+							city: "",
+							postcode: "",
+						}}
+						isSubmitting={upsertVendorProfileMutation.isPending}
+						submitHandler={upsertVendorProfileMutation.mutate}
+					/>
+				</TabsContent>
+				<TabsContent value="logistic"></TabsContent>
+			</Tabs>
 		</DialogContent>
 	);
 }
