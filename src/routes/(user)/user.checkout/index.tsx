@@ -41,7 +41,7 @@ export const Route = createFileRoute("/(user)/user/checkout/")({
 	head: () => ({
 		meta: [
 			{
-				title: "Checkout - EcobuiltConnect",
+				title: "Checkout",
 			},
 			{
 				name: "description",

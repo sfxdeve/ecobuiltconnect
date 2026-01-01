@@ -23,7 +23,7 @@ export const Route = createFileRoute("/(public)/products/$productId/")({
 	head: ({ loaderData }) => ({
 		meta: [
 			{
-				title: `${loaderData?.product.name} - EcobuiltConnect`,
+				title: `${loaderData?.product.name}`,
 			},
 			{
 				name: "description",

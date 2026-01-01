@@ -6,7 +6,7 @@ export const Route = createFileRoute("/(public)/community/")({
 	head: () => ({
 		meta: [
 			{
-				title: "Community - EcobuiltConnect",
+				title: "Community",
 			},
 			{
 				name: "description",

@@ -6,7 +6,7 @@ export const Route = createFileRoute("/(vendor)/vendor/dashboard/")({
 	head: () => ({
 		meta: [
 			{
-				title: "Dashboard - EcobuiltConnect",
+				title: "Dashboard",
 			},
 			{
 				name: "description",

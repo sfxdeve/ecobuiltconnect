@@ -6,7 +6,7 @@ export const Route = createFileRoute("/(auth)/sign-in/$")({
 	head: () => ({
 		meta: [
 			{
-				title: "Sign In - EcobuiltConnect",
+				title: "Sign In",
 			},
 			{
 				name: "description",
