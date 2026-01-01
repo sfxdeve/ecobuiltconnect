@@ -9,9 +9,6 @@ build:
       - pnpm build
 
 run:
-  command: node .output/server/index.mjs
+  command: pnpm start
   network:
-    port: 8080
-  env:
-    - name: NODE_ENV
-      value: production
+    port: 3000
