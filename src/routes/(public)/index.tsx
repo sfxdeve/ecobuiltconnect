@@ -219,7 +219,7 @@ function HomePage() {
 				</div>
 			</section>
 			<section>
-				<div className="container mx-auto py-24 px-4 space-y-12">
+				<div className="container mx-auto pt-12 pb-24 px-4 space-y-12">
 					<div className="space-y-12">
 						<div className="max-w-3xl mx-auto space-y-6 text-center">
 							<h2 className="text-3xl md:text-6xl font-medium">
