@@ -24,7 +24,7 @@ function HomePage() {
 	return (
 		<>
 			<section>
-				<div className="container mx-auto px-4 pt-28 flex gap-12 flex-col-reverse md:flex-row items-center">
+				<div className="container mx-auto py-12 px-4 pt-28 flex gap-12 flex-col-reverse md:flex-row items-center">
 					<div className="flex-1 space-y-12">
 						<div className="space-y-8">
 							<h2 className="text-3xl md:text-6xl font-medium">
@@ -65,7 +65,7 @@ function HomePage() {
 				</div>
 			</section>
 			<section className="bg-primary/2.5">
-				<div className="container mx-auto px-4 pt-12 flex gap-12 flex-col md:flex-row items-center">
+				<div className="container mx-auto py-12 px-4 flex gap-12 flex-col md:flex-row items-center">
 					<div className="flex-1">
 						<img
 							className="aspect-square object-contain w-full"
@@ -94,6 +94,24 @@ function HomePage() {
 							>
 								Browse vendors
 							</Link>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section>
+				<div className="container mx-auto py-24 px-4">
+					<div className="space-y-12">
+						<div className="max-w-3xl mx-auto space-y-6 text-center">
+							<h2 className="text-3xl md:text-6xl font-medium">
+								<span>Ready to join the</span>{" "}
+								<span className="text-primary">Movement?</span>
+							</h2>
+							<h3 className="text-3xl md:text-6xl font-medium">Here's How.</h3>
+							<p className="text-lg">
+								Whether you're a builder, architect, or sustainability advocate,
+								EcobuiltConnect has something for you. Join us in transforming
+								the construction industry!
+							</p>
 						</div>
 					</div>
 				</div>
