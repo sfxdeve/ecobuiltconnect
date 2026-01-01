@@ -31,7 +31,7 @@ async function main() {
 	// Create 1 fake vendors
 	const vendorProfilesData = Array.from({ length: 1 }, () => ({
 		clerkId: faker.string.uuid(),
-		pictureId: "/test.jpg",
+		pictureId: "/test.webp",
 		name: faker.company.name(),
 		description: faker.company.catchPhrase(),
 		postcode: faker.location.zipCode(),
@@ -56,7 +56,7 @@ async function main() {
 
 	// Create 20 fake products
 	const productsData = Array.from({ length: 20 }, () => ({
-		pictureIds: ["/test.jpg"],
+		pictureIds: ["/test.webp"],
 		name: faker.commerce.productName(),
 		description: faker.commerce.productDescription(),
 		previousUsage: faker.helpers.maybe(() => faker.lorem.sentence()),

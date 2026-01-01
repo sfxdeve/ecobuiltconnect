@@ -89,7 +89,7 @@ export function VendorSidebar() {
 	return (
 		<Sidebar>
 			<SidebarHeader>
-				<img className="h-24 mx-auto" src="/logo-with-line.webp" alt="Logo" />
+				<img className="h-24 mx-auto" src="/logo-512x512.png" alt="Logo" />
 			</SidebarHeader>
 			<SidebarContent className="p-2">
 				<SidebarMenu>
@@ -129,7 +129,7 @@ export function VendorSidebar() {
 								defaultValues={{
 									pictureId:
 										vendorProfileResult.data?.vendorProfile?.pictureId ??
-										"/test.jpg",
+										"/test.webp",
 									name: vendorProfileResult.data?.vendorProfile?.name ?? "",
 									description:
 										vendorProfileResult.data?.vendorProfile?.description ?? "",
