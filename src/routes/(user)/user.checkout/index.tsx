@@ -105,174 +105,176 @@ function CheckoutPage() {
 	}, 0);
 
 	return (
-		<section className="container mx-auto py-12 px-4 pt-28">
-			{cartState.items.length > 0 ? (
-				<div className="flex gap-4 items-start">
-					<Card className="flex-1 hidden md:block">
-						<CardHeader>
-							<CardTitle className="text-3xl">Cart Items</CardTitle>
-							<CardDescription className="text-base">
-								Review your cart before checkout
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="space-y-4">
-							{cartState.items.map((item, index) => {
-								const result = productsResults[index];
+		<section>
+			<div className="container mx-auto py-12 px-4 pt-28">
+				{cartState.items.length > 0 ? (
+					<div className="flex gap-4 items-start">
+						<Card className="flex-1 hidden md:block">
+							<CardHeader>
+								<CardTitle className="text-3xl">Cart Items</CardTitle>
+								<CardDescription className="text-base">
+									Review your cart before checkout
+								</CardDescription>
+							</CardHeader>
+							<CardContent className="space-y-4">
+								{cartState.items.map((item, index) => {
+									const result = productsResults[index];
 
-								if (result.isPending) {
-									return <Spinner />;
-								}
+									if (result.isPending) {
+										return <Spinner />;
+									}
 
-								if (!result.data?.product) {
-									return null;
-								}
+									if (!result.data?.product) {
+										return null;
+									}
 
-								const product = result.data.product;
+									const product = result.data.product;
 
-								return (
-									<Item
-										key={item.productId}
-										variant="muted"
-										className="flex gap-3"
-									>
-										<ItemMedia variant="image" className="size-20">
-											<img src={product.pictureIds[0]} alt={product.name} />
-										</ItemMedia>
-										<ItemContent>
-											<ItemTitle className="text-lg font-bold">
-												{product.name}
-											</ItemTitle>
-											<ItemDescription>
-												<span>Qty: {item.quantity}</span>
-												<br />
-												<span>
-													{formatMoneyFromCents(
-														(product.salePrice
-															? product.salePrice
-															: product.price) * item.quantity,
-														{
-															locale: "en-ZA",
-															currency: "ZAR",
-														},
-													)}
-												</span>
-											</ItemDescription>
-										</ItemContent>
-									</Item>
-								);
-							})}
-							<Separator />
-							<Item
-								variant="muted"
-								className="justify-between text-lg font-bold"
-							>
-								<ItemContent>
-									<ItemTitle className="w-full flex justify-between text-xl font-semibold">
-										<span>Total</span>
-										<span>
-											{formatMoneyFromCents(cartTotal, {
-												locale: "en-ZA",
-												currency: "ZAR",
-											})}
-										</span>
-									</ItemTitle>
-								</ItemContent>
-							</Item>
-						</CardContent>
-					</Card>
-					<Card className="flex-1">
-						<CardHeader>
-							<CardTitle className="text-3xl">Customer Information</CardTitle>
-							<CardDescription className="text-base">
-								Review your information before checkout
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="space-y-4">
-							<Item variant="muted" className="flex gap-3">
-								<ItemMedia variant="icon">
-									<UserIcon className="size-6" />
-								</ItemMedia>
-								<ItemContent>
-									<ItemTitle className="text-lg font-bold">
-										Personal Details
-									</ItemTitle>
-									<ItemDescription>
-										<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
-											<span className="font-medium">Name:</span>
-											<span>{user?.fullName}</span>
-											<span className="font-medium">Email:</span>
-											<span className="break-all">
-												{user?.primaryEmailAddress?.emailAddress}
+									return (
+										<Item
+											key={item.productId}
+											variant="muted"
+											className="flex gap-3"
+										>
+											<ItemMedia variant="image" className="size-20">
+												<img src={product.pictureIds[0]} alt={product.name} />
+											</ItemMedia>
+											<ItemContent>
+												<ItemTitle className="text-lg font-bold">
+													{product.name}
+												</ItemTitle>
+												<ItemDescription>
+													<span>Qty: {item.quantity}</span>
+													<br />
+													<span>
+														{formatMoneyFromCents(
+															(product.salePrice
+																? product.salePrice
+																: product.price) * item.quantity,
+															{
+																locale: "en-ZA",
+																currency: "ZAR",
+															},
+														)}
+													</span>
+												</ItemDescription>
+											</ItemContent>
+										</Item>
+									);
+								})}
+								<Separator />
+								<Item
+									variant="muted"
+									className="justify-between text-lg font-bold"
+								>
+									<ItemContent>
+										<ItemTitle className="w-full flex justify-between text-xl font-semibold">
+											<span>Total</span>
+											<span>
+												{formatMoneyFromCents(cartTotal, {
+													locale: "en-ZA",
+													currency: "ZAR",
+												})}
 											</span>
-										</div>
-									</ItemDescription>
-								</ItemContent>
-							</Item>
-							<Item variant="muted" className="flex gap-3">
-								<ItemMedia variant="icon">
-									<MapPinIcon className="size-5" />
-								</ItemMedia>
-								<ItemContent>
-									<ItemTitle className="text-lg font-bold">
-										Address Details
-									</ItemTitle>
-									<ItemDescription>
-										{(() => {
-											if (userProfileResult.isPending) {
-												return <Spinner />;
-											}
+										</ItemTitle>
+									</ItemContent>
+								</Item>
+							</CardContent>
+						</Card>
+						<Card className="flex-1">
+							<CardHeader>
+								<CardTitle className="text-3xl">Customer Information</CardTitle>
+								<CardDescription className="text-base">
+									Review your information before checkout
+								</CardDescription>
+							</CardHeader>
+							<CardContent className="space-y-4">
+								<Item variant="muted" className="flex gap-3">
+									<ItemMedia variant="icon">
+										<UserIcon className="size-6" />
+									</ItemMedia>
+									<ItemContent>
+										<ItemTitle className="text-lg font-bold">
+											Personal Details
+										</ItemTitle>
+										<ItemDescription>
+											<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
+												<span className="font-medium">Name:</span>
+												<span>{user?.fullName}</span>
+												<span className="font-medium">Email:</span>
+												<span className="break-all">
+													{user?.primaryEmailAddress?.emailAddress}
+												</span>
+											</div>
+										</ItemDescription>
+									</ItemContent>
+								</Item>
+								<Item variant="muted" className="flex gap-3">
+									<ItemMedia variant="icon">
+										<MapPinIcon className="size-5" />
+									</ItemMedia>
+									<ItemContent>
+										<ItemTitle className="text-lg font-bold">
+											Address Details
+										</ItemTitle>
+										<ItemDescription>
+											{(() => {
+												if (userProfileResult.isPending) {
+													return <Spinner />;
+												}
 
-											if (!userProfileResult.data?.userProfile) {
-												return null;
-											}
+												if (!userProfileResult.data?.userProfile) {
+													return null;
+												}
 
-											const profile = userProfileResult.data.userProfile;
+												const profile = userProfileResult.data.userProfile;
 
-											return (
-												<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
-													<span className="font-medium">Address:</span>
-													<span className="break-all">{profile.address}</span>
-													<span className="font-medium">City:</span>
-													<span>{profile.city}</span>
-													<span className="font-medium">Postal Code:</span>
-													<span>{profile.postcode}</span>
-												</div>
-											);
-										})()}
-									</ItemDescription>
-								</ItemContent>
-							</Item>
-						</CardContent>
-						<CardFooter>
-							<Button
-								onClick={() => {
-									createUserOrderMutation.mutate(cartState.items);
-								}}
-								disabled={
-									createUserOrderMutation.isPending ||
-									cartState.items.length === 0
-								}
-								variant="default"
-								size="lg"
-								className="w-full"
-							>
-								{createUserOrderMutation.isPending
-									? "Processing..."
-									: "Confirm"}
-							</Button>
-						</CardFooter>
-					</Card>
-				</div>
-			) : (
-				<Empty className="bg-muted">
-					<EmptyHeader>
-						<EmptyTitle>Your cart is empty</EmptyTitle>
-						<EmptyDescription>
-							Add items to your cart to proceed with checkout.
-						</EmptyDescription>
-					</EmptyHeader>
-				</Empty>
-			)}
+												return (
+													<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
+														<span className="font-medium">Address:</span>
+														<span className="break-all">{profile.address}</span>
+														<span className="font-medium">City:</span>
+														<span>{profile.city}</span>
+														<span className="font-medium">Postal Code:</span>
+														<span>{profile.postcode}</span>
+													</div>
+												);
+											})()}
+										</ItemDescription>
+									</ItemContent>
+								</Item>
+							</CardContent>
+							<CardFooter>
+								<Button
+									onClick={() => {
+										createUserOrderMutation.mutate(cartState.items);
+									}}
+									disabled={
+										createUserOrderMutation.isPending ||
+										cartState.items.length === 0
+									}
+									variant="default"
+									size="lg"
+									className="w-full"
+								>
+									{createUserOrderMutation.isPending
+										? "Processing..."
+										: "Confirm"}
+								</Button>
+							</CardFooter>
+						</Card>
+					</div>
+				) : (
+					<Empty className="bg-muted">
+						<EmptyHeader>
+							<EmptyTitle>Your cart is empty</EmptyTitle>
+							<EmptyDescription>
+								Add items to your cart to proceed with checkout.
+							</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
+				)}
+			</div>
 		</section>
 	);
 }

@@ -158,125 +158,129 @@ function VendorProductsPage() {
 	return (
 		<>
 			<DashboardHeader title="Products" />
-			<section className="p-4 space-y-6 min-h-screen">
-				<ProductsPageSearch />
-				{loaderData.products.length > 0 ? (
-					<>
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Name</TableHead>
-									<TableHead>SKU</TableHead>
-									<TableHead>Category</TableHead>
-									<TableHead>Stock</TableHead>
-									<TableHead>Price</TableHead>
-									<TableHead>Date</TableHead>
-									<TableHead></TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{loaderData.products.map((product) => {
-									return (
-										<TableRow key={product.id}>
-											<TableCell>{product.name}</TableCell>
-											<TableCell>{product.sku}</TableCell>
-											<TableCell>{product.category.name}</TableCell>
-											<TableCell>{product.stock}</TableCell>
-											<TableCell>
-												{formatMoneyFromCents(
-													product.salePrice ? product.salePrice : product.price,
-													{
-														locale: "en-ZA",
-														currency: "ZAR",
-													},
-												)}
-											</TableCell>
-											<TableCell>{formatDate(product.createdAt)}</TableCell>
-											<TableCell>
-												<DropdownMenu>
-													<DropdownMenuTrigger
-														render={<Button variant="ghost" size="icon" />}
-													>
-														<MoreHorizontalIcon />
-														<span className="sr-only">Open actions menu</span>
-													</DropdownMenuTrigger>
-													<DropdownMenuContent align="end">
-														<DropdownMenuItem
-															onClick={() => {
-																setSelectedProductId(product.id);
-																setSelectedAction("view");
-															}}
+			<section>
+				<div className="p-4 space-y-6 min-h-screen">
+					<ProductsPageSearch />
+					{loaderData.products.length > 0 ? (
+						<>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Name</TableHead>
+										<TableHead>SKU</TableHead>
+										<TableHead>Category</TableHead>
+										<TableHead>Stock</TableHead>
+										<TableHead>Price</TableHead>
+										<TableHead>Date</TableHead>
+										<TableHead></TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{loaderData.products.map((product) => {
+										return (
+											<TableRow key={product.id}>
+												<TableCell>{product.name}</TableCell>
+												<TableCell>{product.sku}</TableCell>
+												<TableCell>{product.category.name}</TableCell>
+												<TableCell>{product.stock}</TableCell>
+												<TableCell>
+													{formatMoneyFromCents(
+														product.salePrice
+															? product.salePrice
+															: product.price,
+														{
+															locale: "en-ZA",
+															currency: "ZAR",
+														},
+													)}
+												</TableCell>
+												<TableCell>{formatDate(product.createdAt)}</TableCell>
+												<TableCell>
+													<DropdownMenu>
+														<DropdownMenuTrigger
+															render={<Button variant="ghost" size="icon" />}
 														>
-															View
-														</DropdownMenuItem>
-														<DropdownMenuItem
-															onClick={() => {
-																setSelectedProductId(product.id);
-																setSelectedAction("update");
-															}}
-														>
-															Update
-														</DropdownMenuItem>
-														<DropdownMenuItem
-															onClick={() => {
-																setSelectedProductId(product.id);
-																setSelectedAction("delete");
-															}}
-														>
-															Delete
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</TableCell>
-										</TableRow>
-									);
-								})}
-							</TableBody>
-						</Table>
-						<Dialog
-							open={selectedAction !== null}
-							onOpenChange={(open) => {
-								if (!open) {
-									setSelectedProductId(null);
-									setSelectedAction(null);
-								}
-							}}
-						>
-							{selectedProductId && selectedAction === "view" && (
-								<ViewProductDialogContent productId={selectedProductId} />
-							)}
-							{selectedProductId && selectedAction === "update" && (
-								<UpdateProductDialogContent
-									productId={selectedProductId}
-									closeDialog={() => {
+															<MoreHorizontalIcon />
+															<span className="sr-only">Open actions menu</span>
+														</DropdownMenuTrigger>
+														<DropdownMenuContent align="end">
+															<DropdownMenuItem
+																onClick={() => {
+																	setSelectedProductId(product.id);
+																	setSelectedAction("view");
+																}}
+															>
+																View
+															</DropdownMenuItem>
+															<DropdownMenuItem
+																onClick={() => {
+																	setSelectedProductId(product.id);
+																	setSelectedAction("update");
+																}}
+															>
+																Update
+															</DropdownMenuItem>
+															<DropdownMenuItem
+																onClick={() => {
+																	setSelectedProductId(product.id);
+																	setSelectedAction("delete");
+																}}
+															>
+																Delete
+															</DropdownMenuItem>
+														</DropdownMenuContent>
+													</DropdownMenu>
+												</TableCell>
+											</TableRow>
+										);
+									})}
+								</TableBody>
+							</Table>
+							<Dialog
+								open={selectedAction !== null}
+								onOpenChange={(open) => {
+									if (!open) {
 										setSelectedProductId(null);
 										setSelectedAction(null);
-									}}
-								/>
-							)}
-							{selectedProductId && selectedAction === "delete" && (
-								<DeleteProductDialogContent
-									productId={selectedProductId}
-									closeDialog={() => {
-										setSelectedProductId(null);
-										setSelectedAction(null);
-									}}
-								/>
-							)}
-						</Dialog>
-					</>
-				) : (
-					<Empty className="bg-muted">
-						<EmptyHeader>
-							<EmptyTitle>No results found</EmptyTitle>
-							<EmptyDescription>
-								No results found for your search. Try adjusting your search
-								terms.
-							</EmptyDescription>
-						</EmptyHeader>
-					</Empty>
-				)}
-				<ProductsPagePagination />
+									}
+								}}
+							>
+								{selectedProductId && selectedAction === "view" && (
+									<ViewProductDialogContent productId={selectedProductId} />
+								)}
+								{selectedProductId && selectedAction === "update" && (
+									<UpdateProductDialogContent
+										productId={selectedProductId}
+										closeDialog={() => {
+											setSelectedProductId(null);
+											setSelectedAction(null);
+										}}
+									/>
+								)}
+								{selectedProductId && selectedAction === "delete" && (
+									<DeleteProductDialogContent
+										productId={selectedProductId}
+										closeDialog={() => {
+											setSelectedProductId(null);
+											setSelectedAction(null);
+										}}
+									/>
+								)}
+							</Dialog>
+						</>
+					) : (
+						<Empty className="bg-muted">
+							<EmptyHeader>
+								<EmptyTitle>No results found</EmptyTitle>
+								<EmptyDescription>
+									No results found for your search. Try adjusting your search
+									terms.
+								</EmptyDescription>
+							</EmptyHeader>
+						</Empty>
+					)}
+					<ProductsPagePagination />
+				</div>
 			</section>
 		</>
 	);

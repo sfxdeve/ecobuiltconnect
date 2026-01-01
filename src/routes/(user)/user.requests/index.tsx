@@ -104,49 +104,54 @@ function ProductRequestsPage() {
 	const loaderData = Route.useLoaderData();
 
 	return (
-		<section className="container mx-auto py-12 px-4 pt-28 space-y-6">
-			<ProductRequestsPageSearch />
-			{loaderData.productRequests.length > 0 ? (
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead>Name</TableHead>
-							<TableHead>Category</TableHead>
-							<TableHead>Quantity</TableHead>
-							<TableHead>Price</TableHead>
-							<TableHead>Date</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{loaderData.productRequests.map((productRequest) => {
-							return (
-								<TableRow key={productRequest.id}>
-									<TableCell>{productRequest.name}</TableCell>
-									<TableCell>{productRequest.category.name}</TableCell>
-									<TableCell>{productRequest.quantity}</TableCell>
-									<TableCell>
-										{formatMoneyFromCents(productRequest.price, {
-											locale: "en-ZA",
-											currency: "ZAR",
-										})}
-									</TableCell>
-									<TableCell>{formatDate(productRequest.createdAt)}</TableCell>
-								</TableRow>
-							);
-						})}
-					</TableBody>
-				</Table>
-			) : (
-				<Empty className="bg-muted">
-					<EmptyHeader>
-						<EmptyTitle>No results found</EmptyTitle>
-						<EmptyDescription>
-							No results found for your search. Try adjusting your search terms.
-						</EmptyDescription>
-					</EmptyHeader>
-				</Empty>
-			)}
-			<ProductRequestsPagePagination />
+		<section>
+			<div className="container mx-auto py-12 px-4 pt-28 space-y-6">
+				<ProductRequestsPageSearch />
+				{loaderData.productRequests.length > 0 ? (
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead>Name</TableHead>
+								<TableHead>Category</TableHead>
+								<TableHead>Quantity</TableHead>
+								<TableHead>Price</TableHead>
+								<TableHead>Date</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{loaderData.productRequests.map((productRequest) => {
+								return (
+									<TableRow key={productRequest.id}>
+										<TableCell>{productRequest.name}</TableCell>
+										<TableCell>{productRequest.category.name}</TableCell>
+										<TableCell>{productRequest.quantity}</TableCell>
+										<TableCell>
+											{formatMoneyFromCents(productRequest.price, {
+												locale: "en-ZA",
+												currency: "ZAR",
+											})}
+										</TableCell>
+										<TableCell>
+											{formatDate(productRequest.createdAt)}
+										</TableCell>
+									</TableRow>
+								);
+							})}
+						</TableBody>
+					</Table>
+				) : (
+					<Empty className="bg-muted">
+						<EmptyHeader>
+							<EmptyTitle>No results found</EmptyTitle>
+							<EmptyDescription>
+								No results found for your search. Try adjusting your search
+								terms.
+							</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
+				)}
+				<ProductRequestsPagePagination />
+			</div>
 		</section>
 	);
 }

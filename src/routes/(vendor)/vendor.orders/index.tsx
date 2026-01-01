@@ -121,128 +121,133 @@ function VendorOrderRequestsPage() {
 	return (
 		<>
 			<DashboardHeader title="Orders" />
-			<section className="p-4 space-y-6 min-h-screen">
-				<OrderRequestsPageSearch />
-				{loaderData.orderRequests.length > 0 ? (
-					<>
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Order Ref</TableHead>
-									<TableHead>Items</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead>Total</TableHead>
-									<TableHead>Date</TableHead>
-									<TableHead></TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{loaderData.orderRequests.map((orderRequest) => {
-									let statusBadgeVariant: "default" | "outline" | "destructive";
+			<section>
+				<div className="p-4 space-y-6 min-h-screen">
+					<OrderRequestsPageSearch />
+					{loaderData.orderRequests.length > 0 ? (
+						<>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Order Ref</TableHead>
+										<TableHead>Items</TableHead>
+										<TableHead>Status</TableHead>
+										<TableHead>Total</TableHead>
+										<TableHead>Date</TableHead>
+										<TableHead></TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{loaderData.orderRequests.map((orderRequest) => {
+										let statusBadgeVariant:
+											| "default"
+											| "outline"
+											| "destructive";
 
-									switch (orderRequest.status) {
-										case "PAID":
-										case "COMPLETED":
-											statusBadgeVariant = "default";
-											break;
-										case "CANCELLED":
-											statusBadgeVariant = "destructive";
-											break;
-										default:
-											statusBadgeVariant = "outline";
-											break;
-									}
+										switch (orderRequest.status) {
+											case "PAID":
+											case "COMPLETED":
+												statusBadgeVariant = "default";
+												break;
+											case "CANCELLED":
+												statusBadgeVariant = "destructive";
+												break;
+											default:
+												statusBadgeVariant = "outline";
+												break;
+										}
 
-									return (
-										<TableRow key={orderRequest.id}>
-											<TableCell className="uppercase">
-												#{orderRequest.id.slice(24)}
-											</TableCell>
-											<TableCell>{orderRequest._count.orderItems}</TableCell>
-											<TableCell>
-												<Badge variant={statusBadgeVariant}>
-													{orderRequest.status}
-												</Badge>
-											</TableCell>
-											<TableCell>
-												{formatMoneyFromCents(orderRequest.total, {
-													locale: "en-ZA",
-													currency: "ZAR",
-												})}
-											</TableCell>
-											<TableCell>
-												{formatDate(orderRequest.createdAt)}
-											</TableCell>
-											<TableCell>
-												<DropdownMenu>
-													<DropdownMenuTrigger
-														render={<Button variant="ghost" size="icon" />}
-													>
-														<MoreHorizontalIcon />
-														<span className="sr-only">Open actions menu</span>
-													</DropdownMenuTrigger>
-													<DropdownMenuContent align="end">
-														<DropdownMenuItem
-															onClick={() => {
-																setSelectedOrderRequestId(orderRequest.id);
-																setSelectedAction("view");
-															}}
+										return (
+											<TableRow key={orderRequest.id}>
+												<TableCell className="uppercase">
+													#{orderRequest.id.slice(24)}
+												</TableCell>
+												<TableCell>{orderRequest._count.orderItems}</TableCell>
+												<TableCell>
+													<Badge variant={statusBadgeVariant}>
+														{orderRequest.status}
+													</Badge>
+												</TableCell>
+												<TableCell>
+													{formatMoneyFromCents(orderRequest.total, {
+														locale: "en-ZA",
+														currency: "ZAR",
+													})}
+												</TableCell>
+												<TableCell>
+													{formatDate(orderRequest.createdAt)}
+												</TableCell>
+												<TableCell>
+													<DropdownMenu>
+														<DropdownMenuTrigger
+															render={<Button variant="ghost" size="icon" />}
 														>
-															View
-														</DropdownMenuItem>
-														<DropdownMenuItem
-															onClick={() => {
-																setSelectedOrderRequestId(orderRequest.id);
-																setSelectedAction("update");
-															}}
-														>
-															Update
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</TableCell>
-										</TableRow>
-									);
-								})}
-							</TableBody>
-						</Table>
-						<Dialog
-							open={selectedAction !== null}
-							onOpenChange={(open) => {
-								if (!open) {
-									setSelectedOrderRequestId(null);
-									setSelectedAction(null);
-								}
-							}}
-						>
-							{selectedOrderRequestId && selectedAction === "view" && (
-								<ViewOrderRequestDialogContent
-									orderRequestId={selectedOrderRequestId}
-								/>
-							)}
-							{selectedOrderRequestId && selectedAction === "update" && (
-								<UpdateOrderRequestDialogContent
-									orderRequestId={selectedOrderRequestId}
-									closeDialog={() => {
+															<MoreHorizontalIcon />
+															<span className="sr-only">Open actions menu</span>
+														</DropdownMenuTrigger>
+														<DropdownMenuContent align="end">
+															<DropdownMenuItem
+																onClick={() => {
+																	setSelectedOrderRequestId(orderRequest.id);
+																	setSelectedAction("view");
+																}}
+															>
+																View
+															</DropdownMenuItem>
+															<DropdownMenuItem
+																onClick={() => {
+																	setSelectedOrderRequestId(orderRequest.id);
+																	setSelectedAction("update");
+																}}
+															>
+																Update
+															</DropdownMenuItem>
+														</DropdownMenuContent>
+													</DropdownMenu>
+												</TableCell>
+											</TableRow>
+										);
+									})}
+								</TableBody>
+							</Table>
+							<Dialog
+								open={selectedAction !== null}
+								onOpenChange={(open) => {
+									if (!open) {
 										setSelectedOrderRequestId(null);
 										setSelectedAction(null);
-									}}
-								/>
-							)}
-						</Dialog>
-					</>
-				) : (
-					<Empty className="bg-muted">
-						<EmptyHeader>
-							<EmptyTitle>No results found</EmptyTitle>
-							<EmptyDescription>
-								No results found for your search. Try adjusting your search
-								terms.
-							</EmptyDescription>
-						</EmptyHeader>
-					</Empty>
-				)}
-				<OrderRequestsPagePagination />
+									}
+								}}
+							>
+								{selectedOrderRequestId && selectedAction === "view" && (
+									<ViewOrderRequestDialogContent
+										orderRequestId={selectedOrderRequestId}
+									/>
+								)}
+								{selectedOrderRequestId && selectedAction === "update" && (
+									<UpdateOrderRequestDialogContent
+										orderRequestId={selectedOrderRequestId}
+										closeDialog={() => {
+											setSelectedOrderRequestId(null);
+											setSelectedAction(null);
+										}}
+									/>
+								)}
+							</Dialog>
+						</>
+					) : (
+						<Empty className="bg-muted">
+							<EmptyHeader>
+								<EmptyTitle>No results found</EmptyTitle>
+								<EmptyDescription>
+									No results found for your search. Try adjusting your search
+									terms.
+								</EmptyDescription>
+							</EmptyHeader>
+						</Empty>
+					)}
+					<OrderRequestsPagePagination />
+				</div>
 			</section>
 		</>
 	);

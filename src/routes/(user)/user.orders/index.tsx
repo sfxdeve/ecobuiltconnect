@@ -81,83 +81,86 @@ function OrdersPage() {
 	const loaderData = Route.useLoaderData();
 
 	return (
-		<section className="container mx-auto py-12 px-4 pt-28 space-y-6">
-			<OrdersPageSearch />
-			{loaderData.orderRequests.length > 0 ? (
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead>Order Ref</TableHead>
-							<TableHead>Items</TableHead>
-							<TableHead>Status</TableHead>
-							<TableHead>Total</TableHead>
-							<TableHead>Date</TableHead>
-							<TableHead></TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{loaderData.orderRequests.map((orderRequest) => {
-							let statusBadgeVariant: "default" | "outline" | "destructive";
+		<section>
+			<div className="container mx-auto py-12 px-4 pt-28 space-y-6">
+				<OrdersPageSearch />
+				{loaderData.orderRequests.length > 0 ? (
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead>Order Ref</TableHead>
+								<TableHead>Items</TableHead>
+								<TableHead>Status</TableHead>
+								<TableHead>Total</TableHead>
+								<TableHead>Date</TableHead>
+								<TableHead></TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{loaderData.orderRequests.map((orderRequest) => {
+								let statusBadgeVariant: "default" | "outline" | "destructive";
 
-							switch (orderRequest.status) {
-								case "PAID":
-								case "COMPLETED":
-									statusBadgeVariant = "default";
-									break;
-								case "CANCELLED":
-									statusBadgeVariant = "destructive";
-									break;
-								default:
-									statusBadgeVariant = "outline";
-									break;
-							}
+								switch (orderRequest.status) {
+									case "PAID":
+									case "COMPLETED":
+										statusBadgeVariant = "default";
+										break;
+									case "CANCELLED":
+										statusBadgeVariant = "destructive";
+										break;
+									default:
+										statusBadgeVariant = "outline";
+										break;
+								}
 
-							return (
-								<TableRow key={orderRequest.id}>
-									<TableCell className="uppercase">
-										{orderRequest.id.slice(24)}
-									</TableCell>
-									<TableCell>{orderRequest._count.orderItems}</TableCell>
-									<TableCell>
-										<Badge variant={statusBadgeVariant}>
-											{orderRequest.status}
-										</Badge>
-									</TableCell>
-									<TableCell>
-										{formatMoneyFromCents(orderRequest.total, {
-											locale: "en-ZA",
-											currency: "ZAR",
-										})}
-									</TableCell>
-									<TableCell>{formatDate(orderRequest.createdAt)}</TableCell>
-									<TableCell>
-										<Link
-											to="/user/orders/$orderId"
-											params={{ orderId: orderRequest.id }}
-											className={buttonVariants({
-												variant: "ghost",
-												size: "icon",
+								return (
+									<TableRow key={orderRequest.id}>
+										<TableCell className="uppercase">
+											{orderRequest.id.slice(24)}
+										</TableCell>
+										<TableCell>{orderRequest._count.orderItems}</TableCell>
+										<TableCell>
+											<Badge variant={statusBadgeVariant}>
+												{orderRequest.status}
+											</Badge>
+										</TableCell>
+										<TableCell>
+											{formatMoneyFromCents(orderRequest.total, {
+												locale: "en-ZA",
+												currency: "ZAR",
 											})}
-										>
-											<ExternalLinkIcon />
-										</Link>
-									</TableCell>
-								</TableRow>
-							);
-						})}
-					</TableBody>
-				</Table>
-			) : (
-				<Empty className="bg-muted">
-					<EmptyHeader>
-						<EmptyTitle>No results found</EmptyTitle>
-						<EmptyDescription>
-							No results found for your search. Try adjusting your search terms.
-						</EmptyDescription>
-					</EmptyHeader>
-				</Empty>
-			)}
-			<OrdersPagePagination />
+										</TableCell>
+										<TableCell>{formatDate(orderRequest.createdAt)}</TableCell>
+										<TableCell>
+											<Link
+												to="/user/orders/$orderId"
+												params={{ orderId: orderRequest.id }}
+												className={buttonVariants({
+													variant: "ghost",
+													size: "icon",
+												})}
+											>
+												<ExternalLinkIcon />
+											</Link>
+										</TableCell>
+									</TableRow>
+								);
+							})}
+						</TableBody>
+					</Table>
+				) : (
+					<Empty className="bg-muted">
+						<EmptyHeader>
+							<EmptyTitle>No results found</EmptyTitle>
+							<EmptyDescription>
+								No results found for your search. Try adjusting your search
+								terms.
+							</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
+				)}
+				<OrdersPagePagination />
+			</div>
 		</section>
 	);
 }

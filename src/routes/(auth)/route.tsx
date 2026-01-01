@@ -20,9 +20,11 @@ function AuthLayout() {
 	return (
 		<main className="relative">
 			<AppHeader />
-			<section className="container mx-auto py-12 px-4 pt-28">
-				<div className="flex justify-center">
-					<Outlet />
+			<section>
+				<div className="container mx-auto py-12 px-4 pt-28">
+					<div className="flex justify-center">
+						<Outlet />
+					</div>
 				</div>
 			</section>
 			<AppFooter />

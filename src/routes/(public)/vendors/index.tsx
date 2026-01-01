@@ -69,43 +69,48 @@ function VendorsPage() {
 	const loaderData = Route.useLoaderData();
 
 	return (
-		<section className="container mx-auto py-12 px-4 pt-28 space-y-6">
-			<VendorsPageSearch />
-			{loaderData.vendorProfiles.length > 0 ? (
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-					{loaderData.vendorProfiles.map((vendor) => (
-						<Link
-							key={vendor.id}
-							to="/products"
-							search={{ vendorProfileId: vendor.id }}
-						>
-							<Card>
-								<CardHeader>
-									<img
-										className="aspect-square object-contain"
-										src={vendor.pictureId}
-										alt={vendor.name}
-									/>
-								</CardHeader>
-								<CardContent>
-									<h3 className="font-semibold text-xl">{vendor.name}</h3>
-									<p className="font-semibold text-xs">{vendor.description}</p>
-								</CardContent>
-							</Card>
-						</Link>
-					))}
-				</div>
-			) : (
-				<Empty className="bg-muted">
-					<EmptyHeader>
-						<EmptyTitle>No results found</EmptyTitle>
-						<EmptyDescription>
-							No results found for your search. Try adjusting your search terms.
-						</EmptyDescription>
-					</EmptyHeader>
-				</Empty>
-			)}
-			<VendorsPagePagination />
+		<section>
+			<div className="container mx-auto py-12 px-4 pt-28 space-y-6">
+				<VendorsPageSearch />
+				{loaderData.vendorProfiles.length > 0 ? (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						{loaderData.vendorProfiles.map((vendor) => (
+							<Link
+								key={vendor.id}
+								to="/products"
+								search={{ vendorProfileId: vendor.id }}
+							>
+								<Card>
+									<CardHeader>
+										<img
+											className="aspect-square object-contain"
+											src={vendor.pictureId}
+											alt={vendor.name}
+										/>
+									</CardHeader>
+									<CardContent>
+										<h3 className="font-semibold text-xl">{vendor.name}</h3>
+										<p className="font-semibold text-xs">
+											{vendor.description}
+										</p>
+									</CardContent>
+								</Card>
+							</Link>
+						))}
+					</div>
+				) : (
+					<Empty className="bg-muted">
+						<EmptyHeader>
+							<EmptyTitle>No results found</EmptyTitle>
+							<EmptyDescription>
+								No results found for your search. Try adjusting your search
+								terms.
+							</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
+				)}
+				<VendorsPagePagination />
+			</div>
 		</section>
 	);
 }

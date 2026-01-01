@@ -110,209 +110,213 @@ function OrderDetailsPage() {
 	}
 
 	return (
-		<section className="container mx-auto py-12 px-4 pt-28 flex flex-col-reverse md:flex-row gap-6 items-start">
-			<Card className="flex-1">
-				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<PackageIcon className="h-5 w-5" />
-						Order Items
-					</CardTitle>
-					<CardDescription>
-						{loaderData.orderRequest.orderItems.length} item
-						{loaderData.orderRequest.orderItems.length !== 1 ? "s" : ""} in this
-						order
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<div className="hidden md:block">
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Product</TableHead>
-									<TableHead className="text-right">Price</TableHead>
-									<TableHead className="text-right">Quantity</TableHead>
-									<TableHead className="text-right">Total</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{loaderData.orderRequest.orderItems.map((item) => (
-									<TableRow key={item.id}>
-										<TableCell>
-											<div className="flex gap-3 items-center">
-												<img
-													src={item.product.pictureIds[0]}
-													alt={item.product.name}
-													className="size-16 object-cover rounded"
-												/>
-												<div className="space-y-1">
-													<p className="font-medium">{item.product.name}</p>
-													<p className="text-sm text-muted-foreground line-clamp-1">
-														{item.product.description}
-													</p>
-												</div>
-											</div>
-										</TableCell>
-										<TableCell className="text-right">
-											{formatMoneyFromCents(item.price, {
-												locale: "en-ZA",
-												currency: "ZAR",
-											})}
-										</TableCell>
-										<TableCell className="text-right">
-											{item.quantity}
-										</TableCell>
-										<TableCell className="text-right font-medium">
-											{formatMoneyFromCents(item.price * item.quantity, {
-												locale: "en-ZA",
-												currency: "ZAR",
-											})}
-										</TableCell>
+		<section>
+			<div className="container mx-auto py-12 px-4 pt-28 flex flex-col-reverse md:flex-row gap-6 items-start">
+				<Card className="flex-1">
+					<CardHeader>
+						<CardTitle className="flex items-center gap-2">
+							<PackageIcon className="h-5 w-5" />
+							Order Items
+						</CardTitle>
+						<CardDescription>
+							{loaderData.orderRequest.orderItems.length} item
+							{loaderData.orderRequest.orderItems.length !== 1 ? "s" : ""} in
+							this order
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<div className="hidden md:block">
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Product</TableHead>
+										<TableHead className="text-right">Price</TableHead>
+										<TableHead className="text-right">Quantity</TableHead>
+										<TableHead className="text-right">Total</TableHead>
 									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</div>
-					<div className="md:hidden space-y-4">
-						{loaderData.orderRequest.orderItems.map((item) => (
-							<div key={item.id} className="border rounded-lg p-4 space-y-3">
-								<div className="flex gap-3">
-									<img
-										src={item.product.pictureIds[0]}
-										alt={item.product.name}
-										className="size-20 object-cover rounded shrink-0"
-									/>
-									<div className="min-w-0">
-										<p className="font-medium">{item.product.name}</p>
-										<p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-											{item.product.description}
-										</p>
+								</TableHeader>
+								<TableBody>
+									{loaderData.orderRequest.orderItems.map((item) => (
+										<TableRow key={item.id}>
+											<TableCell>
+												<div className="flex gap-3 items-center">
+													<img
+														src={item.product.pictureIds[0]}
+														alt={item.product.name}
+														className="size-16 object-cover rounded"
+													/>
+													<div className="space-y-1">
+														<p className="font-medium">{item.product.name}</p>
+														<p className="text-sm text-muted-foreground line-clamp-1">
+															{item.product.description}
+														</p>
+													</div>
+												</div>
+											</TableCell>
+											<TableCell className="text-right">
+												{formatMoneyFromCents(item.price, {
+													locale: "en-ZA",
+													currency: "ZAR",
+												})}
+											</TableCell>
+											<TableCell className="text-right">
+												{item.quantity}
+											</TableCell>
+											<TableCell className="text-right font-medium">
+												{formatMoneyFromCents(item.price * item.quantity, {
+													locale: "en-ZA",
+													currency: "ZAR",
+												})}
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</div>
+						<div className="md:hidden space-y-4">
+							{loaderData.orderRequest.orderItems.map((item) => (
+								<div key={item.id} className="border rounded-lg p-4 space-y-3">
+									<div className="flex gap-3">
+										<img
+											src={item.product.pictureIds[0]}
+											alt={item.product.name}
+											className="size-20 object-cover rounded shrink-0"
+										/>
+										<div className="min-w-0">
+											<p className="font-medium">{item.product.name}</p>
+											<p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+												{item.product.description}
+											</p>
+										</div>
+									</div>
+									<Separator />
+									<div className="grid grid-cols-3 gap-2 text-sm">
+										<div>
+											<p className="text-muted-foreground">Price</p>
+											<p className="font-medium">
+												{formatMoneyFromCents(item.price, {
+													locale: "en-ZA",
+													currency: "ZAR",
+												})}
+											</p>
+										</div>
+										<div>
+											<p className="text-muted-foreground">Qty</p>
+											<p className="font-medium">{item.quantity}</p>
+										</div>
+										<div>
+											<p className="text-muted-foreground">Total</p>
+											<p className="font-semibold">
+												{formatMoneyFromCents(item.price * item.quantity, {
+													locale: "en-ZA",
+													currency: "ZAR",
+												})}
+											</p>
+										</div>
 									</div>
 								</div>
-								<Separator />
-								<div className="grid grid-cols-3 gap-2 text-sm">
-									<div>
-										<p className="text-muted-foreground">Price</p>
-										<p className="font-medium">
-											{formatMoneyFromCents(item.price, {
-												locale: "en-ZA",
-												currency: "ZAR",
-											})}
-										</p>
-									</div>
-									<div>
-										<p className="text-muted-foreground">Qty</p>
-										<p className="font-medium">{item.quantity}</p>
-									</div>
-									<div>
-										<p className="text-muted-foreground">Total</p>
-										<p className="font-semibold">
-											{formatMoneyFromCents(item.price * item.quantity, {
-												locale: "en-ZA",
-												currency: "ZAR",
-											})}
-										</p>
-									</div>
+							))}
+						</div>
+					</CardContent>
+				</Card>
+				<Card className="w-full md:w-72">
+					<CardHeader>
+						<CardTitle className="flex items-center gap-2">
+							<CalendarIcon className="h-5 w-5" />
+							Order Info
+						</CardTitle>
+					</CardHeader>
+					<CardContent className="space-y-3">
+						<div className="space-y-1">
+							<p className="text-sm font-medium">Order Ref</p>
+							<p className="text-sm text-muted-foreground break-all">
+								{loaderData.orderRequest.id.slice(24)}
+							</p>
+						</div>
+						<Separator />
+						<div className="space-y-1">
+							<p className="text-sm font-medium">Order Date</p>
+							<p className="text-sm text-muted-foreground">
+								{formatDate(loaderData.orderRequest.createdAt)}
+							</p>
+						</div>
+						<Separator />
+						<div className="space-y-1">
+							<p className="text-sm font-medium">Order Status</p>
+							<Badge variant={orderStatusBadgeVariant}>
+								{loaderData.orderRequest.status}
+							</Badge>
+						</div>
+						<Separator />
+						<div className="space-y-1">
+							<p className="text-sm font-medium">Delivery Status</p>
+							{loaderData.orderRequest.logisticRequest ? (
+								<div className="flex gap-1 items-center">
+									<Badge variant={deliveryStatusBadgeVariant}>
+										{loaderData.orderRequest.logisticRequest.status}
+									</Badge>
+									<Link
+										to="/user/orders/$orderId/delivery"
+										params={{ orderId: loaderData.orderRequest.id }}
+										className={cn(
+											buttonVariants({
+												variant: "ghost",
+												size: "icon-xs",
+											}),
+										)}
+									>
+										<ExternalLinkIcon />
+									</Link>
 								</div>
-							</div>
-						))}
-					</div>
-				</CardContent>
-			</Card>
-			<Card className="w-full md:w-72">
-				<CardHeader>
-					<CardTitle className="flex items-center gap-2">
-						<CalendarIcon className="h-5 w-5" />
-						Order Info
-					</CardTitle>
-				</CardHeader>
-				<CardContent className="space-y-3">
-					<div className="space-y-1">
-						<p className="text-sm font-medium">Order Ref</p>
-						<p className="text-sm text-muted-foreground break-all">
-							{loaderData.orderRequest.id.slice(24)}
-						</p>
-					</div>
-					<Separator />
-					<div className="space-y-1">
-						<p className="text-sm font-medium">Order Date</p>
-						<p className="text-sm text-muted-foreground">
-							{formatDate(loaderData.orderRequest.createdAt)}
-						</p>
-					</div>
-					<Separator />
-					<div className="space-y-1">
-						<p className="text-sm font-medium">Order Status</p>
-						<Badge variant={orderStatusBadgeVariant}>
-							{loaderData.orderRequest.status}
-						</Badge>
-					</div>
-					<Separator />
-					<div className="space-y-1">
-						<p className="text-sm font-medium">Delivery Status</p>
-						{loaderData.orderRequest.logisticRequest ? (
-							<div className="flex gap-1 items-center">
-								<Badge variant={deliveryStatusBadgeVariant}>
-									{loaderData.orderRequest.logisticRequest.status}
-								</Badge>
-								<Link
-									to="/user/orders/$orderId/delivery"
-									params={{ orderId: loaderData.orderRequest.id }}
-									className={cn(
-										buttonVariants({
-											variant: "ghost",
-											size: "icon-xs",
-										}),
-									)}
+							) : loaderData.orderRequest.status === "COMPLETED" ? (
+								<Dialog
+									open={isLogisticRequestDialogOpen}
+									onOpenChange={setIsLogisticRequestDialogOpen}
 								>
-									<ExternalLinkIcon />
-								</Link>
-							</div>
-						) : loaderData.orderRequest.status === "COMPLETED" ? (
-							<Dialog
-								open={isLogisticRequestDialogOpen}
-								onOpenChange={setIsLogisticRequestDialogOpen}
-							>
-								<DialogTrigger render={<Button variant="outline" size="xs" />}>
-									Request
-								</DialogTrigger>
-								<DialogContent>
-									<DialogHeader>
-										<DialogTitle className="text-xl font-semibold">
-											Request Logistic
-										</DialogTitle>
-									</DialogHeader>
-									<UserLogisticRequestForm
-										defaultValues={{
-											requestedPrice: 0,
-										}}
-										isSubmitting={createLogisticRequestMutation.isPending}
-										submitHandler={({ data }) => {
-											createLogisticRequestMutation.mutate({
-												data: {
-													...data,
-													orderRequestId: loaderData.orderRequest.id,
-												},
-											});
-										}}
-									/>
-								</DialogContent>
-							</Dialog>
-						) : (
-							<p className="text-sm text-muted-foreground">N/A</p>
-						)}
-					</div>
-					<Separator />
-					<div className="space-y-1">
-						<p className="text-sm font-medium">Total Price</p>
-						<p className="text-lg font-semibold">
-							{formatMoneyFromCents(loaderData.orderRequest.total, {
-								locale: "en-ZA",
-								currency: "ZAR",
-							})}
-						</p>
-					</div>
-				</CardContent>
-			</Card>
+									<DialogTrigger
+										render={<Button variant="outline" size="xs" />}
+									>
+										Request
+									</DialogTrigger>
+									<DialogContent>
+										<DialogHeader>
+											<DialogTitle className="text-xl font-semibold">
+												Request Logistic
+											</DialogTitle>
+										</DialogHeader>
+										<UserLogisticRequestForm
+											defaultValues={{
+												requestedPrice: 0,
+											}}
+											isSubmitting={createLogisticRequestMutation.isPending}
+											submitHandler={({ data }) => {
+												createLogisticRequestMutation.mutate({
+													data: {
+														...data,
+														orderRequestId: loaderData.orderRequest.id,
+													},
+												});
+											}}
+										/>
+									</DialogContent>
+								</Dialog>
+							) : (
+								<p className="text-sm text-muted-foreground">N/A</p>
+							)}
+						</div>
+						<Separator />
+						<div className="space-y-1">
+							<p className="text-sm font-medium">Total Price</p>
+							<p className="text-lg font-semibold">
+								{formatMoneyFromCents(loaderData.orderRequest.total, {
+									locale: "en-ZA",
+									currency: "ZAR",
+								})}
+							</p>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
 		</section>
 	);
 }

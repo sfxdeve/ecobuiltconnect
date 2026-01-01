@@ -118,86 +118,88 @@ function VendorRequestsPage() {
 	return (
 		<>
 			<DashboardHeader title="Requests" />
-			<section className="p-4 space-y-6 min-h-screen">
-				<ProductRequestsPageSearch />
-				{loaderData.productRequests.length > 0 ? (
-					<>
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Name</TableHead>
-									<TableHead>Category</TableHead>
-									<TableHead>Quantity</TableHead>
-									<TableHead>Price</TableHead>
-									<TableHead>Date</TableHead>
-									<TableHead></TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{loaderData.productRequests.map((productRequest) => {
-									return (
-										<TableRow key={productRequest.id}>
-											<TableCell>{productRequest.name}</TableCell>
-											<TableCell>{productRequest.category.name}</TableCell>
-											<TableCell>{productRequest.quantity}</TableCell>
-											<TableCell>
-												{formatMoneyFromCents(productRequest.price, {
-													locale: "en-ZA",
-													currency: "ZAR",
-												})}
-											</TableCell>
-											<TableCell>
-												{formatDate(productRequest.createdAt)}
-											</TableCell>
-											<TableCell>
-												<Button
-													onClick={() => {
-														setSelectedProductRequestId(productRequest.id);
-														setSelectedAction("create");
-													}}
-													variant="ghost"
-													size="icon"
-												>
-													<ExternalLinkIcon />
-												</Button>
-											</TableCell>
-										</TableRow>
-									);
-								})}
-							</TableBody>
-						</Table>
-						<Dialog
-							open={selectedAction !== null}
-							onOpenChange={(open) => {
-								if (!open) {
-									setSelectedProductRequestId(null);
-									setSelectedAction(null);
-								}
-							}}
-						>
-							{selectedProductRequestId && selectedAction === "create" && (
-								<CreateProductDialogContent
-									productRequestId={selectedProductRequestId}
-									closeDialog={() => {
+			<section>
+				<div className="p-4 space-y-6 min-h-screen">
+					<ProductRequestsPageSearch />
+					{loaderData.productRequests.length > 0 ? (
+						<>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Name</TableHead>
+										<TableHead>Category</TableHead>
+										<TableHead>Quantity</TableHead>
+										<TableHead>Price</TableHead>
+										<TableHead>Date</TableHead>
+										<TableHead></TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{loaderData.productRequests.map((productRequest) => {
+										return (
+											<TableRow key={productRequest.id}>
+												<TableCell>{productRequest.name}</TableCell>
+												<TableCell>{productRequest.category.name}</TableCell>
+												<TableCell>{productRequest.quantity}</TableCell>
+												<TableCell>
+													{formatMoneyFromCents(productRequest.price, {
+														locale: "en-ZA",
+														currency: "ZAR",
+													})}
+												</TableCell>
+												<TableCell>
+													{formatDate(productRequest.createdAt)}
+												</TableCell>
+												<TableCell>
+													<Button
+														onClick={() => {
+															setSelectedProductRequestId(productRequest.id);
+															setSelectedAction("create");
+														}}
+														variant="ghost"
+														size="icon"
+													>
+														<ExternalLinkIcon />
+													</Button>
+												</TableCell>
+											</TableRow>
+										);
+									})}
+								</TableBody>
+							</Table>
+							<Dialog
+								open={selectedAction !== null}
+								onOpenChange={(open) => {
+									if (!open) {
 										setSelectedProductRequestId(null);
 										setSelectedAction(null);
-									}}
-								/>
-							)}
-						</Dialog>
-					</>
-				) : (
-					<Empty className="bg-muted">
-						<EmptyHeader>
-							<EmptyTitle>No results found</EmptyTitle>
-							<EmptyDescription>
-								No results found for your search. Try adjusting your search
-								terms.
-							</EmptyDescription>
-						</EmptyHeader>
-					</Empty>
-				)}
-				<ProductRequestsPagePagination />
+									}
+								}}
+							>
+								{selectedProductRequestId && selectedAction === "create" && (
+									<CreateProductDialogContent
+										productRequestId={selectedProductRequestId}
+										closeDialog={() => {
+											setSelectedProductRequestId(null);
+											setSelectedAction(null);
+										}}
+									/>
+								)}
+							</Dialog>
+						</>
+					) : (
+						<Empty className="bg-muted">
+							<EmptyHeader>
+								<EmptyTitle>No results found</EmptyTitle>
+								<EmptyDescription>
+									No results found for your search. Try adjusting your search
+									terms.
+								</EmptyDescription>
+							</EmptyHeader>
+						</Empty>
+					)}
+					<ProductRequestsPagePagination />
+				</div>
 			</section>
 		</>
 	);
