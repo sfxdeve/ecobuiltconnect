@@ -10,6 +10,8 @@ export const getRouter = () => {
 		routeTree,
 		context: { queryClient },
 		defaultPreload: "intent",
+		scrollRestoration: true,
+		scrollRestorationBehavior: "smooth",
 	});
 
 	setupRouterSsrQueryIntegration({

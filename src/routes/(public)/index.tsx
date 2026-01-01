@@ -23,7 +23,7 @@ export const Route = createFileRoute("/(public)/")({
 function HomePage() {
 	return (
 		<>
-			<section className="container mx-auto px-4 pt-28 flex gap-12 items-center">
+			<section className="container mx-auto px-4 pt-28 flex gap-12 flex-col-reverse md:flex-row items-center">
 				<div className="flex-1 space-y-12">
 					<div className="space-y-8">
 						<h2 className="text-3xl md:text-6xl font-medium">
@@ -50,7 +50,7 @@ function HomePage() {
 						</Link>
 					</div>
 				</div>
-				<div className="flex-1 hidden md:block">
+				<div className="flex-1">
 					<img
 						className="aspect-square object-contain w-full"
 						src="/art-01.webp"
@@ -58,8 +58,8 @@ function HomePage() {
 					/>
 				</div>
 			</section>
-			<section className="container mx-auto px-4 pt-12 flex gap-12 items-center">
-				<div className="flex-1 hidden md:block">
+			<section className="container mx-auto px-4 pt-12 flex gap-12 flex-col md:flex-row items-center">
+				<div className="flex-1">
 					<img
 						className="aspect-square object-contain w-full"
 						src="/art-02.webp"
