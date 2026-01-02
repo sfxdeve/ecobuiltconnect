@@ -8,6 +8,7 @@ import {
 	TruckIcon,
 	User2Icon,
 } from "lucide-react";
+import { Fragment } from "react/jsx-runtime";
 import { AppPending } from "@/components/blocks/app-pending";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -189,9 +190,9 @@ function HomePage() {
 					</div>
 					<div>
 						<ItemGroup className="max-w-5xl mx-auto md:flex-row items-center justify-center">
-							{steps.map((step) => (
-								<>
-									<Item key={step.title} variant="outline" className="w-48">
+							{steps.map((step, index) => (
+								<Fragment key={step.title}>
+									<Item variant="outline" className="w-48">
 										<ItemHeader className="py-2 justify-center">
 											<div className="p-5 rounded-full flex flex-col justify-center items-center bg-primary text-white">
 												<step.icon className="size-8" />
@@ -206,13 +207,13 @@ function HomePage() {
 											</ItemDescription>
 										</ItemContent>
 									</Item>
-									{step !== steps[steps.length - 1] && (
+									{index !== steps.length - 1 && (
 										<>
 											<ArrowRightIcon className="size-8 hidden md:block" />
 											<ArrowDownIcon className="size-8 md:hidden" />
 										</>
 									)}
-								</>
+								</Fragment>
 							))}
 						</ItemGroup>
 					</div>
