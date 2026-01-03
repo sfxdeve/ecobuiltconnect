@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	type ChangeEvent,
 	type DragEvent,
@@ -27,36 +25,58 @@ export type UploadItem =
 	| ({ kind: "remote" } & RemoteFile)
 	| ({ kind: "local" } & LocalFile);
 
+export type FileValidationError = {
+	file: string;
+	reason: string;
+};
+
 export type FileUploadOptions = {
 	initialFiles?: RemoteFile[];
 	multiple?: boolean;
 	maxFiles?: number;
 	maxSize?: number;
 	accept?: string;
-	onChange?: (files: UploadItem[]) => void;
+	allowDuplicates?: boolean;
+	autoPreview?: boolean;
+	onFilesChange?: (files: UploadItem[]) => void;
+	onError?: (errors: FileValidationError[]) => void;
+	validateFile?: (file: File) => string | null;
 };
 
-const generateUUID = () => crypto.randomUUID();
-
-const revokeItemURL = (item: UploadItem) => {
-	if (item.kind === "local" && item.preview) URL.revokeObjectURL(item.preview);
-};
-
-const isFileAcceptable = (file: File, acceptList: string[]) => {
+const isFileAcceptable = (file: File, acceptList: string[]): boolean => {
 	if (acceptList.length === 0) return true;
 
 	return acceptList.some((type) => {
-		const trimedType = type.trim();
+		const trimmed = type.trim();
 
-		if (trimedType.startsWith(".")) {
-			return file.name.toLowerCase().endsWith(trimedType.toLowerCase());
+		if (!trimmed) {
+			return false;
 		}
 
-		if (trimedType.endsWith("/*")) {
-			return file.type.startsWith(trimedType.replace("/*", ""));
+		if (trimmed.startsWith(".")) {
+			return file.name.toLowerCase().endsWith(trimmed.toLowerCase());
 		}
 
-		return file.type === trimedType;
+		if (trimmed.endsWith("/*")) {
+			const category = trimmed.replace("/*", "");
+			return file.type.startsWith(category);
+		}
+
+		return file.type === trimmed;
+	});
+};
+
+const isDuplicateFile = (file: File, existingFiles: UploadItem[]): boolean => {
+	return existingFiles.some((item) => {
+		if (item.kind === "local") {
+			return (
+				item.file.name === file.name &&
+				item.file.size === file.size &&
+				item.file.lastModified === file.lastModified
+			);
+		}
+
+		return item.name === file.name && item.size === file.size;
 	});
 };
 
@@ -66,112 +86,177 @@ export function useFileUpload({
 	maxFiles = Infinity,
 	maxSize = Infinity,
 	accept = "",
-	onChange,
+	allowDuplicates = false,
+	autoPreview = true,
+	onFilesChange,
+	onError,
+	validateFile,
 }: FileUploadOptions = {}) {
 	const inputRef = useRef<HTMLInputElement>(null);
+	const filesRef = useRef<UploadItem[]>([]);
 
-	const acceptList = accept.split(",").map((type) => type.trim());
+	const acceptList = accept ? accept.split(",").map((type) => type.trim()) : [];
 
-	const [files, setFiles] = useState<UploadItem[]>(
-		initialFiles.map((f) => ({ kind: "remote", ...f })),
+	const [files, setFiles] = useState<UploadItem[]>(() =>
+		initialFiles.map((file) => ({ kind: "remote" as const, ...file })),
 	);
-	const [errors, setErrors] = useState<string[]>([]);
+	const [errors, setErrors] = useState<FileValidationError[]>([]);
 	const [isDragging, setIsDragging] = useState(false);
 
-	useEffect(() => {
-		return () => files.forEach(revokeItemURL);
-	}, [files]);
+	filesRef.current = files;
 
-	const validate = (file: File, count: number) => {
+	useEffect(() => {
+		return () => {
+			filesRef.current.forEach((item) => {
+				if (item.kind === "local" && item.preview) {
+					URL.revokeObjectURL(item.preview);
+				}
+			});
+		};
+	}, []);
+
+	useEffect(() => {
+		if (onFilesChange) {
+			onFilesChange(files);
+		}
+	}, [files, onFilesChange]);
+
+	useEffect(() => {
+		if (onError && errors.length > 0) {
+			onError(errors);
+		}
+	}, [errors, onError]);
+
+	function validateSingleFile(file: File, count: number): string | null {
 		if (!multiple && count > 0) {
-			return "Only one file allowed.";
+			return "Only one file allowed";
 		}
 
 		if (count >= maxFiles) {
-			return `Maximum of ${maxFiles} files allowed.`;
+			return `Maximum ${maxFiles} file${maxFiles > 1 ? "s" : ""} allowed`;
 		}
 
 		if (file.size > maxSize) {
-			return "File exceeds size limit.";
+			return "File size exceeds limit"; // (max: ${formatFileSize(maxSize)}, actual: ${formatFileSize(file.size)})
 		}
 
 		if (!isFileAcceptable(file, acceptList)) {
-			return "File type not allowed.";
+			const acceptedTypes =
+				acceptList.length > 0 ? acceptList.join(", ") : "all types";
+			return `File type not accepted (accepted: ${acceptedTypes})`;
+		}
+
+		if (!allowDuplicates && isDuplicateFile(file, filesRef.current)) {
+			return "File already uploaded";
+		}
+
+		if (validateFile) {
+			const customError = validateFile(file);
+			if (customError) return customError;
 		}
 
 		return null;
-	};
+	}
 
-	const addFiles = (input: FileList | File[]) => {
-		const files = Array.from(input);
+	function createLocalFile(file: File): UploadItem {
+		const shouldCreatePreview = autoPreview && file.type.startsWith("image/");
 
-		if (!files.length) {
+		return {
+			kind: "local" as const,
+			id: crypto.randomUUID(),
+			file,
+			preview: shouldCreatePreview ? URL.createObjectURL(file) : undefined,
+		};
+	}
+
+	function addFiles(fileList: FileList | File[]) {
+		const filesArray = Array.from(fileList);
+
+		if (filesArray.length === 0) {
 			return;
 		}
 
-		const newItems: UploadItem[] = [];
-		const newErrors: string[] = [];
+		const validationErrors: FileValidationError[] = [];
+		const validFiles: UploadItem[] = [];
 
 		setFiles((prev) => {
 			const currentFiles = multiple ? [...prev] : [];
 
 			if (!multiple) {
-				prev.forEach(revokeItemURL);
+				prev.forEach((item) => {
+					if (item.kind === "local" && item.preview) {
+						URL.revokeObjectURL(item.preview);
+					}
+				});
 			}
 
-			for (const file of files) {
-				const error = validate(file, currentFiles.length + newItems.length);
+			for (const file of filesArray) {
+				const error = validateSingleFile(
+					file,
+					currentFiles.length + validFiles.length,
+				);
 
 				if (error) {
-					newErrors.push(error);
+					validationErrors.push({ file: file.name, reason: error });
 				} else {
-					newItems.push({
-						kind: "local",
-						id: generateUUID(),
-						file,
-						preview: file.type.startsWith("image/")
-							? URL.createObjectURL(file)
-							: undefined,
-					});
+					validFiles.push(createLocalFile(file));
 				}
 			}
 
-			const newState = [...currentFiles, ...newItems];
-
-			setErrors(newErrors);
-			onChange?.(newState);
-
-			if (inputRef.current) inputRef.current.value = "";
-
-			return newState;
-		});
-	};
-
-	const removeFile = (id: string) => {
-		setFiles((prev) => {
-			const fileToRemove = prev.find((file) => file.id === id);
-
-			if (fileToRemove) {
-				revokeItemURL(fileToRemove);
-			}
-
-			const newFiles = prev.filter((file) => file.id !== id);
-
-			onChange?.(newFiles);
+			setErrors(validationErrors);
 
 			if (inputRef.current) {
 				inputRef.current.value = "";
 			}
 
+			return [...currentFiles, ...validFiles];
+		});
+	}
+
+	function removeFile(id: string) {
+		setFiles((prev) => {
+			const fileToRemove = prev.find((item) => item.id === id);
+
+			if (
+				fileToRemove &&
+				fileToRemove.kind === "local" &&
+				fileToRemove.preview
+			) {
+				URL.revokeObjectURL(fileToRemove.preview);
+			}
+
+			return prev.filter((item) => item.id !== id);
+		});
+	}
+
+	function replaceFile(id: string, newFile: File) {
+		setFiles((prev) => {
+			const index = prev.findIndex((item) => item.id === id);
+
+			if (index === -1) return prev;
+
+			const oldItem = prev[index];
+
+			if (oldItem.kind === "local" && oldItem.preview) {
+				URL.revokeObjectURL(oldItem.preview);
+			}
+
+			const newItem = createLocalFile(newFile);
+			const newFiles = [...prev];
+
+			newFiles[index] = newItem;
+
 			return newFiles;
 		});
-	};
+	}
 
-	const clearAll = () => {
+	function clearAll() {
 		setFiles((prev) => {
-			prev.forEach(revokeItemURL);
-
-			onChange?.([]);
+			prev.forEach((item) => {
+				if (item.kind === "local" && item.preview) {
+					URL.revokeObjectURL(item.preview);
+				}
+			});
 
 			return [];
 		});
@@ -181,46 +266,56 @@ export function useFileUpload({
 		if (inputRef.current) {
 			inputRef.current.value = "";
 		}
-	};
+	}
 
-	const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+	function clearErrors() {
+		setErrors([]);
+	}
+
+	function onInputChange(event: ChangeEvent<HTMLInputElement>) {
 		if (event.target.files) {
 			addFiles(event.target.files);
 		}
-	};
+	}
 
-	const getInputProps = (
-		props: InputHTMLAttributes<HTMLInputElement> = {},
-	) => ({
-		...props,
-		type: "file",
-		accept,
-		multiple,
-		ref: inputRef,
-		onChange: (event: ChangeEvent<HTMLInputElement>) => {
-			props.onChange?.(event);
-			onInputChange(event);
-		},
-	});
+	function getInputProps(props: InputHTMLAttributes<HTMLInputElement> = {}) {
+		return {
+			...props,
+			type: "file" as const,
+			accept,
+			multiple,
+			ref: inputRef,
+			onChange: onInputChange,
+		};
+	}
+
+	function openFileDialog() {
+		inputRef.current?.click();
+	}
 
 	const dragHandlers = {
-		onDragEnter: (event: DragEvent) => {
+		onDragEnter(event: DragEvent) {
 			event.preventDefault();
 			event.stopPropagation();
+
 			setIsDragging(true);
 		},
-		onDragLeave: (event: DragEvent) => {
+		onDragLeave(event: DragEvent) {
 			event.preventDefault();
 			event.stopPropagation();
-			setIsDragging(false);
+
+			if (event.currentTarget === event.target) {
+				setIsDragging(false);
+			}
 		},
-		onDragOver: (event: DragEvent) => {
+		onDragOver(event: DragEvent) {
 			event.preventDefault();
 			event.stopPropagation();
 		},
-		onDrop: (event: DragEvent) => {
+		onDrop(event: DragEvent) {
 			event.preventDefault();
 			event.stopPropagation();
+
 			setIsDragging(false);
 
 			if (event.dataTransfer.files) {
@@ -229,17 +324,33 @@ export function useFileUpload({
 		},
 	};
 
+	const localFiles = files.filter(
+		(file): file is LocalFile & { kind: "local" } => file.kind === "local",
+	);
+
+	const remoteFiles = files.filter(
+		(file): file is RemoteFile & { kind: "remote" } => file.kind === "remote",
+	);
+
+	const hasFiles = files.length > 0;
+	const canAddMore = files.length < maxFiles;
+
 	return {
 		files,
-		localFiles: files.filter((file) => file.kind === "local"),
-		remoteFiles: files.filter((file) => file.kind === "remote"),
+		localFiles,
+		remoteFiles,
 		errors,
+
 		isDragging,
+		hasFiles,
+		canAddMore,
 
 		addFiles,
 		removeFile,
+		replaceFile,
 		clearAll,
-		openFileDialog: () => inputRef.current?.click(),
+		clearErrors,
+		openFileDialog,
 
 		getInputProps,
 		dragHandlers,
