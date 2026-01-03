@@ -6,7 +6,7 @@ import { cn } from "@/utils";
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
 	return (
-		// biome-ignore lint/a11y/useSemanticElements: ui library component
+		// biome-ignore lint/a11y/useSemanticElements: Intentional
 		<div
 			data-slot="input-group"
 			role="group"
@@ -46,8 +46,8 @@ function InputGroupAddon({
 	...props
 }: React.ComponentProps<"div"> & VariantProps<typeof inputGroupAddonVariants>) {
 	return (
-		// biome-ignore lint/a11y/useSemanticElements: ui library component
-		// biome-ignore lint/a11y/useKeyWithClickEvents: ui library component
+		// biome-ignore lint/a11y/useSemanticElements: Intentional
+		// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
 		<div
 			role="group"
 			data-slot="input-group-addon"

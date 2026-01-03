@@ -224,7 +224,7 @@ export const createOrderRequest = createServerFn({
 		}[] = [];
 
 		for (const product of products) {
-			// biome-ignore lint/style/noNonNullAssertion: itemsMap.get(product.id) is never null
+			// biome-ignore lint/style/noNonNullAssertion: Intentional
 			const requested = itemsMap.get(product.id)!;
 
 			if (product.stock < requested) {
@@ -246,7 +246,7 @@ export const createOrderRequest = createServerFn({
 
 		const totalPrice = products.reduce(
 			(acc, product) =>
-				// biome-ignore lint/style/noNonNullAssertion: itemsMap.get(product.id) is never null
+				// biome-ignore lint/style/noNonNullAssertion: Intentional
 				acc + (product.salePrice ?? product.price) * itemsMap.get(product.id)!,
 			0,
 		);
@@ -259,7 +259,7 @@ export const createOrderRequest = createServerFn({
 					orderItems: {
 						createMany: {
 							data: products.map((product) => ({
-								// biome-ignore lint/style/noNonNullAssertion: itemsMap.get(product.id) is never null
+								// biome-ignore lint/style/noNonNullAssertion: Intentional
 								quantity: itemsMap.get(product.id)!,
 								price: product.salePrice ?? product.price,
 								productId: product.id,
@@ -276,7 +276,7 @@ export const createOrderRequest = createServerFn({
 						where: { id: product.id },
 						data: {
 							stock: {
-								// biome-ignore lint/style/noNonNullAssertion: itemsMap.get(product.id) is never null
+								// biome-ignore lint/style/noNonNullAssertion: Intentional
 								decrement: itemsMap.get(product.id)!,
 							},
 						},

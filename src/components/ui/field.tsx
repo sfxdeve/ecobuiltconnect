@@ -72,7 +72,7 @@ function Field({
 	...props
 }: React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>) {
 	return (
-		// biome-ignore lint/a11y/useSemanticElements: ui library component
+		// biome-ignore lint/a11y/useSemanticElements: Intentional
 		<div
 			role="group"
 			data-slot="field"

@@ -4,7 +4,7 @@ import { cn } from "@/utils";
 
 function Label({ className, ...props }: React.ComponentProps<"label">) {
 	return (
-		// biome-ignore lint/a11y/noLabelWithoutControl: ui library component
+		// biome-ignore lint/a11y/noLabelWithoutControl: Intentional
 		<label
 			data-slot="label"
 			className={cn(
