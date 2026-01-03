@@ -23,6 +23,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { getCategories } from "@/lib/api/public.category";
 import { ProductCondition } from "@/prisma/generated/enums";
 
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import type { ComponentPropsWithoutRef } from "react";
+import { cn } from "@/utils";
+
 export const vendorProductFormSchema = z.object({
 	pictureIds: z
 		.array(z.string("Picture id must be a string"))
@@ -70,7 +75,9 @@ export function VendorProductForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof vendorProductFormSchema>;
 	isSubmitting: boolean;
 	submitHandler: ({
@@ -102,6 +109,8 @@ export function VendorProductForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn(className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">

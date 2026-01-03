@@ -455,6 +455,7 @@ function CreateProductDialogContent({
 				}}
 				isSubmitting={createProductMutation.isPending}
 				submitHandler={createProductMutation.mutate}
+				className="max-h-[80dvh] overflow-y-auto no-scrollbar"
 			/>
 		</DialogContent>
 	);
