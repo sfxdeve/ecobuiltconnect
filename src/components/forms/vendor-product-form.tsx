@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import type { ComponentPropsWithoutRef } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,10 +23,6 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { getCategories } from "@/lib/api/public.category";
 import { ProductCondition } from "@/prisma/generated/enums";
-
-import "filepond/dist/filepond.min.css";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/utils";
 
 export const vendorProductFormSchema = z.object({
