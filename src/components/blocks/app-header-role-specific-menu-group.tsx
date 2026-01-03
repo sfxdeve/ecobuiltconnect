@@ -20,6 +20,7 @@ export function AppHeaderRoleSpecificMenuGroup({
 	const getProfileFn = useServerFn(getProfile);
 
 	const profileResult = useQuery({
+		enabled: !!user?.id,
 		queryKey: ["shared-profile", user?.id],
 		queryFn: getProfileFn,
 	});

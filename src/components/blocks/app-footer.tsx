@@ -75,7 +75,7 @@ export function AppFooter() {
 					<h3 className="mb-6 text-lg font-semibold">Quick Links</h3>
 					<ul className="text-muted-foreground space-y-4 text-sm">
 						{QUICK_LINKS.map((link) => (
-							<li key={link.to}>
+							<li key={link.label}>
 								<Link
 									to={link.to}
 									className="hover:text-primary transition-colors"
@@ -90,7 +90,7 @@ export function AppFooter() {
 					<h3 className="mb-6 text-lg font-semibold">Legal</h3>
 					<ul className="text-muted-foreground space-y-4 text-sm">
 						{LEGAL_LINKS.map((link) => (
-							<li key={link.to}>
+							<li key={link.label}>
 								<Link
 									to={link.to}
 									className="hover:text-primary transition-colors"

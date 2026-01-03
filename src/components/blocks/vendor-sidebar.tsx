@@ -68,6 +68,7 @@ export function VendorSidebar() {
 	const queryClient = useQueryClient();
 
 	const vendorProfileResult = useQuery({
+		enabled: !!user?.id,
 		queryKey: ["vendor-profile", user?.id],
 		queryFn: () => getVendorProfileFn(),
 	});
