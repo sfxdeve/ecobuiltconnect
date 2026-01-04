@@ -6,6 +6,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { composeS3Key } from "@/lib/aws/shared.s3";
 
 export type RemoteFile = {
 	id: string;
@@ -14,7 +15,7 @@ export type RemoteFile = {
 
 export type LocalFile = {
 	id: string;
-	file: File;
+	data: File;
 	preview?: string;
 };
 
@@ -66,8 +67,8 @@ const isFileAcceptable = (file: File, acceptList: string[]): boolean => {
 
 const createLocalUploadItem = (file: File): UploadItem => ({
 	kind: "local",
-	id: crypto.randomUUID(),
-	file,
+	id: composeS3Key(file.name),
+	data: file,
 	preview: createFilePreview(file),
 });
 
@@ -148,7 +149,7 @@ export function useFileUpload({
 	onErrorsChange,
 }: FileUploadOptions = {}) {
 	const [files, setFiles] = useState<UploadItem[]>(() =>
-		initialFiles.map((f) => ({ kind: "remote", ...f })),
+		initialFiles.map((file) => ({ kind: "remote", ...file })),
 	);
 	const [errors, setErrors] = useState<FileValidationError[]>([]);
 	const [isDragging, setIsDragging] = useState(false);
@@ -219,13 +220,13 @@ export function useFileUpload({
 
 	const removeFile = (id: string) => {
 		setFiles((current) => {
-			const item = current.find((f) => f.id === id);
+			const item = current.find((file) => file.id === id);
 
 			if (item) {
 				revokeFilePreview(item);
 			}
 
-			return current.filter((f) => f.id !== id);
+			return current.filter((file) => file.id !== id);
 		});
 	};
 
@@ -242,7 +243,7 @@ export function useFileUpload({
 		if (!validFiles.length) return;
 
 		setFiles((current) => {
-			const index = current.findIndex((f) => f.id === id);
+			const index = current.findIndex((file) => file.id === id);
 
 			if (index === -1) {
 				return current;
@@ -325,10 +326,6 @@ export function useFileUpload({
 			}
 		},
 	};
-
-	/* =======================
-	   Derived
-	======================= */
 
 	const localFiles = files.filter(
 		(file): file is LocalFile & { kind: "local" } => file.kind === "local",

@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { getCategories } from "@/lib/api/public.category";
 import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
-import { composeS3Key, composeS3URL } from "@/lib/aws/shared.s3";
+import { composeS3URL } from "@/lib/aws/shared.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
 
@@ -120,13 +120,7 @@ export function VendorProductForm({
 		onFilesChange: (files) => {
 			form.setFieldValue(
 				"pictureIds",
-				files.map((file) => {
-					if (file.kind === "local") {
-						return composeS3Key(file.file.name, "products");
-					}
-
-					return file.id;
-				}),
+				files.map((file) => file.id),
 			);
 		},
 	});
@@ -143,21 +137,19 @@ export function VendorProductForm({
 
 					await Promise.all(
 						localFiles.map(async (file) => {
-							const contentType = file.file.type;
-
 							const { url } = await getS3ObjectUploadURLFn({
 								data: {
-									key: composeS3Key(file.file.name, "products"),
-									contentType,
+									key: file.id,
+									contentType: file.data.type,
 								},
 							});
 
 							await fetch(url, {
 								method: "PUT",
 								headers: {
-									"Content-Type": contentType,
+									"Content-Type": file.data.type,
 								},
-								body: file.file,
+								body: file.data,
 							});
 						}),
 					);
@@ -451,111 +443,129 @@ export function VendorProductForm({
 						}}
 					</form.Field>
 				</div>
-				<Field>
-					<FieldLabel>Images</FieldLabel>
-					<Input {...getInputProps()} className="hidden" />
-
-					{files.length < 1 && !areFilesUploading && !isSubmitting && (
-						// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
-						// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
-						<div
-							{...dragHandlers}
-							onClick={openFileDialog}
-							className={cn(
-								"border border-dashed rounded-3xl p-4 text-center cursor-pointer",
-								{
-									"border-primary bg-primary/10": isDragging,
-								},
-							)}
-						>
-							{isDragging
-								? "Release to upload your images"
-								: "Click or drag images to upload"}
-						</div>
-					)}
-
-					{files.length > 0 && (
-						<div className="grid grid-cols-3 gap-2 place-items-center">
-							{remoteFiles.map((file) => (
-								<div
-									key={file.id}
-									className="relative size-24 border border-input rounded p-1"
-								>
-									<img
-										src={file.url}
-										alt={file.id}
-										className="size-full object-cover"
+				<div className="flex gap-2 items-start">
+					<form.Field name="pictureIds">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel>Images</FieldLabel>
+									<Input
+										id={field.name}
+										name={field.name}
+										{...getInputProps()}
+										aria-invalid={isInvalid}
+										className="hidden"
 									/>
-									<Button
-										onClick={() => {
-											removeFile(file.id);
-										}}
-										disabled={areFilesUploading || isSubmitting}
-										variant="destructive"
-										size="icon-xs"
-										className="absolute -top-2 -right-2"
-									>
-										<XIcon />
-									</Button>
-								</div>
-							))}
-							{localFiles.map((file) => (
-								<div
-									key={file.id}
-									className="relative size-24 border border-input rounded p-1"
-								>
-									{file.preview && (
-										<img
-											src={file.preview}
-											alt={file.file.name}
-											className="size-full object-cover"
+
+									{files.length < 1 && !areFilesUploading && !isSubmitting && (
+										// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
+										// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
+										<div
+											{...dragHandlers}
+											onClick={openFileDialog}
+											className={cn(
+												"border border-dashed rounded-3xl p-4 text-center cursor-pointer",
+												{
+													"border-primary bg-primary/10": isDragging,
+												},
+											)}
+										>
+											{isDragging
+												? "Release to upload your images"
+												: "Click or drag images to upload"}
+										</div>
+									)}
+
+									{files.length > 0 && (
+										<div className="grid grid-cols-3 gap-2 place-items-center">
+											{remoteFiles.map((file) => (
+												<div
+													key={file.id}
+													className="relative size-24 border border-input rounded p-1"
+												>
+													<img
+														src={file.url}
+														alt={file.id}
+														className="size-full object-cover"
+													/>
+													<Button
+														onClick={() => {
+															removeFile(file.id);
+														}}
+														disabled={areFilesUploading || isSubmitting}
+														variant="destructive"
+														size="icon-xs"
+														className="absolute -top-2 -right-2"
+													>
+														<XIcon />
+													</Button>
+												</div>
+											))}
+											{localFiles.map((file) => (
+												<div
+													key={file.id}
+													className="relative size-24 border border-input rounded p-1"
+												>
+													{file.preview && (
+														<img
+															src={file.preview}
+															alt={file.data.name}
+															className="size-full object-cover"
+														/>
+													)}
+													<Button
+														onClick={() => {
+															removeFile(file.id);
+														}}
+														disabled={areFilesUploading || isSubmitting}
+														variant="destructive"
+														size="icon-xs"
+														className="absolute -top-2 -right-2"
+													>
+														<XIcon />
+													</Button>
+												</div>
+											))}
+
+											{!areFilesUploading && !isSubmitting && (
+												// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
+												// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
+												<div
+													{...dragHandlers}
+													onClick={openFileDialog}
+													className={cn(
+														"size-24 border border-input rounded p-1 flex flex-col justify-center items-center cursor-pointer",
+														{
+															"border-primary bg-primary/10": isDragging,
+														},
+													)}
+												>
+													<PlusIcon
+														className={cn("text-muted-foreground", {
+															"text-primary": isDragging,
+														})}
+													/>
+												</div>
+											)}
+										</div>
+									)}
+
+									{errors.length > 0 && (
+										<FieldError
+											errors={errors.map((error) => ({
+												message: `${error.file}: ${error.reason}`,
+											}))}
 										/>
 									)}
-									<Button
-										onClick={() => {
-											removeFile(file.id);
-										}}
-										disabled={areFilesUploading || isSubmitting}
-										variant="destructive"
-										size="icon-xs"
-										className="absolute -top-2 -right-2"
-									>
-										<XIcon />
-									</Button>
-								</div>
-							))}
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+				</div>
 
-							{!areFilesUploading && !isSubmitting && (
-								// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
-								// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
-								<div
-									{...dragHandlers}
-									onClick={openFileDialog}
-									className={cn(
-										"size-24 border border-input rounded p-1 flex flex-col justify-center items-center cursor-pointer",
-										{
-											"border-primary bg-primary/10": isDragging,
-										},
-									)}
-								>
-									<PlusIcon
-										className={cn("text-muted-foreground", {
-											"text-primary": isDragging,
-										})}
-									/>
-								</div>
-							)}
-						</div>
-					)}
-
-					{errors.length > 0 && (
-						<FieldError
-							errors={errors.map((error) => ({
-								message: `${error.file}: ${error.reason}`,
-							}))}
-						/>
-					)}
-				</Field>
 				<div className="flex gap-2 items-start justify-stretch">
 					<Button
 						type="submit"
