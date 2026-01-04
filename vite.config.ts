@@ -19,6 +19,18 @@ const config = defineConfig({
 			},
 		}),
 	],
+	resolve: {
+		alias: [
+			{
+				find: "use-sync-external-store/shim/index.js",
+				replacement: "react",
+			},
+			{
+				find: "cookie",
+				replacement: "cookie-es",
+			},
+		],
+	},
 });
 
 export default config;
