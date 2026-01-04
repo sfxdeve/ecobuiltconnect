@@ -75,7 +75,7 @@ import {
 	getProducts,
 	updateProduct,
 } from "@/lib/api/vendor.product";
-import { composeS3Url } from "@/lib/aws/shared.s3";
+import { composeS3URL } from "@/lib/aws/shared.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
@@ -334,7 +334,7 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 							<CarouselItem key={pictureId}>
 								<img
 									className="aspect-square object-contain w-full rounded-lg"
-									src={composeS3Url(pictureId)}
+									src={composeS3URL(pictureId)}
 									alt={`${productResult.data.product.name} - View ${index + 1}`}
 								/>
 							</CarouselItem>

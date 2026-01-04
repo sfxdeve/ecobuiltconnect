@@ -9,9 +9,6 @@ import {
 
 export type RemoteFile = {
 	id: string;
-	name: string;
-	size: number;
-	type: string;
 	url: string;
 };
 
@@ -36,6 +33,8 @@ export type FileUploadOptions = {
 	maxFiles?: number;
 	maxSize?: number;
 	accept?: string;
+	onFilesChange?: (files: UploadItem[]) => void;
+	onErrorsChange?: (errors: FileValidationError[]) => void;
 };
 
 type FileValidationResult = {
@@ -145,6 +144,8 @@ export function useFileUpload({
 	maxFiles = Infinity,
 	maxSize = Infinity,
 	accept = "",
+	onFilesChange,
+	onErrorsChange,
 }: FileUploadOptions = {}) {
 	const [files, setFiles] = useState<UploadItem[]>(() =>
 		initialFiles.map((f) => ({ kind: "remote", ...f })),
@@ -164,6 +165,14 @@ export function useFileUpload({
 			filesRef.current.forEach(revokeFilePreview);
 		};
 	}, []);
+
+	useEffect(() => {
+		onFilesChange?.(files);
+	}, [files, onFilesChange]);
+
+	useEffect(() => {
+		onErrorsChange?.(errors);
+	}, [errors, onErrorsChange]);
 
 	const acceptList = accept
 		.split(",")

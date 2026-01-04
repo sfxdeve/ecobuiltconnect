@@ -2,7 +2,7 @@ import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { PlusIcon, XIcon } from "lucide-react";
-import type { ComponentPropsWithoutRef } from "react";
+import { type ComponentPropsWithoutRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { getCategories } from "@/lib/api/public.category";
 import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
-import { composeS3Url } from "@/lib/aws/shared.s3";
+import { composeS3Key, composeS3URL } from "@/lib/aws/shared.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
 
@@ -88,6 +88,16 @@ export function VendorProductForm({
 		data: z.infer<typeof vendorProductFormSchema>;
 	}) => void;
 }) {
+	const [areFilesUploading, setAreFilesUploading] = useState(false);
+
+	const getS3ObjectUploadURLFn = useServerFn(getS3ObjectUploadURL);
+	const getCategoriesFn = useServerFn(getCategories);
+
+	const categoriesResult = useQuery({
+		queryKey: ["categories"],
+		queryFn: () => getCategoriesFn({ data: {} }),
+	});
+
 	const {
 		files,
 		remoteFiles,
@@ -101,23 +111,24 @@ export function VendorProductForm({
 	} = useFileUpload({
 		initialFiles: defaultValues.pictureIds.map((id) => ({
 			id,
-			name: id,
-			size: 0,
-			type: "",
-			url: composeS3Url(id),
+			url: composeS3URL(id),
 		})),
 		multiple: true,
 		maxFiles: 5,
 		maxSize: 5 * 1024 * 1024,
 		accept: "image/*",
-	});
+		onFilesChange: (files) => {
+			form.setFieldValue(
+				"pictureIds",
+				files.map((file) => {
+					if (file.kind === "local") {
+						return composeS3Key(file.file.name, "products");
+					}
 
-	const getS3ObjectUploadURLFn = useServerFn(getS3ObjectUploadURL);
-	const getCategoriesFn = useServerFn(getCategories);
-
-	const categoriesResult = useQuery({
-		queryKey: ["categories"],
-		queryFn: () => getCategoriesFn({ data: {} }),
+					return file.id;
+				}),
+			);
+		},
 	});
 
 	const form = useForm({
@@ -125,7 +136,40 @@ export function VendorProductForm({
 			onChange: vendorProductFormSchema,
 		},
 		defaultValues,
-		onSubmit: ({ value: data }) => {
+		onSubmit: async ({ value: data }) => {
+			if (localFiles.length > 0) {
+				try {
+					setAreFilesUploading(true);
+
+					await Promise.all(
+						localFiles.map(async (file) => {
+							const contentType = file.file.type;
+
+							const { url } = await getS3ObjectUploadURLFn({
+								data: {
+									key: composeS3Key(file.file.name, "products"),
+									contentType,
+								},
+							});
+
+							await fetch(url, {
+								method: "PUT",
+								headers: {
+									"Content-Type": contentType,
+								},
+								body: file.file,
+							});
+						}),
+					);
+				} catch {
+					toast.error("Failed to upload images.");
+
+					return;
+				} finally {
+					setAreFilesUploading(false);
+				}
+			}
+
 			submitHandler({ data });
 		},
 	});
@@ -134,41 +178,6 @@ export function VendorProductForm({
 		<form
 			onSubmit={async (event) => {
 				event.preventDefault();
-
-				if (localFiles.length > 0) {
-					try {
-						await Promise.all(
-							localFiles.map(async (file) => {
-								const key = `${Date.now()}_${file.file.name}`;
-								const contentType = file.file.type;
-
-								const { url } = await getS3ObjectUploadURLFn({
-									data: {
-										key,
-										contentType,
-									},
-								});
-
-								await fetch(url, {
-									method: "PUT",
-									headers: {
-										"Content-Type": contentType,
-									},
-									body: file.file,
-								});
-
-								form.setFieldValue("pictureIds", [
-									...form.getFieldValue("pictureIds"),
-									key,
-								]);
-							}),
-						);
-					} catch {
-						toast.error("Failed to upload images.");
-
-						return;
-					}
-				}
 
 				form.handleSubmit();
 			}}
@@ -446,7 +455,7 @@ export function VendorProductForm({
 					<FieldLabel>Images</FieldLabel>
 					<Input {...getInputProps()} className="hidden" />
 
-					{files.length < 1 && (
+					{files.length < 1 && !areFilesUploading && !isSubmitting && (
 						// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
 						// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
 						<div
@@ -474,20 +483,14 @@ export function VendorProductForm({
 								>
 									<img
 										src={file.url}
-										alt={file.name}
+										alt={file.id}
 										className="size-full object-cover"
 									/>
 									<Button
 										onClick={() => {
 											removeFile(file.id);
-
-											form.setFieldValue(
-												"pictureIds",
-												form
-													.getFieldValue("pictureIds")
-													.filter((id) => id !== file.id),
-											);
 										}}
+										disabled={areFilesUploading || isSubmitting}
 										variant="destructive"
 										size="icon-xs"
 										className="absolute -top-2 -right-2"
@@ -512,6 +515,7 @@ export function VendorProductForm({
 										onClick={() => {
 											removeFile(file.id);
 										}}
+										disabled={areFilesUploading || isSubmitting}
 										variant="destructive"
 										size="icon-xs"
 										className="absolute -top-2 -right-2"
@@ -520,24 +524,27 @@ export function VendorProductForm({
 									</Button>
 								</div>
 							))}
-							{/* biome-ignore lint/a11y/noStaticElementInteractions: Intentional */}
-							{/* biome-ignore lint/a11y/useKeyWithClickEvents: Intentional */}
-							<div
-								{...dragHandlers}
-								onClick={openFileDialog}
-								className={cn(
-									"size-24 border border-input rounded p-1 flex flex-col justify-center items-center cursor-pointer",
-									{
-										"border-primary bg-primary/10": isDragging,
-									},
-								)}
-							>
-								<PlusIcon
-									className={cn("text-muted-foreground", {
-										"text-primary": isDragging,
-									})}
-								/>
-							</div>
+
+							{(areFilesUploading || isSubmitting) && (
+								// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
+								// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
+								<div
+									{...dragHandlers}
+									onClick={openFileDialog}
+									className={cn(
+										"size-24 border border-input rounded p-1 flex flex-col justify-center items-center cursor-pointer",
+										{
+											"border-primary bg-primary/10": isDragging,
+										},
+									)}
+								>
+									<PlusIcon
+										className={cn("text-muted-foreground", {
+											"text-primary": isDragging,
+										})}
+									/>
+								</div>
+							)}
 						</div>
 					)}
 
@@ -552,12 +559,12 @@ export function VendorProductForm({
 				<div className="flex gap-2 items-start justify-stretch">
 					<Button
 						type="submit"
-						disabled={isSubmitting}
+						disabled={areFilesUploading || isSubmitting}
 						variant="default"
 						size="lg"
 						className="flex-1"
 					>
-						{isSubmitting ? <Spinner /> : "Submit"}
+						{areFilesUploading || isSubmitting ? <Spinner /> : "Submit"}
 					</Button>
 				</div>
 			</FieldGroup>

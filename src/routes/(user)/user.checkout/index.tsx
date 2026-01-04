@@ -34,7 +34,7 @@ import { getProduct } from "@/lib/api/public.product";
 import { createOrderRequest } from "@/lib/api/user.order-request";
 import { initiateOrderRequestPayment } from "@/lib/api/user.ozow";
 import { getUserProfile } from "@/lib/api/user.profile";
-import { composeS3Url } from "@/lib/aws/shared.s3";
+import { composeS3URL } from "@/lib/aws/shared.s3";
 import { cartActions, cartStore } from "@/stores/cart";
 import { formatMoneyFromCents } from "@/utils/formatters";
 
@@ -140,7 +140,7 @@ function CheckoutPage() {
 										>
 											<ItemMedia variant="image" className="size-20">
 												<img
-													src={composeS3Url(product.pictureIds[0])}
+													src={composeS3URL(product.pictureIds[0])}
 													alt={product.name}
 												/>
 											</ItemMedia>
