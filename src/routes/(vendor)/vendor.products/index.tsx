@@ -442,7 +442,7 @@ function CreateProductDialogContent({
 			</DialogHeader>
 			<VendorProductForm
 				defaultValues={{
-					pictureIds: [""],
+					pictureIds: [],
 					name: "",
 					description: "",
 					previousUsage: null,
