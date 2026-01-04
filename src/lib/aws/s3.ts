@@ -8,3 +8,7 @@ export const s3 = new S3Client({
 		secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
 	},
 });
+
+export function composeS3Url(key: string) {
+	return `https://${env.AWS_S3_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
+}
