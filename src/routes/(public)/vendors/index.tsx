@@ -23,6 +23,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { getVendorProfiles } from "@/lib/api/public.vendor-profile";
+import { composeS3Url } from "@/lib/aws/client.s3";
 import { cn } from "@/utils";
 
 export const Route = createFileRoute("/(public)/vendors/")({
@@ -84,7 +85,7 @@ function VendorsPage() {
 									<CardHeader>
 										<img
 											className="aspect-square object-contain"
-											src={vendor.pictureId}
+											src={composeS3Url(vendor.pictureId)}
 											alt={vendor.name}
 										/>
 									</CardHeader>

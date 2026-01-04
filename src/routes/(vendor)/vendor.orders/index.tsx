@@ -66,6 +66,7 @@ import {
 	getOrderRequests,
 	updateOrderRequest,
 } from "@/lib/api/vendor.order-request";
+import { composeS3Url } from "@/lib/aws/client.s3";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 
@@ -365,7 +366,10 @@ function ViewOrderRequestDialogContent({
 					{orderRequestResult.data.orderRequest.orderItems.map((item) => (
 						<Item key={item.id} variant="muted" className="flex gap-3">
 							<ItemMedia variant="image" className="size-20">
-								<img src={item.product.pictureIds[0]} alt={item.product.name} />
+								<img
+									src={composeS3Url(item.product.pictureIds[0])}
+									alt={item.product.name}
+								/>
 							</ItemMedia>
 							<ItemContent>
 								<ItemTitle className="font-bold text-base">

@@ -1,4 +1,5 @@
 import { S3Client } from "@aws-sdk/client-s3";
+import { createServerOnlyFn } from "@tanstack/react-start";
 import { env } from "@/lib/env/server";
 
 export const s3 = new S3Client({
@@ -9,6 +10,6 @@ export const s3 = new S3Client({
 	},
 });
 
-export function composeS3Url(key: string) {
+export const composeS3Url = createServerOnlyFn((key: string) => {
 	return `https://${env.AWS_S3_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
-}
+});

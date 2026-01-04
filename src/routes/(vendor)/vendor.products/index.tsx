@@ -75,6 +75,7 @@ import {
 	getProducts,
 	updateProduct,
 } from "@/lib/api/vendor.product";
+import { composeS3Url } from "@/lib/aws/client.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
@@ -321,11 +322,11 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 	}
 
 	return (
-		<DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+		<DialogContent>
 			<DialogHeader>
 				<DialogTitle>Product Details</DialogTitle>
 			</DialogHeader>
-			<div className="space-y-6">
+			<div className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1 space-y-6">
 				{/* Image Carousel */}
 				<Carousel className="w-full">
 					<CarouselContent>
@@ -333,7 +334,7 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 							<CarouselItem key={pictureId}>
 								<img
 									className="aspect-square object-contain w-full rounded-lg"
-									src={pictureId}
+									src={composeS3Url(pictureId)}
 									alt={`${productResult.data.product.name} - View ${index + 1}`}
 								/>
 							</CarouselItem>
@@ -455,7 +456,7 @@ function CreateProductDialogContent({
 				}}
 				isSubmitting={createProductMutation.isPending}
 				submitHandler={createProductMutation.mutate}
-				className="max-h-[80dvh] overflow-y-auto no-scrollbar"
+				className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 			/>
 		</DialogContent>
 	);
@@ -543,6 +544,7 @@ function UpdateProductDialogContent({
 				submitHandler={({ data }) =>
 					updateProductMutation.mutate({ data: { ...data, productId } })
 				}
+				className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 			/>
 		</DialogContent>
 	);

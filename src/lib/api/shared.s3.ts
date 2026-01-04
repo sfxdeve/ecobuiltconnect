@@ -2,7 +2,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { s3 } from "../aws/s3";
+import { s3 } from "../aws/server.s3";
 import { env } from "../env/server";
 
 export const getS3ObjectUploadURL = createServerFn({

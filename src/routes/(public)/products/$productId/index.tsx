@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { getProduct } from "@/lib/api/public.product";
+import { composeS3Url } from "@/lib/aws/client.s3";
 import { cartActions } from "@/stores/cart";
 import { formatMoneyFromCents } from "@/utils/formatters";
 
@@ -51,7 +52,7 @@ function ProductDetailsPage() {
 									<CarouselItem key={pictureId}>
 										<img
 											className="aspect-square object-contain w-full"
-											src={pictureId}
+											src={composeS3Url(pictureId)}
 											alt={`${product.name} - View ${index + 1}`}
 										/>
 									</CarouselItem>

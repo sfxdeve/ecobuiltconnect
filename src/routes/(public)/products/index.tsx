@@ -37,6 +37,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { getProducts } from "@/lib/api/public.product";
+import { composeS3Url } from "@/lib/aws/client.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cartActions } from "@/stores/cart";
 import { cn } from "@/utils";
@@ -134,7 +135,7 @@ function ProductsPage() {
 									<CardHeader>
 										<img
 											className="aspect-square object-contain"
-											src={product.pictureIds[0]}
+											src={composeS3Url(product.pictureIds[0])}
 											alt={product.name}
 										/>
 									</CardHeader>

@@ -10,6 +10,8 @@ export const env = createEnv({
 
 	client: {
 		VITE_CLERK_PUBLISHABLE_KEY: z.string(),
+		VITE_AWS_REGION: z.string(),
+		VITE_AWS_S3_BUCKET_NAME: z.string(),
 	},
 
 	/**

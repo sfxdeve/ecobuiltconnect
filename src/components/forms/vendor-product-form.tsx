@@ -1,7 +1,9 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { PlusIcon, XIcon } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,11 +23,12 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { useFileUpload } from "@/hooks/use-file-upload";
 import { getCategories } from "@/lib/api/public.category";
+import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
+import { composeS3Url } from "@/lib/aws/client.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
-import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
-import { useFileUpload } from "@/hooks/use-file-upload";
 
 export const vendorProductFormSchema = z.object({
 	pictureIds: z
@@ -85,9 +88,26 @@ export function VendorProductForm({
 		data: z.infer<typeof vendorProductFormSchema>;
 	}) => void;
 }) {
-	const {} = useFileUpload({
-		initialFiles: [],
+	const {
+		files,
+		remoteFiles,
+		localFiles,
+		errors,
+		isDragging,
+		removeFile,
+		openFileDialog,
+		getInputProps,
+		dragHandlers,
+	} = useFileUpload({
+		initialFiles: defaultValues.pictureIds.map((id) => ({
+			id,
+			name: id,
+			size: 0,
+			type: "",
+			url: composeS3Url(id),
+		})),
 		multiple: true,
+		maxFiles: 5,
 		maxSize: 5 * 1024 * 1024,
 		accept: "image/*",
 	});
@@ -112,11 +132,47 @@ export function VendorProductForm({
 
 	return (
 		<form
-			onSubmit={(event) => {
+			onSubmit={async (event) => {
 				event.preventDefault();
+
+				if (localFiles.length > 0) {
+					try {
+						await Promise.all(
+							localFiles.map(async (file) => {
+								const key = `${Date.now()}_${file.file.name}`;
+								const contentType = file.file.type;
+
+								const { url } = await getS3ObjectUploadURLFn({
+									data: {
+										key,
+										contentType,
+									},
+								});
+
+								await fetch(url, {
+									method: "PUT",
+									headers: {
+										"Content-Type": contentType,
+									},
+									body: file.file,
+								});
+
+								form.setFieldValue("pictureIds", [
+									...form.getFieldValue("pictureIds"),
+									key,
+								]);
+							}),
+						);
+					} catch {
+						toast.error("Failed to upload images.");
+
+						return;
+					}
+				}
+
 				form.handleSubmit();
 			}}
-			className={cn(className)}
+			className={cn("space-y-6", className)}
 			{...props}
 		>
 			<FieldGroup>
@@ -386,6 +442,113 @@ export function VendorProductForm({
 						}}
 					</form.Field>
 				</div>
+				<Field>
+					<FieldLabel>Images</FieldLabel>
+					<Input {...getInputProps()} className="hidden" />
+
+					{files.length < 1 && (
+						// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
+						// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
+						<div
+							{...dragHandlers}
+							onClick={openFileDialog}
+							className={cn(
+								"border border-dashed rounded-3xl p-4 text-center cursor-pointer",
+								{
+									"border-primary bg-primary/10": isDragging,
+								},
+							)}
+						>
+							{isDragging
+								? "Release to upload your images"
+								: "Click or drag images to upload"}
+						</div>
+					)}
+
+					{files.length > 0 && (
+						<div className="grid grid-cols-3 gap-2 place-items-center">
+							{remoteFiles.map((file) => (
+								<div
+									key={file.id}
+									className="relative size-24 border border-input rounded p-1"
+								>
+									<img
+										src={file.url}
+										alt={file.name}
+										className="size-full object-cover"
+									/>
+									<Button
+										onClick={() => {
+											removeFile(file.id);
+
+											form.setFieldValue(
+												"pictureIds",
+												form
+													.getFieldValue("pictureIds")
+													.filter((id) => id !== file.id),
+											);
+										}}
+										variant="destructive"
+										size="icon-xs"
+										className="absolute -top-2 -right-2"
+									>
+										<XIcon />
+									</Button>
+								</div>
+							))}
+							{localFiles.map((file) => (
+								<div
+									key={file.id}
+									className="relative size-24 border border-input rounded p-1"
+								>
+									{file.preview && (
+										<img
+											src={file.preview}
+											alt={file.file.name}
+											className="size-full object-cover"
+										/>
+									)}
+									<Button
+										onClick={() => {
+											removeFile(file.id);
+										}}
+										variant="destructive"
+										size="icon-xs"
+										className="absolute -top-2 -right-2"
+									>
+										<XIcon />
+									</Button>
+								</div>
+							))}
+							{/* biome-ignore lint/a11y/noStaticElementInteractions: Intentional */}
+							{/* biome-ignore lint/a11y/useKeyWithClickEvents: Intentional */}
+							<div
+								{...dragHandlers}
+								onClick={openFileDialog}
+								className={cn(
+									"size-24 border border-input rounded p-1 flex flex-col justify-center items-center cursor-pointer",
+									{
+										"border-primary bg-primary/10": isDragging,
+									},
+								)}
+							>
+								<PlusIcon
+									className={cn("text-muted-foreground", {
+										"text-primary": isDragging,
+									})}
+								/>
+							</div>
+						</div>
+					)}
+
+					{errors.length > 0 && (
+						<FieldError
+							errors={errors.map((error) => ({
+								message: `${error.file}: ${error.reason}`,
+							}))}
+						/>
+					)}
+				</Field>
 				<div className="flex gap-2 items-start justify-stretch">
 					<Button
 						type="submit"

@@ -34,6 +34,7 @@ import { getProduct } from "@/lib/api/public.product";
 import { createOrderRequest } from "@/lib/api/user.order-request";
 import { initiateOrderRequestPayment } from "@/lib/api/user.ozow";
 import { getUserProfile } from "@/lib/api/user.profile";
+import { composeS3Url } from "@/lib/aws/client.s3";
 import { cartActions, cartStore } from "@/stores/cart";
 import { formatMoneyFromCents } from "@/utils/formatters";
 
@@ -138,7 +139,10 @@ function CheckoutPage() {
 											className="flex gap-3"
 										>
 											<ItemMedia variant="image" className="size-20">
-												<img src={product.pictureIds[0]} alt={product.name} />
+												<img
+													src={composeS3Url(product.pictureIds[0])}
+													alt={product.name}
+												/>
 											</ItemMedia>
 											<ItemContent>
 												<ItemTitle className="text-lg font-bold">
