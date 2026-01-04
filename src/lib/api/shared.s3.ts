@@ -5,7 +5,7 @@ import { z } from "zod";
 import { s3 } from "../aws/s3";
 import { env } from "../env/server";
 
-export const generateS3ObjectUploadURL = createServerFn({
+export const getS3ObjectUploadURL = createServerFn({
 	method: "GET",
 })
 	.inputValidator(
@@ -25,7 +25,7 @@ export const generateS3ObjectUploadURL = createServerFn({
 			const url = await getSignedUrl(s3, command, { expiresIn: 60 });
 
 			return { url };
-		} catch (_error) {
+		} catch {
 			throw new Error("Failed to generate signed URL");
 		}
 	});

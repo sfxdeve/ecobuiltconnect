@@ -25,7 +25,7 @@ export const Route = createFileRoute("/(api)/api/ozow/notify")({
 								where: { id: data.TransactionReference.toString() },
 								data: { status: "PAID" },
 							});
-						} catch (_error) {
+						} catch {
 							return new Response("Failed to update order request", {
 								status: 500,
 							});
@@ -82,7 +82,7 @@ export const Route = createFileRoute("/(api)/api/ozow/notify")({
 									},
 								});
 							});
-						} catch (_error) {
+						} catch {
 							return new Response("Failed to update order request", {
 								status: 500,
 							});

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/(auth)")({
 			if (clerkId) {
 				throw redirect({ to: "/" });
 			}
-		} catch (_error) {}
+		} catch {}
 	},
 	component: AuthLayout,
 });

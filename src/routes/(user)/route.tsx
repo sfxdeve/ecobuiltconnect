@@ -7,7 +7,7 @@ export const Route = createFileRoute("/(user)")({
 	beforeLoad: async () => {
 		try {
 			await getUserProfile();
-		} catch (_error) {
+		} catch {
 			throw redirect({ to: "/" });
 		}
 	},

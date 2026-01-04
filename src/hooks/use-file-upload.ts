@@ -47,78 +47,88 @@ const isFileAcceptable = (file: File, acceptList: string[]): boolean => {
 	if (acceptList.length === 0) return true;
 
 	return acceptList.some((type) => {
-		const trimmed = type.trim();
-		if (!trimmed) return false;
+		const trimmed = type.trim().toLowerCase();
+
+		if (!trimmed) {
+			return false;
+		}
 
 		if (trimmed.startsWith(".")) {
-			return file.name.toLowerCase().endsWith(trimmed.toLowerCase());
+			return file.name.toLowerCase().endsWith(trimmed);
 		}
 
 		if (trimmed.endsWith("/*")) {
-			const category = trimmed.slice(0, -2);
-			return file.type.startsWith(category);
+			return file.type.startsWith(trimmed.slice(0, -2));
 		}
 
 		return file.type === trimmed;
 	});
 };
 
+const createLocalUploadItem = (file: File): UploadItem => ({
+	kind: "local",
+	id: crypto.randomUUID(),
+	file,
+	preview: createFilePreview(file),
+});
+
 const createFilePreview = (file: File): string | undefined => {
-	if (file.type.startsWith("image/")) {
+	if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
 		return URL.createObjectURL(file);
 	}
+
+	return undefined;
 };
 
 const revokeFilePreview = (item: UploadItem): void => {
 	if (item.kind === "local" && item.preview) {
-		URL.revokeObjectURL(item.preview);
+		try {
+			URL.revokeObjectURL(item.preview);
+		} catch {}
 	}
 };
 
 const validateFiles = (
 	newFiles: File[],
-	existingFiles: UploadItem[],
+	existingFilesCount: number,
 	multiple: boolean,
 	maxFiles: number,
 	maxSize: number,
 	acceptList: string[],
 ): FileValidationResult => {
-	const validationErrors: FileValidationError[] = [];
+	if (newFiles.length === 0) {
+		return { errors: [], validFiles: [] };
+	}
+
+	const errors: FileValidationError[] = [];
 	const validFiles: File[] = [];
 
-	const currentCount = existingFiles.length;
-	const remainingSlots = maxFiles - currentCount;
-	const filesToProcess = multiple ? newFiles : [newFiles[0]];
+	const remainingSlots = Math.max(0, maxFiles - existingFilesCount);
+	const filesToProcess = multiple ? newFiles : newFiles.slice(0, 1);
 
-	for (const [index, file] of filesToProcess.entries()) {
+	for (const file of filesToProcess) {
 		if (validFiles.length >= remainingSlots) {
-			validationErrors.push({
+			errors.push({
 				file: file.name,
-				reason: `Maximum ${maxFiles} file${maxFiles > 1 ? "s" : ""} allowed. Cannot add more files.`,
+				reason: `Maximum ${maxFiles} file${maxFiles > 1 ? "s" : ""} allowed`,
 			});
 			continue;
 		}
 
 		if (file.size > maxSize) {
-			validationErrors.push({
+			errors.push({
 				file: file.name,
-				reason: "File size exceeds maximum allowed size",
+				reason: `File exceeds max size of ${Math.round(
+					maxSize / 1024 / 1024,
+				)}MB`,
 			});
 			continue;
 		}
 
-		if (acceptList.length > 0 && !isFileAcceptable(file, acceptList)) {
-			validationErrors.push({
+		if (acceptList.length && !isFileAcceptable(file, acceptList)) {
+			errors.push({
 				file: file.name,
-				reason: `File type not accepted. Allowed: ${acceptList.join(", ")}`,
-			});
-			continue;
-		}
-
-		if (!multiple && existingFiles.length > 0 && index === 0) {
-			validationErrors.push({
-				file: file.name,
-				reason: "Only one file allowed",
+				reason: `File type not accepted (${acceptList.join(", ")})`,
 			});
 			continue;
 		}
@@ -126,7 +136,7 @@ const validateFiles = (
 		validFiles.push(file);
 	}
 
-	return { errors: validationErrors, validFiles };
+	return { errors, validFiles };
 };
 
 export function useFileUpload({
@@ -137,7 +147,7 @@ export function useFileUpload({
 	accept = "",
 }: FileUploadOptions = {}) {
 	const [files, setFiles] = useState<UploadItem[]>(() =>
-		initialFiles.map((file) => ({ kind: "remote" as const, ...file })),
+		initialFiles.map((f) => ({ kind: "remote", ...f })),
 	);
 	const [errors, setErrors] = useState<FileValidationError[]>([]);
 	const [isDragging, setIsDragging] = useState(false);
@@ -156,55 +166,41 @@ export function useFileUpload({
 	}, []);
 
 	const acceptList = accept
-		? accept
-				.split(",")
-				.map((type) => type.trim())
-				.filter(Boolean)
-		: [];
+		.split(",")
+		.map((t) => t.trim())
+		.filter(Boolean);
 
 	const addFiles = (fileList: FileList | File[]) => {
-		const filesArray = Array.from(fileList);
-
-		if (filesArray.length === 0) {
+		const incoming = Array.from(fileList);
+		if (!incoming.length) {
 			return;
 		}
 
-		setFiles((currentFiles) => {
-			const { errors: validationErrors, validFiles } = validateFiles(
-				filesArray,
-				currentFiles,
-				multiple,
-				maxFiles,
-				maxSize,
-				acceptList,
-			);
+		const currentFiles = filesRef.current;
 
-			if (validationErrors.length > 0) {
-				setErrors(validationErrors);
-			} else {
-				setErrors([]);
-			}
+		const { errors, validFiles } = validateFiles(
+			incoming,
+			currentFiles.length,
+			multiple,
+			maxFiles,
+			maxSize,
+			acceptList,
+		);
 
-			if (validFiles.length === 0) {
-				return currentFiles;
-			}
+		setErrors(errors);
 
-			const filesToProcess = multiple ? currentFiles : [];
+		if (!validFiles.length) {
+			return;
+		}
 
+		setFiles(() => {
 			if (!multiple) {
 				currentFiles.forEach(revokeFilePreview);
+
+				return validFiles.map(createLocalUploadItem);
 			}
 
-			const newUploadItems: UploadItem[] = validFiles.map((file) => ({
-				kind: "local" as const,
-				id: crypto.randomUUID(),
-				file,
-				preview: createFilePreview(file),
-			}));
-
-			const updatedFiles = [...filesToProcess, ...newUploadItems];
-
-			return updatedFiles;
+			return [...currentFiles, ...validFiles.map(createLocalUploadItem)];
 		});
 
 		if (inputRef.current) {
@@ -213,47 +209,49 @@ export function useFileUpload({
 	};
 
 	const removeFile = (id: string) => {
-		setFiles((currentFiles) => {
-			const fileToRemove = currentFiles.find((item) => item.id === id);
+		setFiles((current) => {
+			const item = current.find((f) => f.id === id);
 
-			if (fileToRemove) {
-				revokeFilePreview(fileToRemove);
+			if (item) {
+				revokeFilePreview(item);
 			}
 
-			return currentFiles.filter((item) => item.id !== id);
+			return current.filter((f) => f.id !== id);
 		});
 	};
 
 	const replaceFile = (id: string, newFile: File) => {
-		setFiles((currentFiles) => {
-			const index = currentFiles.findIndex((item) => item.id === id);
+		const { validFiles } = validateFiles(
+			[newFile],
+			filesRef.current.length - 1,
+			false,
+			1,
+			maxSize,
+			acceptList,
+		);
+
+		if (!validFiles.length) return;
+
+		setFiles((current) => {
+			const index = current.findIndex((f) => f.id === id);
 
 			if (index === -1) {
-				return currentFiles;
+				return current;
 			}
 
-			const oldItem = currentFiles[index];
+			revokeFilePreview(current[index]);
 
-			revokeFilePreview(oldItem);
+			const updated = [...current];
 
-			const newItem: UploadItem = {
-				kind: "local" as const,
-				id: crypto.randomUUID(),
-				file: newFile,
-				preview: createFilePreview(newFile),
-			};
+			updated[index] = createLocalUploadItem(newFile);
 
-			const newFiles = [...currentFiles];
-
-			newFiles[index] = newItem;
-
-			return newFiles;
+			return updated;
 		});
 	};
 
 	const clearAll = () => {
-		setFiles((currentFiles) => {
-			currentFiles.forEach(revokeFilePreview);
+		setFiles((current) => {
+			current.forEach(revokeFilePreview);
 
 			return [];
 		});
@@ -265,9 +263,7 @@ export function useFileUpload({
 		}
 	};
 
-	const clearErrors = () => {
-		setErrors([]);
-	};
+	const clearErrors = () => setErrors([]);
 
 	const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
@@ -275,9 +271,7 @@ export function useFileUpload({
 		}
 	};
 
-	const openFileDialog = () => {
-		inputRef.current?.click();
-	};
+	const openFileDialog = () => inputRef.current?.click();
 
 	const getInputProps = (
 		props: InputHTMLAttributes<HTMLInputElement> = {},
@@ -287,7 +281,10 @@ export function useFileUpload({
 		accept,
 		multiple,
 		ref: inputRef,
-		onChange: onInputChange,
+		onChange: (e: ChangeEvent<HTMLInputElement>) => {
+			props.onChange?.(e);
+			onInputChange(e);
+		},
 	});
 
 	const dragHandlers = {
@@ -297,15 +294,16 @@ export function useFileUpload({
 
 			setIsDragging(true);
 		},
-		onDragLeave: (event: DragEvent) => {
-			event.preventDefault();
-			event.stopPropagation();
-
-			setIsDragging(false);
-		},
 		onDragOver: (event: DragEvent) => {
 			event.preventDefault();
 			event.stopPropagation();
+		},
+		onDragLeave: (event: DragEvent) => {
+			if (event.currentTarget.contains(event.relatedTarget as Node)) {
+				return;
+			}
+
+			setIsDragging(false);
 		},
 		onDrop: (event: DragEvent) => {
 			event.preventDefault();
@@ -318,6 +316,10 @@ export function useFileUpload({
 			}
 		},
 	};
+
+	/* =======================
+	   Derived
+	======================= */
 
 	const localFiles = files.filter(
 		(file): file is LocalFile & { kind: "local" } => file.kind === "local",

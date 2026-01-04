@@ -24,6 +24,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { getCategories } from "@/lib/api/public.category";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
+import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
+import { useFileUpload } from "@/hooks/use-file-upload";
 
 export const vendorProductFormSchema = z.object({
 	pictureIds: z
@@ -83,6 +85,14 @@ export function VendorProductForm({
 		data: z.infer<typeof vendorProductFormSchema>;
 	}) => void;
 }) {
+	const {} = useFileUpload({
+		initialFiles: [],
+		multiple: true,
+		maxSize: 5 * 1024 * 1024,
+		accept: "image/*",
+	});
+
+	const getS3ObjectUploadURLFn = useServerFn(getS3ObjectUploadURL);
 	const getCategoriesFn = useServerFn(getCategories);
 
 	const categoriesResult = useQuery({

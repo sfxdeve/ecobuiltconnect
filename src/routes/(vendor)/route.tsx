@@ -8,7 +8,7 @@ export const Route = createFileRoute("/(vendor)")({
 	beforeLoad: async () => {
 		try {
 			await getVendorProfile();
-		} catch (_error) {
+		} catch {
 			throw redirect({ to: "/" });
 		}
 	},
