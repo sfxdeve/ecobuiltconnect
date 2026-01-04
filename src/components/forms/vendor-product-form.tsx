@@ -525,7 +525,7 @@ export function VendorProductForm({
 								</div>
 							))}
 
-							{(areFilesUploading || isSubmitting) && (
+							{!areFilesUploading && !isSubmitting && (
 								// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
 								// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
 								<div
