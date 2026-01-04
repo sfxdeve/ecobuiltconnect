@@ -75,7 +75,7 @@ import {
 	getProducts,
 	updateProduct,
 } from "@/lib/api/vendor.product";
-import { composeS3Url } from "@/lib/aws/client.s3";
+import { composeS3Url } from "@/lib/aws/shared.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";

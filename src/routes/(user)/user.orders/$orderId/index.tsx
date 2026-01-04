@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/table";
 import { createLogisticRequest } from "@/lib/api/user.logistic-request";
 import { getOrderRequest } from "@/lib/api/user.order-request";
-import { composeS3Url } from "@/lib/aws/client.s3";
+import { composeS3Url } from "@/lib/aws/shared.s3";
 import { cn } from "@/utils";
 import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
 

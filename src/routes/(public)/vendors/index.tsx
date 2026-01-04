@@ -23,7 +23,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { getVendorProfiles } from "@/lib/api/public.vendor-profile";
-import { composeS3Url } from "@/lib/aws/client.s3";
+import { composeS3Url } from "@/lib/aws/shared.s3";
 import { cn } from "@/utils";
 
 export const Route = createFileRoute("/(public)/vendors/")({

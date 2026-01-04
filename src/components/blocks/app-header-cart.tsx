@@ -22,7 +22,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { getProduct } from "@/lib/api/public.product";
-import { composeS3Url } from "@/lib/aws/client.s3";
+import { composeS3Url } from "@/lib/aws/shared.s3";
 import { cartActions, cartStore } from "@/stores/cart";
 import { cn } from "@/utils";
 import { formatMoneyFromCents } from "@/utils/formatters";

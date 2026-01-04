@@ -37,7 +37,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { getProducts } from "@/lib/api/public.product";
-import { composeS3Url } from "@/lib/aws/client.s3";
+import { composeS3Url } from "@/lib/aws/shared.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cartActions } from "@/stores/cart";
 import { cn } from "@/utils";
