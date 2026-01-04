@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { getCategories } from "@/lib/api/public.category";
 import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
-import { composeS3URL } from "@/lib/aws/shared.s3";
+import { composeS3Key, composeS3URL } from "@/lib/aws/shared.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
 
@@ -109,18 +109,20 @@ export function VendorProductForm({
 		getInputProps,
 		dragHandlers,
 	} = useFileUpload({
-		initialFiles: defaultValues.pictureIds.map((id) => ({
-			id,
-			url: composeS3URL(id),
+		initialFiles: defaultValues.pictureIds.map((key) => ({
+			id: crypto.randomUUID(),
+			key,
+			url: composeS3URL(key),
 		})),
 		multiple: true,
 		maxFiles: 5,
 		maxSize: 5 * 1024 * 1024,
 		accept: "image/*",
+		keyGenerator: (file) => composeS3Key(file.name, "products"),
 		onFilesChange: (files) => {
 			form.setFieldValue(
 				"pictureIds",
-				files.map((file) => file.id),
+				files.map((file) => file.key),
 			);
 		},
 	});
@@ -139,7 +141,7 @@ export function VendorProductForm({
 						localFiles.map(async (file) => {
 							const { url } = await getS3ObjectUploadURLFn({
 								data: {
-									key: file.id,
+									key: file.key,
 									contentType: file.data.type,
 								},
 							});

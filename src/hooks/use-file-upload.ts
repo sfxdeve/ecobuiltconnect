@@ -6,16 +6,17 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { composeS3Key } from "@/lib/aws/shared.s3";
 
 export type RemoteFile = {
 	id: string;
+	key: string;
 	url: string;
 };
 
 export type LocalFile = {
 	id: string;
 	data: File;
+	key: string;
 	preview?: string;
 };
 
@@ -29,11 +30,12 @@ export type FileValidationError = {
 };
 
 export type FileUploadOptions = {
-	initialFiles?: RemoteFile[];
-	multiple?: boolean;
-	maxFiles?: number;
-	maxSize?: number;
-	accept?: string;
+	initialFiles: RemoteFile[];
+	multiple: boolean;
+	maxFiles: number;
+	maxSize: number;
+	accept: string;
+	keyGenerator: (file: File) => string;
 	onFilesChange?: (files: UploadItem[]) => void;
 	onErrorsChange?: (errors: FileValidationError[]) => void;
 };
@@ -64,13 +66,6 @@ const isFileAcceptable = (file: File, acceptList: string[]): boolean => {
 		return file.type === trimmed;
 	});
 };
-
-const createLocalUploadItem = (file: File): UploadItem => ({
-	kind: "local",
-	id: composeS3Key(file.name),
-	data: file,
-	preview: createFilePreview(file),
-});
 
 const createFilePreview = (file: File): string | undefined => {
 	if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
@@ -145,11 +140,12 @@ export function useFileUpload({
 	maxFiles = Infinity,
 	maxSize = Infinity,
 	accept = "",
+	keyGenerator,
 	onFilesChange,
 	onErrorsChange,
-}: FileUploadOptions = {}) {
+}: FileUploadOptions) {
 	const [files, setFiles] = useState<UploadItem[]>(() =>
-		initialFiles.map((file) => ({ kind: "remote", ...file })),
+		initialFiles.map((file) => ({ kind: "remote" as const, ...file })),
 	);
 	const [errors, setErrors] = useState<FileValidationError[]>([]);
 	const [isDragging, setIsDragging] = useState(false);
@@ -207,10 +203,25 @@ export function useFileUpload({
 			if (!multiple) {
 				currentFiles.forEach(revokeFilePreview);
 
-				return validFiles.map(createLocalUploadItem);
+				return validFiles.map((file) => ({
+					kind: "local" as const,
+					id: crypto.randomUUID(),
+					data: file,
+					key: keyGenerator(file),
+					preview: createFilePreview(file),
+				}));
 			}
 
-			return [...currentFiles, ...validFiles.map(createLocalUploadItem)];
+			return [
+				...currentFiles,
+				...validFiles.map((file) => ({
+					kind: "local" as const,
+					id: crypto.randomUUID(),
+					data: file,
+					key: keyGenerator(file),
+					preview: createFilePreview(file),
+				})),
+			];
 		});
 
 		if (inputRef.current) {
@@ -253,7 +264,13 @@ export function useFileUpload({
 
 			const updated = [...current];
 
-			updated[index] = createLocalUploadItem(newFile);
+			updated[index] = {
+				kind: "local" as const,
+				id,
+				data: newFile,
+				key: keyGenerator(newFile),
+				preview: createFilePreview(newFile),
+			};
 
 			return updated;
 		});
