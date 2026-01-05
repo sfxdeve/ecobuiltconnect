@@ -181,7 +181,7 @@ export const createProduct = createServerFn({
 		z.object({
 			pictureIds: z
 				.array(z.string("Picture id must be a string"))
-				.min(1, "At least one picture id is required"),
+				.min(1, "At least one picture is required"),
 			name: z
 				.string("Name must be a string")
 				.min(3, "Name must be at least 3 characters"),
@@ -255,7 +255,7 @@ export const updateProduct = createServerFn({
 			productId: z.uuid("Product id must be valid UUID"),
 			pictureIds: z
 				.array(z.string("Picture id must be a string"))
-				.min(1, "At least one picture id is required")
+				.min(1, "At least one picture is required")
 				.optional(),
 			name: z
 				.string("Name must be a string")

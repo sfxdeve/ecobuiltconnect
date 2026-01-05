@@ -25,7 +25,7 @@ import { getCategories } from "@/lib/api/public.category";
 export const userProductRequestFormSchema = z.object({
 	pictureIds: z
 		.array(z.string("Picture id must be a string"))
-		.min(1, "At least one picture id is required"),
+		.min(1, "At least one picture is required"),
 	name: z
 		.string("Name must be a string")
 		.min(3, "Name must be at least 3 characters"),

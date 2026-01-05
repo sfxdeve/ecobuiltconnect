@@ -1,7 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { PlusIcon, XIcon } from "lucide-react";
 import { type ComponentPropsWithoutRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -29,11 +28,12 @@ import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
 import { composeS3Key, composeS3URL } from "@/lib/aws/shared.s3";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
+import { ProductImagesPicker } from "../blocks/product-images-picker";
 
 export const vendorProductFormSchema = z.object({
 	pictureIds: z
 		.array(z.string("Picture id must be a string"))
-		.min(1, "At least one picture id is required"),
+		.min(1, "At least one picture is required"),
 	name: z
 		.string("Name must be a string")
 		.min(3, "Name must be at least 3 characters"),
@@ -98,17 +98,7 @@ export function VendorProductForm({
 		queryFn: () => getCategoriesFn({ data: {} }),
 	});
 
-	const {
-		files,
-		remoteFiles,
-		localFiles,
-		errors,
-		isDragging,
-		removeFile,
-		openFileDialog,
-		getInputProps,
-		dragHandlers,
-	} = useFileUpload({
+	const fileUpload = useFileUpload({
 		initialFiles: defaultValues.pictureIds.map((key) => ({
 			id: crypto.randomUUID(),
 			key,
@@ -133,12 +123,12 @@ export function VendorProductForm({
 		},
 		defaultValues,
 		onSubmit: async ({ value: data }) => {
-			if (localFiles.length > 0) {
+			if (fileUpload.localFiles.length > 0) {
 				try {
 					setAreFilesUploading(true);
 
 					await Promise.all(
-						localFiles.map(async (file) => {
+						fileUpload.localFiles.map(async (file) => {
 							const { url } = await getS3ObjectUploadURLFn({
 								data: {
 									key: file.key,
@@ -179,6 +169,34 @@ export function VendorProductForm({
 			{...props}
 		>
 			<FieldGroup>
+				<div className="flex gap-2 items-start">
+					<form.Field name="pictureIds">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={field.name}>Images</FieldLabel>
+									<ProductImagesPicker
+										id={field.name}
+										name={field.name}
+										{...fileUpload}
+										disabled={areFilesUploading || isSubmitting}
+										aria-invalid={isInvalid}
+									/>
+									{fileUpload.errors.length > 0 && (
+										<FieldError
+											errors={fileUpload.errors.map((error) => ({
+												message: `${error.file}: ${error.reason}`,
+											}))}
+										/>
+									)}
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+				</div>
 				<div className="flex gap-2 items-start">
 					<form.Field name="name">
 						{(field) => {
@@ -445,129 +463,6 @@ export function VendorProductForm({
 						}}
 					</form.Field>
 				</div>
-				<div className="flex gap-2 items-start">
-					<form.Field name="pictureIds">
-						{(field) => {
-							const isInvalid =
-								field.state.meta.isTouched && !field.state.meta.isValid;
-							return (
-								<Field data-invalid={isInvalid}>
-									<FieldLabel>Images</FieldLabel>
-									<Input
-										id={field.name}
-										name={field.name}
-										{...getInputProps()}
-										aria-invalid={isInvalid}
-										className="hidden"
-									/>
-
-									{files.length < 1 && !areFilesUploading && !isSubmitting && (
-										// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
-										// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
-										<div
-											{...dragHandlers}
-											onClick={openFileDialog}
-											className={cn(
-												"border border-dashed rounded-3xl p-4 text-center cursor-pointer",
-												{
-													"border-primary bg-primary/10": isDragging,
-												},
-											)}
-										>
-											{isDragging
-												? "Release to upload your images"
-												: "Click or drag images to upload"}
-										</div>
-									)}
-
-									{files.length > 0 && (
-										<div className="grid grid-cols-3 gap-2 place-items-center">
-											{remoteFiles.map((file) => (
-												<div
-													key={file.id}
-													className="relative size-24 border border-input rounded p-1"
-												>
-													<img
-														src={file.url}
-														alt={file.id}
-														className="size-full object-cover"
-													/>
-													<Button
-														onClick={() => {
-															removeFile(file.id);
-														}}
-														disabled={areFilesUploading || isSubmitting}
-														variant="destructive"
-														size="icon-xs"
-														className="absolute -top-2 -right-2"
-													>
-														<XIcon />
-													</Button>
-												</div>
-											))}
-											{localFiles.map((file) => (
-												<div
-													key={file.id}
-													className="relative size-24 border border-input rounded p-1"
-												>
-													{file.preview && (
-														<img
-															src={file.preview}
-															alt={file.data.name}
-															className="size-full object-cover"
-														/>
-													)}
-													<Button
-														onClick={() => {
-															removeFile(file.id);
-														}}
-														disabled={areFilesUploading || isSubmitting}
-														variant="destructive"
-														size="icon-xs"
-														className="absolute -top-2 -right-2"
-													>
-														<XIcon />
-													</Button>
-												</div>
-											))}
-
-											{!areFilesUploading && !isSubmitting && (
-												// biome-ignore lint/a11y/noStaticElementInteractions: Intentional
-												// biome-ignore lint/a11y/useKeyWithClickEvents: Intentional
-												<div
-													{...dragHandlers}
-													onClick={openFileDialog}
-													className={cn(
-														"size-24 border border-input rounded p-1 flex flex-col justify-center items-center cursor-pointer",
-														{
-															"border-primary bg-primary/10": isDragging,
-														},
-													)}
-												>
-													<PlusIcon
-														className={cn("text-muted-foreground", {
-															"text-primary": isDragging,
-														})}
-													/>
-												</div>
-											)}
-										</div>
-									)}
-
-									{errors.length > 0 && (
-										<FieldError
-											errors={errors.map((error) => ({
-												message: `${error.file}: ${error.reason}`,
-											}))}
-										/>
-									)}
-									{isInvalid && <FieldError errors={field.state.meta.errors} />}
-								</Field>
-							);
-						}}
-					</form.Field>
-				</div>
-
 				<div className="flex gap-2 items-start justify-stretch">
 					<Button
 						type="submit"

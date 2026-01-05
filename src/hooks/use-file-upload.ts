@@ -29,7 +29,7 @@ export type FileValidationError = {
 	reason: string;
 };
 
-export type FileUploadOptions = {
+export type FileUploadProps = {
 	initialFiles: RemoteFile[];
 	multiple: boolean;
 	maxFiles: number;
@@ -38,6 +38,31 @@ export type FileUploadOptions = {
 	keyGenerator: (file: File) => string;
 	onFilesChange?: (files: UploadItem[]) => void;
 	onErrorsChange?: (errors: FileValidationError[]) => void;
+};
+
+export type FileUploadReturn = {
+	files: UploadItem[];
+	localFiles: LocalFile[];
+	remoteFiles: RemoteFile[];
+	errors: FileValidationError[];
+	isDragging: boolean;
+
+	addFiles: (fileList: File[] | FileList) => void;
+	replaceFile: (id: string, newFile: File) => void;
+	removeFile: (id: string) => void;
+	clearAll: () => void;
+	clearErrors: () => void;
+	openFileDialog: () => void;
+
+	getInputProps: (
+		props?: InputHTMLAttributes<HTMLInputElement>,
+	) => InputHTMLAttributes<HTMLInputElement>;
+	dragHandlers: {
+		onDragEnter: (event: DragEvent<Element>) => void;
+		onDragOver: (event: DragEvent) => void;
+		onDragLeave: (event: DragEvent) => void;
+		onDrop: (event: DragEvent) => void;
+	};
 };
 
 type FileValidationResult = {
@@ -143,7 +168,7 @@ export function useFileUpload({
 	keyGenerator,
 	onFilesChange,
 	onErrorsChange,
-}: FileUploadOptions) {
+}: FileUploadProps): FileUploadReturn {
 	const [files, setFiles] = useState<UploadItem[]>(() =>
 		initialFiles.map((file) => ({ kind: "remote" as const, ...file })),
 	);
@@ -229,18 +254,6 @@ export function useFileUpload({
 		}
 	};
 
-	const removeFile = (id: string) => {
-		setFiles((current) => {
-			const item = current.find((file) => file.id === id);
-
-			if (item) {
-				revokeFilePreview(item);
-			}
-
-			return current.filter((file) => file.id !== id);
-		});
-	};
-
 	const replaceFile = (id: string, newFile: File) => {
 		const { validFiles } = validateFiles(
 			[newFile],
@@ -276,6 +289,18 @@ export function useFileUpload({
 		});
 	};
 
+	const removeFile = (id: string) => {
+		setFiles((current) => {
+			const item = current.find((file) => file.id === id);
+
+			if (item) {
+				revokeFilePreview(item);
+			}
+
+			return current.filter((file) => file.id !== id);
+		});
+	};
+
 	const clearAll = () => {
 		setFiles((current) => {
 			current.forEach(revokeFilePreview);
@@ -298,7 +323,9 @@ export function useFileUpload({
 		}
 	};
 
-	const openFileDialog = () => inputRef.current?.click();
+	const openFileDialog = () => {
+		inputRef.current?.click();
+	};
 
 	const getInputProps = (
 		props: InputHTMLAttributes<HTMLInputElement> = {},
@@ -354,9 +381,9 @@ export function useFileUpload({
 
 	return {
 		files,
-		errors,
 		localFiles,
 		remoteFiles,
+		errors,
 		isDragging,
 
 		addFiles,
