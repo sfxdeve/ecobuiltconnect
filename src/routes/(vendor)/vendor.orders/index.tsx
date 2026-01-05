@@ -367,7 +367,7 @@ function ViewOrderRequestDialogContent({
 						<Item key={item.id} variant="muted" className="flex gap-3">
 							<ItemMedia variant="image" className="size-20">
 								<img
-									src={composeS3URL(item.product.pictureIds[0])}
+									src={composeS3URL(item.product.pictureKeys[0])}
 									alt={item.product.name}
 								/>
 							</ItemMedia>

@@ -112,8 +112,8 @@ export const getProductRequests = createServerFn({
 export const createProductRequest = createServerFn({ method: "POST" })
 	.inputValidator(
 		z.object({
-			pictureIds: z
-				.array(z.string("Picture id must be a string"))
+			pictureKeys: z
+				.array(z.string("Picture key must be a string"))
 				.min(1, "At least one picture is required"),
 			name: z
 				.string("Name must be a string")

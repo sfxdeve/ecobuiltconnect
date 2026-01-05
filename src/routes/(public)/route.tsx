@@ -145,7 +145,7 @@ function CreateProfileDialogContent({
 				<TabsContent value="vendor">
 					<VendorProfileForm
 						defaultValues={{
-							pictureId: "/test.webp",
+							pictureKeys: [],
 							name: "",
 							description: "",
 							address: "",

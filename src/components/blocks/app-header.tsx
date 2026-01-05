@@ -241,7 +241,7 @@ function CreateProfileDialogContent({
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Update Profile</DialogTitle>
+				<DialogTitle>Profile</DialogTitle>
 			</DialogHeader>
 			<UserProfileForm
 				defaultValues={{

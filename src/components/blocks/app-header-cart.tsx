@@ -80,7 +80,7 @@ export function AppHeaderCart() {
 								return (
 									<div key={item.productId} className="flex gap-3">
 										<img
-											src={composeS3URL(product.pictureIds[0])}
+											src={composeS3URL(product.pictureKeys[0])}
 											alt={product.name}
 											className="size-16 rounded object-cover"
 										/>

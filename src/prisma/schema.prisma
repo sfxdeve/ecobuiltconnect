@@ -34,7 +34,7 @@ model VendorProfile {
   id String @id @default(uuid())
 
   clerkId     String        @unique @map("clerk_id")
-  pictureId   String        @map("picture_id")
+  pictureKeys String[]      @map("picture_keys")
   name        String
   description String
   address     String
@@ -52,7 +52,7 @@ model LogisticProfile {
   id String @id @default(uuid())
 
   clerkId     String        @unique @map("clerk_id")
-  pictureId   String        @map("picture_id")
+  pictureKeys String[]      @map("picture_keys")
   name        String
   description String
   address     String
@@ -105,7 +105,7 @@ enum ProductCondition {
 model Product {
   id String @id @default(uuid())
 
-  pictureIds    String[]         @map("picture_ids")
+  pictureKeys   String[]         @map("picture_keys")
   name          String
   description   String
   previousUsage String?          @map("previous_usage")
@@ -135,7 +135,7 @@ model Product {
 model ProductRequest {
   id String @id @default(uuid())
 
-  pictureIds  String[] @map("picture_ids")
+  pictureKeys String[] @map("picture_keys")
   name        String
   description String
   quantity    Int

@@ -31,8 +31,8 @@ import { cn } from "@/utils";
 import { ProductImagesPicker } from "../blocks/product-images-picker";
 
 export const vendorProductFormSchema = z.object({
-	pictureIds: z
-		.array(z.string("Picture id must be a string"))
+	pictureKeys: z
+		.array(z.string("Picture key must be a string"))
 		.min(1, "At least one picture is required"),
 	name: z
 		.string("Name must be a string")
@@ -99,7 +99,7 @@ export function VendorProductForm({
 	});
 
 	const fileUpload = useFileUpload({
-		initialFiles: defaultValues.pictureIds.map((key) => ({
+		initialFiles: defaultValues.pictureKeys.map((key) => ({
 			id: crypto.randomUUID(),
 			key,
 			url: composeS3URL(key),
@@ -111,7 +111,7 @@ export function VendorProductForm({
 		keyGenerator: (file) => composeS3Key(file.name, "products"),
 		onFilesChange: (files) => {
 			form.setFieldValue(
-				"pictureIds",
+				"pictureKeys",
 				files.map((file) => file.key),
 			);
 		},
@@ -170,7 +170,7 @@ export function VendorProductForm({
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">
-					<form.Field name="pictureIds">
+					<form.Field name="pictureKeys">
 						{(field) => {
 							const isInvalid =
 								field.state.meta.isTouched && !field.state.meta.isValid;

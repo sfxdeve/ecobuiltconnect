@@ -142,7 +142,7 @@ function OrderDetailsPage() {
 											<TableCell>
 												<div className="flex gap-3 items-center">
 													<img
-														src={composeS3URL(item.product.pictureIds[0])}
+														src={composeS3URL(item.product.pictureKeys[0])}
 														alt={item.product.name}
 														className="size-16 object-cover rounded"
 													/>
@@ -179,7 +179,7 @@ function OrderDetailsPage() {
 								<div key={item.id} className="border rounded-lg p-4 space-y-3">
 									<div className="flex gap-3">
 										<img
-											src={composeS3URL(item.product.pictureIds[0])}
+											src={composeS3URL(item.product.pictureKeys[0])}
 											alt={item.product.name}
 											className="size-20 object-cover rounded shrink-0"
 										/>

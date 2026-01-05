@@ -179,8 +179,8 @@ export const createProduct = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			pictureIds: z
-				.array(z.string("Picture id must be a string"))
+			pictureKeys: z
+				.array(z.string("Picture key must be a string"))
 				.min(1, "At least one picture is required"),
 			name: z
 				.string("Name must be a string")
@@ -253,8 +253,8 @@ export const updateProduct = createServerFn({
 	.inputValidator(
 		z.object({
 			productId: z.uuid("Product id must be valid UUID"),
-			pictureIds: z
-				.array(z.string("Picture id must be a string"))
+			pictureKeys: z
+				.array(z.string("Picture key must be a string"))
 				.min(1, "At least one picture is required")
 				.optional(),
 			name: z

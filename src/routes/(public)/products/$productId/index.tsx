@@ -48,11 +48,11 @@ function ProductDetailsPage() {
 					<CardContent className="flex flex-col items-center justify-center">
 						<Carousel className="w-full">
 							<CarouselContent>
-								{product.pictureIds.map((pictureId, index) => (
-									<CarouselItem key={pictureId}>
+								{product.pictureKeys.map((key, index) => (
+									<CarouselItem key={key}>
 										<img
 											className="aspect-square object-contain w-full"
-											src={composeS3URL(pictureId)}
+											src={composeS3URL(key)}
 											alt={`${product.name} - View ${index + 1}`}
 										/>
 									</CarouselItem>

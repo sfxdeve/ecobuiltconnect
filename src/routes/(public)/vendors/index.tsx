@@ -85,7 +85,7 @@ function VendorsPage() {
 									<CardHeader>
 										<img
 											className="aspect-square object-contain"
-											src={composeS3URL(vendor.pictureId)}
+											src={composeS3URL(vendor.pictureKeys[0])}
 											alt={vendor.name}
 										/>
 									</CardHeader>

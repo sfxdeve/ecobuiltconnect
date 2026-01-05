@@ -135,7 +135,7 @@ function ProductsPage() {
 									<CardHeader>
 										<img
 											className="aspect-square object-contain"
-											src={composeS3URL(product.pictureIds[0])}
+											src={composeS3URL(product.pictureKeys[0])}
 											alt={product.name}
 										/>
 									</CardHeader>

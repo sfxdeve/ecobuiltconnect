@@ -27,7 +27,7 @@ export const userProfileSelector = {
 export const vendorProfileSelector = {
 	id: true,
 	clerkId: true,
-	pictureId: true,
+	pictureKeys: true,
 	name: true,
 	description: true,
 	address: true,
@@ -41,7 +41,7 @@ export const vendorProfileSelector = {
 export const logisticProfileSelector = {
 	id: true,
 	clerkId: true,
-	pictureId: true,
+	pictureKeys: true,
 	name: true,
 	description: true,
 	address: true,
@@ -70,7 +70,7 @@ export const categorySelector = {
 
 export const productSelector = {
 	id: true,
-	pictureIds: true,
+	pictureKeys: true,
 	name: true,
 	description: true,
 	previousUsage: true,
@@ -86,7 +86,7 @@ export const productSelector = {
 
 export const productRequestSelector = {
 	id: true,
-	pictureIds: true,
+	pictureKeys: true,
 	name: true,
 	description: true,
 	quantity: true,

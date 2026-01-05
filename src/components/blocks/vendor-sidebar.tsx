@@ -128,9 +128,8 @@ export function VendorSidebar() {
 							</DialogHeader>
 							<VendorProfileForm
 								defaultValues={{
-									pictureId:
-										vendorProfileResult.data?.vendorProfile?.pictureId ??
-										"/test.webp",
+									pictureKeys:
+										vendorProfileResult.data?.vendorProfile?.pictureKeys ?? [],
 									name: vendorProfileResult.data?.vendorProfile?.name ?? "",
 									description:
 										vendorProfileResult.data?.vendorProfile?.description ?? "",

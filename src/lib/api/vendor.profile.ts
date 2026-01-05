@@ -29,7 +29,10 @@ export const upsertVendorProfile = createServerFn({
 })
 	.inputValidator(
 		z.object({
-			pictureId: z.string("Picture id must be a string"),
+			pictureKeys: z
+				.array(z.string("Picture key must be a string"))
+				.min(1, "One picture is required")
+				.max(1, "Only one picture is required"),
 			name: z
 				.string("Name must be a string")
 				.min(3, "Name must be at least 3 characters"),

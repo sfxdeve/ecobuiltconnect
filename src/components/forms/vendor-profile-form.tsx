@@ -1,5 +1,8 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,10 +22,18 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { useFileUpload } from "@/hooks/use-file-upload";
+import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
+import { composeS3URL } from "@/lib/aws/client.s3";
+import { composeS3Key } from "@/lib/aws/shared.s3";
 import { fetchPlaceNamesByCountry } from "@/utils/cities";
+import { ProfileImagePicker } from "../blocks/profile-image-picker";
 
 export const vendorProfileFormSchema = z.object({
-	pictureId: z.string("Picture id must be a string"),
+	pictureKeys: z
+		.array(z.string("Picture key must be a string"))
+		.min(1, "One picture is required")
+		.max(1, "Only one picture is required"),
 	name: z
 		.string("Name must be a string")
 		.min(3, "Name must be at least 3 characters"),
@@ -53,10 +64,33 @@ export function VendorProfileForm({
 		data: z.infer<typeof vendorProfileFormSchema>;
 	}) => void;
 }) {
+	const [isFileUploading, setIsFileUploading] = useState(false);
+
+	const getS3ObjectUploadURLFn = useServerFn(getS3ObjectUploadURL);
+
 	const cities = useQuery({
 		queryKey: ["cities"],
 		queryFn: async () => {
 			return await fetchPlaceNamesByCountry("ZA", ["city"]);
+		},
+	});
+
+	const fileUpload = useFileUpload({
+		initialFiles: defaultValues.pictureKeys.map((key) => ({
+			id: crypto.randomUUID(),
+			key,
+			url: composeS3URL(key),
+		})),
+		multiple: false,
+		maxFiles: 1,
+		maxSize: 5 * 1024 * 1024,
+		accept: "image/*",
+		keyGenerator: (file) => composeS3Key(file.name, "profiles"),
+		onFilesChange: (files) => {
+			form.setFieldValue(
+				"pictureKeys",
+				files.map((file) => file.key),
+			);
 		},
 	});
 
@@ -65,7 +99,38 @@ export function VendorProfileForm({
 			onChange: vendorProfileFormSchema,
 		},
 		defaultValues,
-		onSubmit: ({ value: data }) => {
+		onSubmit: async ({ value: data }) => {
+			if (fileUpload.localFiles.length > 0) {
+				try {
+					setIsFileUploading(true);
+
+					await Promise.all(
+						fileUpload.localFiles.map(async (file) => {
+							const { url } = await getS3ObjectUploadURLFn({
+								data: {
+									key: file.key,
+									contentType: file.data.type,
+								},
+							});
+
+							await fetch(url, {
+								method: "PUT",
+								headers: {
+									"Content-Type": file.data.type,
+								},
+								body: file.data,
+							});
+						}),
+					);
+				} catch {
+					toast.error("Failed to upload image.");
+
+					return;
+				} finally {
+					setIsFileUploading(false);
+				}
+			}
+
 			submitHandler({ data });
 		},
 	});
@@ -78,6 +143,36 @@ export function VendorProfileForm({
 			}}
 		>
 			<FieldGroup>
+				<div className="flex gap-2 items-start">
+					<form.Field name="pictureKeys">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={field.name}>Image</FieldLabel>
+									<div>
+										<ProfileImagePicker
+											id={field.name}
+											name={field.name}
+											{...fileUpload}
+											disabled={isFileUploading || isSubmitting}
+											aria-invalid={isInvalid}
+										/>
+									</div>
+									{fileUpload.errors.length > 0 && (
+										<FieldError
+											errors={fileUpload.errors.map((error) => ({
+												message: `${error.file}: ${error.reason}`,
+											}))}
+										/>
+									)}
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+				</div>
 				<div className="flex gap-2 items-start">
 					<form.Field name="name">
 						{(field) => {

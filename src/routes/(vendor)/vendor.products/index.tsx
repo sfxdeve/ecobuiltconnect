@@ -330,11 +330,11 @@ function ViewProductDialogContent({ productId }: { productId: string }) {
 				{/* Image Carousel */}
 				<Carousel className="w-full">
 					<CarouselContent>
-						{productResult.data.product.pictureIds.map((pictureId, index) => (
-							<CarouselItem key={pictureId}>
+						{productResult.data.product.pictureKeys.map((key, index) => (
+							<CarouselItem key={key}>
 								<img
 									className="aspect-square object-contain w-full rounded-lg"
-									src={composeS3URL(pictureId)}
+									src={composeS3URL(key)}
 									alt={`${productResult.data.product.name} - View ${index + 1}`}
 								/>
 							</CarouselItem>
@@ -442,7 +442,7 @@ function CreateProductDialogContent({
 			</DialogHeader>
 			<VendorProductForm
 				defaultValues={{
-					pictureIds: [],
+					pictureKeys: [],
 					name: "",
 					description: "",
 					previousUsage: null,
@@ -526,7 +526,7 @@ function UpdateProductDialogContent({
 			</DialogHeader>
 			<VendorProductForm
 				defaultValues={{
-					pictureIds: productResult.data.product.pictureIds,
+					pictureKeys: productResult.data.product.pictureKeys,
 					name: productResult.data.product.name,
 					description: productResult.data.product.description,
 					previousUsage: productResult.data.product.previousUsage,
