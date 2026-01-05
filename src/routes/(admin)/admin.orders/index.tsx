@@ -1,0 +1,488 @@
+import { debounce } from "@tanstack/pacer";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	MoreHorizontalIcon,
+} from "lucide-react";
+import { useId, useState } from "react";
+import { z } from "zod";
+import { AppPending } from "@/components/blocks/app-pending";
+import { DashboardHeader } from "@/components/blocks/dashboard-header";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "@/components/ui/empty";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+	Item,
+	ItemContent,
+	ItemDescription,
+	ItemMedia,
+	ItemTitle,
+} from "@/components/ui/item";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import {
+	getOrderRequest,
+	getOrderRequests,
+} from "@/lib/api/admin.order-request";
+import { composeS3URL } from "@/lib/aws/shared.s3";
+import { cn } from "@/utils";
+import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
+
+export const Route = createFileRoute("/(admin)/admin/orders/")({
+	validateSearch: z.object({
+		page: z
+			.int("Page must be an integer")
+			.positive("Page must be a positive integer")
+			.default(1),
+		limit: z
+			.int("Limit must be an integer")
+			.positive("Limit must be a positive integer")
+			.default(10),
+		sortBy: z
+			.enum(["name", "createdAt"], {
+				message: "Sort by must be either 'name' or 'createdAt'",
+			})
+			.default("createdAt"),
+		sortOrder: z
+			.enum(["asc", "desc"], {
+				message: "Sort order must be either 'asc' or 'desc'",
+			})
+			.default("desc"),
+		searchTerm: z.string("Search term must be a string").optional(),
+	}),
+	loaderDeps: ({ search }) => search,
+	loader: ({ deps }) => getOrderRequests({ data: deps }),
+	head: () => ({
+		meta: [
+			{
+				title: "Order Requests",
+			},
+			{
+				name: "description",
+				content: "Manage your order requests.",
+			},
+		],
+	}),
+	pendingComponent: AppPending,
+	component: VendorOrderRequestsPage,
+});
+
+function VendorOrderRequestsPage() {
+	const loaderData = Route.useLoaderData();
+
+	const [selectedOrderRequestId, setSelectedOrderRequestId] = useState<
+		string | null
+	>(null);
+	const [selectedAction, setSelectedAction] = useState<
+		"view" | "update" | null
+	>(null);
+
+	return (
+		<>
+			<DashboardHeader title="Orders" />
+			<section>
+				<div className="p-4 space-y-6 min-h-screen">
+					<OrderRequestsPageSearch />
+					{loaderData.orderRequests.length > 0 ? (
+						<>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Order Ref</TableHead>
+										<TableHead>Items</TableHead>
+										<TableHead>Status</TableHead>
+										<TableHead>Total</TableHead>
+										<TableHead>Date</TableHead>
+										<TableHead></TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{loaderData.orderRequests.map((orderRequest) => {
+										let statusBadgeVariant:
+											| "default"
+											| "outline"
+											| "destructive";
+
+										switch (orderRequest.status) {
+											case "PAID":
+											case "COMPLETED":
+												statusBadgeVariant = "default";
+												break;
+											case "CANCELLED":
+												statusBadgeVariant = "destructive";
+												break;
+											default:
+												statusBadgeVariant = "outline";
+												break;
+										}
+
+										return (
+											<TableRow key={orderRequest.id}>
+												<TableCell className="uppercase">
+													#{orderRequest.id.slice(24)}
+												</TableCell>
+												<TableCell>{orderRequest._count.orderItems}</TableCell>
+												<TableCell>
+													<Badge variant={statusBadgeVariant}>
+														{orderRequest.status}
+													</Badge>
+												</TableCell>
+												<TableCell>
+													{formatMoneyFromCents(orderRequest.total, {
+														locale: "en-ZA",
+														currency: "ZAR",
+													})}
+												</TableCell>
+												<TableCell>
+													{formatDate(orderRequest.createdAt)}
+												</TableCell>
+												<TableCell>
+													<DropdownMenu>
+														<DropdownMenuTrigger
+															render={<Button variant="ghost" size="icon" />}
+														>
+															<MoreHorizontalIcon />
+															<span className="sr-only">Open actions menu</span>
+														</DropdownMenuTrigger>
+														<DropdownMenuContent align="end">
+															<DropdownMenuItem
+																onClick={() => {
+																	setSelectedOrderRequestId(orderRequest.id);
+																	setSelectedAction("view");
+																}}
+															>
+																View
+															</DropdownMenuItem>
+														</DropdownMenuContent>
+													</DropdownMenu>
+												</TableCell>
+											</TableRow>
+										);
+									})}
+								</TableBody>
+							</Table>
+							<Dialog
+								open={selectedAction !== null}
+								onOpenChange={(open) => {
+									if (!open) {
+										setSelectedOrderRequestId(null);
+										setSelectedAction(null);
+									}
+								}}
+							>
+								{selectedOrderRequestId && selectedAction === "view" && (
+									<ViewOrderRequestDialogContent
+										orderRequestId={selectedOrderRequestId}
+									/>
+								)}
+							</Dialog>
+						</>
+					) : (
+						<Empty className="bg-muted">
+							<EmptyHeader>
+								<EmptyTitle>No results found</EmptyTitle>
+								<EmptyDescription>
+									No results found for your search. Try adjusting your search
+									terms.
+								</EmptyDescription>
+							</EmptyHeader>
+						</Empty>
+					)}
+					<OrderRequestsPagePagination />
+				</div>
+			</section>
+		</>
+	);
+}
+
+function ViewOrderRequestDialogContent({
+	orderRequestId,
+}: {
+	orderRequestId: string;
+}) {
+	const getOrderRequestFn = useServerFn(getOrderRequest);
+
+	const orderRequestResult = useQuery({
+		queryKey: ["order-request", orderRequestId],
+		queryFn: () => getOrderRequestFn({ data: { orderRequestId } }),
+	});
+
+	if (orderRequestResult.isPending) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>View Order</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-muted-foreground">
+					Loading order details...
+				</div>
+			</DialogContent>
+		);
+	}
+
+	if (orderRequestResult.isError) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>View Order</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-destructive">
+					Error loading order: {orderRequestResult.error.message}
+				</div>
+			</DialogContent>
+		);
+	}
+
+	let statusBadgeVariant: "default" | "outline" | "destructive";
+	switch (orderRequestResult.data.orderRequest.status) {
+		case "PAID":
+		case "COMPLETED":
+			statusBadgeVariant = "default";
+			break;
+		case "CANCELLED":
+			statusBadgeVariant = "destructive";
+			break;
+		default:
+			statusBadgeVariant = "outline";
+			break;
+	}
+
+	return (
+		<DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+			<DialogHeader>
+				<DialogTitle>Order Details</DialogTitle>
+			</DialogHeader>
+			<div className="space-y-6">
+				<div className="grid grid-cols-2 gap-4">
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Order Ref
+							</ItemDescription>
+							<ItemTitle className="font-medium uppercase">
+								#{orderRequestResult.data.orderRequest.id.slice(24)}
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Status
+							</ItemDescription>
+							<ItemTitle>
+								<Badge variant={statusBadgeVariant}>
+									{orderRequestResult.data.orderRequest.status}
+								</Badge>
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Date
+							</ItemDescription>
+							<ItemTitle className="font-medium">
+								{formatDate(orderRequestResult.data.orderRequest.createdAt)}
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+					<Item variant="muted">
+						<ItemContent>
+							<ItemDescription className="text-sm text-muted-foreground">
+								Total
+							</ItemDescription>
+							<ItemTitle className="font-medium">
+								{formatMoneyFromCents(
+									orderRequestResult.data.orderRequest.total,
+									{
+										locale: "en-ZA",
+										currency: "ZAR",
+									},
+								)}
+							</ItemTitle>
+						</ItemContent>
+					</Item>
+				</div>
+				<div className="space-y-4">
+					{orderRequestResult.data.orderRequest.orderItems.map((item) => (
+						<Item key={item.id} variant="muted" className="flex gap-3">
+							<ItemMedia variant="image" className="size-20">
+								<img
+									src={composeS3URL(item.product.pictureKeys[0])}
+									alt={item.product.name}
+								/>
+							</ItemMedia>
+							<ItemContent>
+								<ItemTitle className="font-bold text-base">
+									{item.product.name}
+								</ItemTitle>
+								<ItemDescription>
+									<span>Qty: {item.quantity}</span>
+									<br />
+									<span>
+										{formatMoneyFromCents(item.price * item.quantity, {
+											locale: "en-ZA",
+											currency: "ZAR",
+										})}
+									</span>
+								</ItemDescription>
+							</ItemContent>
+						</Item>
+					))}
+				</div>
+			</div>
+		</DialogContent>
+	);
+}
+
+function OrderRequestsPageSearch() {
+	const navigate = Route.useNavigate();
+
+	const debouncedSearch = debounce(
+		(searchTerm: string) => {
+			navigate({
+				search: (prev) => ({
+					...prev,
+					page: 1,
+					searchTerm: searchTerm.trim() ? searchTerm : undefined,
+				}),
+				replace: true,
+			});
+		},
+		{ wait: 500 },
+	);
+
+	return (
+		<div className="flex gap-2 items-center justify-between">
+			<Input
+				placeholder="Search Orders"
+				defaultValue={Route.useSearch().searchTerm ?? ""}
+				onChange={(event) => debouncedSearch(event.target.value)}
+			/>
+		</div>
+	);
+}
+
+function OrderRequestsPagePagination() {
+	const loaderData = Route.useLoaderData();
+	const navigate = Route.useNavigate();
+
+	const limitSelectId = useId();
+
+	const start = (loaderData.page - 1) * loaderData.limit + 1;
+	const end = Math.min(loaderData.page * loaderData.limit, loaderData.total);
+
+	const prevDisabled = loaderData.page <= 1;
+	const nextDisabled = loaderData.page >= loaderData.pages;
+
+	return (
+		<div className="flex items-center justify-between gap-4">
+			<Field orientation="horizontal" className="w-fit">
+				<FieldLabel htmlFor={limitSelectId}>
+					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
+					{loaderData.total} orders
+				</FieldLabel>
+				<Select
+					key={loaderData.limit}
+					defaultValue={String(loaderData.limit)}
+					onValueChange={(value) =>
+						navigate({
+							search: (prev) => ({
+								...prev,
+								limit: Number(value),
+								page: 1,
+							}),
+							replace: true,
+						})
+					}
+				>
+					<SelectTrigger className="w-20 hidden md:flex" id={limitSelectId}>
+						<SelectValue />
+					</SelectTrigger>
+					<SelectContent align="start">
+						<SelectGroup>
+							<SelectItem value="5">5</SelectItem>
+							<SelectItem value="10">10</SelectItem>
+							<SelectItem value="25">25</SelectItem>
+							<SelectItem value="50">50</SelectItem>
+						</SelectGroup>
+					</SelectContent>
+				</Select>
+			</Field>
+			<div className="flex items-center gap-1">
+				<Link
+					from={Route.fullPath}
+					search={(prev) =>
+						prevDisabled ? prev : { ...prev, page: prev.page - 1 }
+					}
+					onClick={(event) => {
+						if (prevDisabled) event.preventDefault();
+					}}
+					aria-disabled={prevDisabled}
+					tabIndex={prevDisabled ? -1 : 0}
+					className={cn(
+						buttonVariants({ variant: "ghost" }),
+						prevDisabled && "opacity-50 pointer-events-none",
+					)}
+				>
+					<ChevronLeftIcon />
+					<span>Previous</span>
+				</Link>
+				<Link
+					from={Route.fullPath}
+					search={(prev) =>
+						nextDisabled ? prev : { ...prev, page: prev.page + 1 }
+					}
+					onClick={(event) => {
+						if (nextDisabled) event.preventDefault();
+					}}
+					aria-disabled={nextDisabled}
+					tabIndex={nextDisabled ? -1 : 0}
+					className={cn(
+						buttonVariants({ variant: "ghost" }),
+						nextDisabled && "opacity-50 pointer-events-none",
+					)}
+				>
+					<span>Next</span>
+					<ChevronRightIcon />
+				</Link>
+			</div>
+		</div>
+	);
+}

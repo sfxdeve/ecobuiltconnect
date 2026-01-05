@@ -39,21 +39,8 @@ export const getProfile = createServerFn({ method: "GET" }).handler(
 		if (userProfile) {
 			profile = userProfile;
 			role = "user";
-		}
 
-		const adminProfile = await prisma.adminProfile.findUnique({
-			where: {
-				clerkId,
-			},
-			select: {
-				...adminProfileSelector,
-				status: true,
-			},
-		});
-
-		if (adminProfile) {
-			profile = adminProfile;
-			role = "admin";
+			return { profile, role };
 		}
 
 		const vendorProfile = await prisma.vendorProfile.findUnique({
@@ -69,6 +56,8 @@ export const getProfile = createServerFn({ method: "GET" }).handler(
 		if (vendorProfile) {
 			profile = vendorProfile;
 			role = "vendor";
+
+			return { profile, role };
 		}
 
 		const logisticProfile = await prisma.logisticProfile.findUnique({
@@ -84,6 +73,25 @@ export const getProfile = createServerFn({ method: "GET" }).handler(
 		if (logisticProfile) {
 			profile = logisticProfile;
 			role = "logistic";
+
+			return { profile, role };
+		}
+
+		const adminProfile = await prisma.adminProfile.findUnique({
+			where: {
+				clerkId,
+			},
+			select: {
+				...adminProfileSelector,
+				status: true,
+			},
+		});
+
+		if (adminProfile) {
+			profile = adminProfile;
+			role = "admin";
+
+			return { profile, role };
 		}
 
 		return { profile, role };

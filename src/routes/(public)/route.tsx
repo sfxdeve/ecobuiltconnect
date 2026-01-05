@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { AppHeader } from "@/components/blocks/app-header";
+import { AdminProfileForm } from "@/components/forms/admin-profile-form";
 import { UserProfileForm } from "@/components/forms/user-profile-form";
 import { VendorProfileForm } from "@/components/forms/vendor-profile-form";
 import {
@@ -15,6 +16,7 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { upsertAdminProfile } from "@/lib/api/admin.profile";
 import { getProfile } from "@/lib/api/shared.profile";
 import { upsertUserProfile } from "@/lib/api/user.profile";
 import { upsertVendorProfile } from "@/lib/api/vendor.profile";
@@ -87,6 +89,7 @@ function CreateProfileDialogContent({
 
 	const upsertUserProfileFn = useServerFn(upsertUserProfile);
 	const upsertVendorProfileFn = useServerFn(upsertVendorProfile);
+	const upsertAdminProfileFn = useServerFn(upsertAdminProfile);
 
 	const queryClient = useQueryClient();
 
@@ -118,6 +121,20 @@ function CreateProfileDialogContent({
 		},
 	});
 
+	const upsertAdminProfileMutation = useMutation({
+		mutationFn: upsertAdminProfileFn,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: ["admin-profile", user?.id],
+			});
+
+			closeDialog();
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
 	return (
 		<DialogContent>
 			<DialogHeader>
@@ -126,9 +143,9 @@ function CreateProfileDialogContent({
 			<Tabs>
 				<TabsList>
 					<TabsTrigger value="user">User</TabsTrigger>
-					{/* <TabsTrigger value="admin">Admin</TabsTrigger> */}
 					<TabsTrigger value="vendor">Vendor</TabsTrigger>
 					{/* <TabsTrigger value="logistic">Logistic</TabsTrigger> */}
+					<TabsTrigger value="admin">Admin</TabsTrigger>
 				</TabsList>
 				<TabsContent value="user">
 					<UserProfileForm
@@ -141,7 +158,16 @@ function CreateProfileDialogContent({
 						submitHandler={upsertUserProfileMutation.mutate}
 					/>
 				</TabsContent>
-				<TabsContent value="admin"></TabsContent>
+				<TabsContent value="admin">
+					<AdminProfileForm
+						defaultValues={{
+							name: "",
+							description: "",
+						}}
+						isSubmitting={upsertAdminProfileMutation.isPending}
+						submitHandler={upsertAdminProfileMutation.mutate}
+					/>
+				</TabsContent>
 				<TabsContent value="vendor">
 					<VendorProfileForm
 						defaultValues={{

@@ -79,5 +79,20 @@ export function AppHeaderRoleSpecificMenuGroup({
 		);
 	}
 
+	if (profileResult.data.role === "admin") {
+		return (
+			<DropdownMenuGroup className="mb-0">
+				<DropdownMenuItem
+					render={
+						<Link to="/admin/orders" activeProps={{ className: "bg-muted" }} />
+					}
+				>
+					<PackageIcon />
+					<span>Dashboard</span>
+				</DropdownMenuItem>
+			</DropdownMenuGroup>
+		);
+	}
+
 	return null;
 }

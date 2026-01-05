@@ -69,8 +69,10 @@ model LogisticProfile {
 model AdminProfile {
   id String @id @default(uuid())
 
-  clerkId String        @unique @map("clerk_id")
-  status  ProfileStatus @default(PENDING)
+  clerkId     String        @unique @map("clerk_id")
+  name        String
+  description String
+  status      ProfileStatus @default(PENDING)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

@@ -28,6 +28,7 @@ import { Route as userUserRequestsIndexRouteImport } from './routes/(user)/user.
 import { Route as userUserOrdersIndexRouteImport } from './routes/(user)/user.orders/index'
 import { Route as userUserCheckoutIndexRouteImport } from './routes/(user)/user.checkout/index'
 import { Route as publicProductsProductIdIndexRouteImport } from './routes/(public)/products/$productId/index'
+import { Route as adminAdminOrdersIndexRouteImport } from './routes/(admin)/admin.orders/index'
 import { Route as apiApiOzowNotifyRouteImport } from './routes/(api)/api.ozow/notify'
 import { Route as userUserOrdersOrderIdIndexRouteImport } from './routes/(user)/user.orders/$orderId/index'
 import { Route as userUserOrdersOrderIdDeliveryIndexRouteImport } from './routes/(user)/user.orders/$orderId/delivery/index'
@@ -127,6 +128,11 @@ const publicProductsProductIdIndexRoute =
     path: '/products/$productId/',
     getParentRoute: () => publicRouteRoute,
   } as any)
+const adminAdminOrdersIndexRoute = adminAdminOrdersIndexRouteImport.update({
+  id: '/(admin)/admin/orders/',
+  path: '/admin/orders/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const apiApiOzowNotifyRoute = apiApiOzowNotifyRouteImport.update({
   id: '/(api)/api/ozow/notify',
   path: '/api/ozow/notify',
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/products': typeof publicProductsIndexRoute
   '/vendors': typeof publicVendorsIndexRoute
   '/api/ozow/notify': typeof apiApiOzowNotifyRoute
+  '/admin/orders': typeof adminAdminOrdersIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/user/checkout': typeof userUserCheckoutIndexRoute
   '/user/orders': typeof userUserOrdersIndexRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/products': typeof publicProductsIndexRoute
   '/vendors': typeof publicVendorsIndexRoute
   '/api/ozow/notify': typeof apiApiOzowNotifyRoute
+  '/admin/orders': typeof adminAdminOrdersIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/user/checkout': typeof userUserCheckoutIndexRoute
   '/user/orders': typeof userUserOrdersIndexRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/(public)/products/': typeof publicProductsIndexRoute
   '/(public)/vendors/': typeof publicVendorsIndexRoute
   '/(api)/api/ozow/notify': typeof apiApiOzowNotifyRoute
+  '/(admin)/admin/orders/': typeof adminAdminOrdersIndexRoute
   '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
   '/(user)/user/checkout/': typeof userUserCheckoutIndexRoute
   '/(user)/user/orders/': typeof userUserOrdersIndexRoute
@@ -221,6 +230,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/vendors'
     | '/api/ozow/notify'
+    | '/admin/orders'
     | '/products/$productId'
     | '/user/checkout'
     | '/user/orders'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/vendors'
     | '/api/ozow/notify'
+    | '/admin/orders'
     | '/products/$productId'
     | '/user/checkout'
     | '/user/orders'
@@ -265,6 +276,7 @@ export interface FileRouteTypes {
     | '/(public)/products/'
     | '/(public)/vendors/'
     | '/(api)/api/ozow/notify'
+    | '/(admin)/admin/orders/'
     | '/(public)/products/$productId/'
     | '/(user)/user/checkout/'
     | '/(user)/user/orders/'
@@ -283,6 +295,7 @@ export interface RootRouteChildren {
   userRouteRoute: typeof userRouteRouteWithChildren
   vendorRouteRoute: typeof vendorRouteRouteWithChildren
   apiApiOzowNotifyRoute: typeof apiApiOzowNotifyRoute
+  adminAdminOrdersIndexRoute: typeof adminAdminOrdersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -420,6 +433,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicProductsProductIdIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
+    '/(admin)/admin/orders/': {
+      id: '/(admin)/admin/orders/'
+      path: '/admin/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof adminAdminOrdersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(api)/api/ozow/notify': {
       id: '/(api)/api/ozow/notify'
       path: '/api/ozow/notify'
@@ -525,6 +545,7 @@ const rootRouteChildren: RootRouteChildren = {
   userRouteRoute: userRouteRouteWithChildren,
   vendorRouteRoute: vendorRouteRouteWithChildren,
   apiApiOzowNotifyRoute: apiApiOzowNotifyRoute,
+  adminAdminOrdersIndexRoute: adminAdminOrdersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

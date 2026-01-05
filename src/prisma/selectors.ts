@@ -55,6 +55,8 @@ export const logisticProfileSelector = {
 export const adminProfileSelector = {
 	id: true,
 	clerkId: true,
+	name: true,
+	description: true,
 	status: true,
 	createdAt: true,
 	updatedAt: true,
