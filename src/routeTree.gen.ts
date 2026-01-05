@@ -13,6 +13,7 @@ import { Route as vendorRouteRouteImport } from './routes/(vendor)/route'
 import { Route as userRouteRouteImport } from './routes/(user)/route'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as adminRouteRouteImport } from './routes/(admin)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as publicVendorsIndexRouteImport } from './routes/(public)/vendors/index'
 import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
@@ -47,6 +48,10 @@ const publicRouteRoute = publicRouteRouteImport.update({
 } as any)
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const adminRouteRoute = adminRouteRouteImport.update({
+  id: '/(admin)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const publicIndexRoute = publicIndexRouteImport.update({
@@ -129,9 +134,9 @@ const publicProductsProductIdIndexRoute =
     getParentRoute: () => publicRouteRoute,
   } as any)
 const adminAdminOrdersIndexRoute = adminAdminOrdersIndexRouteImport.update({
-  id: '/(admin)/admin/orders/',
+  id: '/admin/orders/',
   path: '/admin/orders/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => adminRouteRoute,
 } as any)
 const apiApiOzowNotifyRoute = apiApiOzowNotifyRouteImport.update({
   id: '/(api)/api/ozow/notify',
@@ -195,6 +200,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/(admin)': typeof adminRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
   '/(user)': typeof userRouteRouteWithChildren
@@ -264,6 +270,7 @@ export interface FileRouteTypes {
     | '/user/orders/$orderId/delivery'
   id:
     | '__root__'
+    | '/(admin)'
     | '/(auth)'
     | '/(public)'
     | '/(user)'
@@ -290,12 +297,12 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  adminRouteRoute: typeof adminRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
   userRouteRoute: typeof userRouteRouteWithChildren
   vendorRouteRoute: typeof vendorRouteRouteWithChildren
   apiApiOzowNotifyRoute: typeof apiApiOzowNotifyRoute
-  adminAdminOrdersIndexRoute: typeof adminAdminOrdersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -326,6 +333,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(admin)': {
+      id: '/(admin)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof adminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/': {
@@ -438,7 +452,7 @@ declare module '@tanstack/react-router' {
       path: '/admin/orders'
       fullPath: '/admin/orders'
       preLoaderRoute: typeof adminAdminOrdersIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof adminRouteRoute
     }
     '/(api)/api/ozow/notify': {
       id: '/(api)/api/ozow/notify'
@@ -463,6 +477,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface adminRouteRouteChildren {
+  adminAdminOrdersIndexRoute: typeof adminAdminOrdersIndexRoute
+}
+
+const adminRouteRouteChildren: adminRouteRouteChildren = {
+  adminAdminOrdersIndexRoute: adminAdminOrdersIndexRoute,
+}
+
+const adminRouteRouteWithChildren = adminRouteRoute._addFileChildren(
+  adminRouteRouteChildren,
+)
 
 interface authRouteRouteChildren {
   authSignInSplatRoute: typeof authSignInSplatRoute
@@ -540,12 +566,12 @@ const vendorRouteRouteWithChildren = vendorRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  adminRouteRoute: adminRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
   userRouteRoute: userRouteRouteWithChildren,
   vendorRouteRoute: vendorRouteRouteWithChildren,
   apiApiOzowNotifyRoute: apiApiOzowNotifyRoute,
-  adminAdminOrdersIndexRoute: adminAdminOrdersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
