@@ -24,5 +24,5 @@ function AdminLayout() {
 				<AppFooter />
 			</main>
 		</SidebarProvider>
-	)
+	);
 }

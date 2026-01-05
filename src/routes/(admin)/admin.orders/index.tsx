@@ -109,9 +109,7 @@ function VendorOrderRequestsPage() {
 	const [selectedOrderRequestId, setSelectedOrderRequestId] = useState<
 		string | null
 	>(null);
-	const [selectedAction, setSelectedAction] = useState<
-		"view" | "update" | null
-	>(null);
+	const [selectedAction, setSelectedAction] = useState<"view" | null>(null);
 
 	return (
 		<>

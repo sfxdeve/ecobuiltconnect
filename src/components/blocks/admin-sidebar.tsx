@@ -2,7 +2,12 @@ import { useUser } from "@clerk/tanstack-react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { type LucideIcon, ShoppingBagIcon, UserIcon } from "lucide-react";
+import {
+	type LucideIcon,
+	PackageIcon,
+	ShoppingBagIcon,
+	UserIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AdminProfileForm } from "@/components/forms/admin-profile-form";
@@ -30,6 +35,11 @@ const items = [
 		icon: ShoppingBagIcon,
 		label: "Orders",
 		to: "/admin/orders",
+	},
+	{
+		icon: PackageIcon,
+		label: "Products",
+		to: "/vendor/products",
 	},
 ] satisfies {
 	icon: LucideIcon;
