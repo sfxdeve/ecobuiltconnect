@@ -39,7 +39,7 @@ const items = [
 	{
 		icon: PackageIcon,
 		label: "Products",
-		to: "/vendor/products",
+		to: "/admin/products",
 	},
 ] satisfies {
 	icon: LucideIcon;
