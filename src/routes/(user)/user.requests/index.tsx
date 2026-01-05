@@ -280,7 +280,7 @@ function ProductRequestsPageSearch() {
 					</DialogHeader>
 					<UserProductRequestForm
 						defaultValues={{
-							pictureIds: [""],
+							pictureIds: [],
 							name: "",
 							description: "",
 							quantity: 0,

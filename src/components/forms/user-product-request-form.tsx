@@ -1,6 +1,8 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +22,12 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { useFileUpload } from "@/hooks/use-file-upload";
 import { getCategories } from "@/lib/api/public.category";
+import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
+import { composeS3URL } from "@/lib/aws/client.s3";
+import { composeS3Key } from "@/lib/aws/shared.s3";
+import { ProductImagesPicker } from "../blocks/product-images-picker";
 
 export const userProductRequestFormSchema = z.object({
 	pictureIds: z
@@ -58,6 +65,9 @@ export function UserProductRequestForm({
 		data: z.infer<typeof userProductRequestFormSchema>;
 	}) => void;
 }) {
+	const [areFilesUploading, setAreFilesUploading] = useState(false);
+
+	const getS3ObjectUploadURLFn = useServerFn(getS3ObjectUploadURL);
 	const getCategoriesFn = useServerFn(getCategories);
 
 	const categoriesResult = useQuery({
@@ -65,12 +75,62 @@ export function UserProductRequestForm({
 		queryFn: () => getCategoriesFn({ data: {} }),
 	});
 
+	const fileUpload = useFileUpload({
+		initialFiles: defaultValues.pictureIds.map((key) => ({
+			id: crypto.randomUUID(),
+			key,
+			url: composeS3URL(key),
+		})),
+		multiple: true,
+		maxFiles: 5,
+		maxSize: 5 * 1024 * 1024,
+		accept: "image/*",
+		keyGenerator: (file) => composeS3Key(file.name, "products"),
+		onFilesChange: (files) => {
+			form.setFieldValue(
+				"pictureIds",
+				files.map((file) => file.key),
+			);
+		},
+	});
+
 	const form = useForm({
 		validators: {
 			onChange: userProductRequestFormSchema,
 		},
 		defaultValues,
-		onSubmit: ({ value: data }) => {
+		onSubmit: async ({ value: data }) => {
+			if (fileUpload.localFiles.length > 0) {
+				try {
+					setAreFilesUploading(true);
+
+					await Promise.all(
+						fileUpload.localFiles.map(async (file) => {
+							const { url } = await getS3ObjectUploadURLFn({
+								data: {
+									key: file.key,
+									contentType: file.data.type,
+								},
+							});
+
+							await fetch(url, {
+								method: "PUT",
+								headers: {
+									"Content-Type": file.data.type,
+								},
+								body: file.data,
+							});
+						}),
+					);
+				} catch {
+					toast.error("Failed to upload images.");
+
+					return;
+				} finally {
+					setAreFilesUploading(false);
+				}
+			}
+
 			submitHandler({ data });
 		},
 	});
@@ -83,6 +143,34 @@ export function UserProductRequestForm({
 			}}
 		>
 			<FieldGroup>
+				<div className="flex gap-2 items-start">
+					<form.Field name="pictureIds">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={field.name}>Images</FieldLabel>
+									<ProductImagesPicker
+										id={field.name}
+										name={field.name}
+										{...fileUpload}
+										disabled={areFilesUploading || isSubmitting}
+										aria-invalid={isInvalid}
+									/>
+									{fileUpload.errors.length > 0 && (
+										<FieldError
+											errors={fileUpload.errors.map((error) => ({
+												message: `${error.file}: ${error.reason}`,
+											}))}
+										/>
+									)}
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+				</div>
 				<div className="flex gap-2 items-start">
 					<form.Field name="name">
 						{(field) => {
