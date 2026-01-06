@@ -80,8 +80,8 @@ model AdminProfile {
 
 enum CategoryStatus {
   REQUESTED
-  APPROVED
   REJECTED
+  APPROVED
 }
 
 model Category {
