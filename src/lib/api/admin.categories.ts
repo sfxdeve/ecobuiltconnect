@@ -44,7 +44,7 @@ export const getCategories = createServerFn({ method: "GET" })
 		await getAdminProfile();
 
 		const where: CategoryWhereInput = {
-			isDeleted: true,
+			isDeleted: false,
 			AND: [],
 		};
 
@@ -88,7 +88,7 @@ export const getCategory = createServerFn({ method: "GET" })
 		const category = await prisma.category.findUnique({
 			where: {
 				id: data.categoryId,
-				isDeleted: true,
+				isDeleted: false,
 			},
 			select: categorySelector,
 		});
@@ -106,14 +106,16 @@ export const createCategory = createServerFn({ method: "POST" })
 			name: z
 				.string("Name must be a string")
 				.min(3, "Name must be at least 3 characters"),
-			status: z.enum(
-				[
-					CategoryStatus.REQUESTED,
-					CategoryStatus.REJECTED,
-					CategoryStatus.APPROVED,
-				],
-				`Status must be either '${CategoryStatus.REQUESTED}', '${CategoryStatus.REJECTED}', or '${CategoryStatus.APPROVED}'`,
-			),
+			status: z
+				.enum(
+					[
+						CategoryStatus.REQUESTED,
+						CategoryStatus.REJECTED,
+						CategoryStatus.APPROVED,
+					],
+					`Status must be either '${CategoryStatus.REQUESTED}', '${CategoryStatus.REJECTED}', or '${CategoryStatus.APPROVED}'`,
+				)
+				.optional(),
 		}),
 	)
 	.handler(async ({ data }) => {

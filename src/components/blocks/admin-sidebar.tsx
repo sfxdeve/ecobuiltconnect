@@ -30,22 +30,27 @@ import {
 import { getAdminProfile, upsertAdminProfile } from "@/lib/api/admin.profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
-const items = [
+const items: {
+	icon: LucideIcon;
+	label: string;
+	to: FileRouteTypes["to"];
+}[] = [
 	{
-		icon: ShoppingBagIcon,
-		label: "Orders",
-		to: "/admin/orders",
+		icon: PackageIcon,
+		label: "Categories",
+		to: "/admin/categories",
 	},
 	{
 		icon: PackageIcon,
 		label: "Products",
 		to: "/admin/products",
 	},
-] satisfies {
-	icon: LucideIcon;
-	label: string;
-	to: FileRouteTypes["to"];
-}[];
+	{
+		icon: ShoppingBagIcon,
+		label: "Orders",
+		to: "/admin/orders",
+	},
+];
 
 export function AdminSidebar() {
 	const { user } = useUser();
