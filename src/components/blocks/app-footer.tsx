@@ -33,11 +33,11 @@ const QUICK_LINKS = [
 }[];
 
 const LEGAL_LINKS = [
-	{ label: "Privacy Policy", to: "/" },
-	{ label: "Cookies Policy", to: "/" },
-	{ label: "Terms of Use", to: "/" },
-	{ label: "Terms of Sale", to: "/" },
-	{ label: "Returns & Refunds Policy", to: "/" },
+	{ label: "Privacy Policy", to: "/privacy-policy" },
+	{ label: "Cookies Policy", to: "/cookies-policy" },
+	{ label: "Terms of Use", to: "/terms-of-use" },
+	{ label: "Terms of Sale", to: "/terms-of-sales" },
+	{ label: "Returns & Refunds Policy", to: "/returns-policy" },
 ] satisfies {
 	label: string;
 	to: FileRouteTypes["to"];

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as vendorRouteRouteImport } from './routes/(vendor)/route'
 import { Route as userRouteRouteImport } from './routes/(user)/route'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
+import { Route as legalRouteRouteImport } from './routes/(legal)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as adminRouteRouteImport } from './routes/(admin)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
@@ -19,6 +20,11 @@ import { Route as publicVendorsIndexRouteImport } from './routes/(public)/vendor
 import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
 import { Route as publicCommunityIndexRouteImport } from './routes/(public)/community/index'
+import { Route as legalTermsOfUseIndexRouteImport } from './routes/(legal)/terms-of-use/index'
+import { Route as legalTermsOfSalesIndexRouteImport } from './routes/(legal)/terms-of-sales/index'
+import { Route as legalReturnsPolicyIndexRouteImport } from './routes/(legal)/returns-policy/index'
+import { Route as legalPrivacyPolicyIndexRouteImport } from './routes/(legal)/privacy-policy/index'
+import { Route as legalCookiesPolicyIndexRouteImport } from './routes/(legal)/cookies-policy/index'
 import { Route as authSignUpSplatRouteImport } from './routes/(auth)/sign-up/$'
 import { Route as authSignInSplatRouteImport } from './routes/(auth)/sign-in/$'
 import { Route as vendorVendorRequestsIndexRouteImport } from './routes/(vendor)/vendor.requests/index'
@@ -46,6 +52,10 @@ const userRouteRoute = userRouteRouteImport.update({
 } as any)
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const legalRouteRoute = legalRouteRouteImport.update({
+  id: '/(legal)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authRouteRoute = authRouteRouteImport.update({
@@ -80,6 +90,31 @@ const publicCommunityIndexRoute = publicCommunityIndexRouteImport.update({
   id: '/community/',
   path: '/community/',
   getParentRoute: () => publicRouteRoute,
+} as any)
+const legalTermsOfUseIndexRoute = legalTermsOfUseIndexRouteImport.update({
+  id: '/terms-of-use/',
+  path: '/terms-of-use/',
+  getParentRoute: () => legalRouteRoute,
+} as any)
+const legalTermsOfSalesIndexRoute = legalTermsOfSalesIndexRouteImport.update({
+  id: '/terms-of-sales/',
+  path: '/terms-of-sales/',
+  getParentRoute: () => legalRouteRoute,
+} as any)
+const legalReturnsPolicyIndexRoute = legalReturnsPolicyIndexRouteImport.update({
+  id: '/returns-policy/',
+  path: '/returns-policy/',
+  getParentRoute: () => legalRouteRoute,
+} as any)
+const legalPrivacyPolicyIndexRoute = legalPrivacyPolicyIndexRouteImport.update({
+  id: '/privacy-policy/',
+  path: '/privacy-policy/',
+  getParentRoute: () => legalRouteRoute,
+} as any)
+const legalCookiesPolicyIndexRoute = legalCookiesPolicyIndexRouteImport.update({
+  id: '/cookies-policy/',
+  path: '/cookies-policy/',
+  getParentRoute: () => legalRouteRoute,
 } as any)
 const authSignUpSplatRoute = authSignUpSplatRouteImport.update({
   id: '/sign-up/$',
@@ -173,6 +208,11 @@ export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
   '/sign-in/$': typeof authSignInSplatRoute
   '/sign-up/$': typeof authSignUpSplatRoute
+  '/cookies-policy': typeof legalCookiesPolicyIndexRoute
+  '/privacy-policy': typeof legalPrivacyPolicyIndexRoute
+  '/returns-policy': typeof legalReturnsPolicyIndexRoute
+  '/terms-of-sales': typeof legalTermsOfSalesIndexRoute
+  '/terms-of-use': typeof legalTermsOfUseIndexRoute
   '/community': typeof publicCommunityIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
@@ -196,6 +236,11 @@ export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
   '/sign-in/$': typeof authSignInSplatRoute
   '/sign-up/$': typeof authSignUpSplatRoute
+  '/cookies-policy': typeof legalCookiesPolicyIndexRoute
+  '/privacy-policy': typeof legalPrivacyPolicyIndexRoute
+  '/returns-policy': typeof legalReturnsPolicyIndexRoute
+  '/terms-of-sales': typeof legalTermsOfSalesIndexRoute
+  '/terms-of-use': typeof legalTermsOfUseIndexRoute
   '/community': typeof publicCommunityIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/products': typeof publicProductsIndexRoute
@@ -219,12 +264,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(admin)': typeof adminRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
+  '/(legal)': typeof legalRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
   '/(user)': typeof userRouteRouteWithChildren
   '/(vendor)': typeof vendorRouteRouteWithChildren
   '/(public)/': typeof publicIndexRoute
   '/(auth)/sign-in/$': typeof authSignInSplatRoute
   '/(auth)/sign-up/$': typeof authSignUpSplatRoute
+  '/(legal)/cookies-policy/': typeof legalCookiesPolicyIndexRoute
+  '/(legal)/privacy-policy/': typeof legalPrivacyPolicyIndexRoute
+  '/(legal)/returns-policy/': typeof legalReturnsPolicyIndexRoute
+  '/(legal)/terms-of-sales/': typeof legalTermsOfSalesIndexRoute
+  '/(legal)/terms-of-use/': typeof legalTermsOfUseIndexRoute
   '/(public)/community/': typeof publicCommunityIndexRoute
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/products/': typeof publicProductsIndexRoute
@@ -250,6 +301,11 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/cookies-policy'
+    | '/privacy-policy'
+    | '/returns-policy'
+    | '/terms-of-sales'
+    | '/terms-of-use'
     | '/community'
     | '/contact'
     | '/products'
@@ -273,6 +329,11 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/cookies-policy'
+    | '/privacy-policy'
+    | '/returns-policy'
+    | '/terms-of-sales'
+    | '/terms-of-use'
     | '/community'
     | '/contact'
     | '/products'
@@ -295,12 +356,18 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(admin)'
     | '/(auth)'
+    | '/(legal)'
     | '/(public)'
     | '/(user)'
     | '/(vendor)'
     | '/(public)/'
     | '/(auth)/sign-in/$'
     | '/(auth)/sign-up/$'
+    | '/(legal)/cookies-policy/'
+    | '/(legal)/privacy-policy/'
+    | '/(legal)/returns-policy/'
+    | '/(legal)/terms-of-sales/'
+    | '/(legal)/terms-of-use/'
     | '/(public)/community/'
     | '/(public)/contact/'
     | '/(public)/products/'
@@ -324,6 +391,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   adminRouteRoute: typeof adminRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
+  legalRouteRoute: typeof legalRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
   userRouteRoute: typeof userRouteRouteWithChildren
   vendorRouteRoute: typeof vendorRouteRouteWithChildren
@@ -351,6 +419,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof publicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(legal)': {
+      id: '/(legal)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof legalRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)': {
@@ -401,6 +476,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/community'
       preLoaderRoute: typeof publicCommunityIndexRouteImport
       parentRoute: typeof publicRouteRoute
+    }
+    '/(legal)/terms-of-use/': {
+      id: '/(legal)/terms-of-use/'
+      path: '/terms-of-use'
+      fullPath: '/terms-of-use'
+      preLoaderRoute: typeof legalTermsOfUseIndexRouteImport
+      parentRoute: typeof legalRouteRoute
+    }
+    '/(legal)/terms-of-sales/': {
+      id: '/(legal)/terms-of-sales/'
+      path: '/terms-of-sales'
+      fullPath: '/terms-of-sales'
+      preLoaderRoute: typeof legalTermsOfSalesIndexRouteImport
+      parentRoute: typeof legalRouteRoute
+    }
+    '/(legal)/returns-policy/': {
+      id: '/(legal)/returns-policy/'
+      path: '/returns-policy'
+      fullPath: '/returns-policy'
+      preLoaderRoute: typeof legalReturnsPolicyIndexRouteImport
+      parentRoute: typeof legalRouteRoute
+    }
+    '/(legal)/privacy-policy/': {
+      id: '/(legal)/privacy-policy/'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof legalPrivacyPolicyIndexRouteImport
+      parentRoute: typeof legalRouteRoute
+    }
+    '/(legal)/cookies-policy/': {
+      id: '/(legal)/cookies-policy/'
+      path: '/cookies-policy'
+      fullPath: '/cookies-policy'
+      preLoaderRoute: typeof legalCookiesPolicyIndexRouteImport
+      parentRoute: typeof legalRouteRoute
     }
     '/(auth)/sign-up/$': {
       id: '/(auth)/sign-up/$'
@@ -547,6 +657,26 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
+interface legalRouteRouteChildren {
+  legalCookiesPolicyIndexRoute: typeof legalCookiesPolicyIndexRoute
+  legalPrivacyPolicyIndexRoute: typeof legalPrivacyPolicyIndexRoute
+  legalReturnsPolicyIndexRoute: typeof legalReturnsPolicyIndexRoute
+  legalTermsOfSalesIndexRoute: typeof legalTermsOfSalesIndexRoute
+  legalTermsOfUseIndexRoute: typeof legalTermsOfUseIndexRoute
+}
+
+const legalRouteRouteChildren: legalRouteRouteChildren = {
+  legalCookiesPolicyIndexRoute: legalCookiesPolicyIndexRoute,
+  legalPrivacyPolicyIndexRoute: legalPrivacyPolicyIndexRoute,
+  legalReturnsPolicyIndexRoute: legalReturnsPolicyIndexRoute,
+  legalTermsOfSalesIndexRoute: legalTermsOfSalesIndexRoute,
+  legalTermsOfUseIndexRoute: legalTermsOfUseIndexRoute,
+}
+
+const legalRouteRouteWithChildren = legalRouteRoute._addFileChildren(
+  legalRouteRouteChildren,
+)
+
 interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
   publicCommunityIndexRoute: typeof publicCommunityIndexRoute
@@ -611,6 +741,7 @@ const vendorRouteRouteWithChildren = vendorRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   adminRouteRoute: adminRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
+  legalRouteRoute: legalRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
   userRouteRoute: userRouteRouteWithChildren,
   vendorRouteRoute: vendorRouteRouteWithChildren,
