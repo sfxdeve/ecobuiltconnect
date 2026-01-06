@@ -6,6 +6,7 @@ import {
 	type LucideIcon,
 	PackageIcon,
 	ShoppingBagIcon,
+	TagIcon,
 	UserIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -36,7 +37,7 @@ const items: {
 	to: FileRouteTypes["to"];
 }[] = [
 	{
-		icon: PackageIcon,
+		icon: TagIcon,
 		label: "Categories",
 		to: "/admin/categories",
 	},
