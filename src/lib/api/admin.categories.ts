@@ -48,6 +48,14 @@ export const getCategories = createServerFn({ method: "GET" })
 			AND: [],
 		};
 
+		const eqFields = ["status"] as const;
+
+		eqFields.forEach((field) => {
+			if (data[field] !== undefined) {
+				where[field] = data[field];
+			}
+		});
+
 		const searchFields = ["name"] as const;
 
 		if (data.searchTerm) {

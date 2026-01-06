@@ -8,7 +8,6 @@ import {
 	FieldGroup,
 	FieldLabel,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -18,43 +17,36 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-import { CategoryStatus } from "@/prisma/generated/enums";
+import { ProfileStatus } from "@/prisma/generated/enums";
 import { cn } from "@/utils";
 
-export const adminCategoryFormSchema = z.object({
-	name: z
-		.string("Name must be a string")
-		.min(3, "Name must be at least 3 characters"),
+export const adminVendorProfileFormSchema = z.object({
 	status: z
 		.enum(
-			[
-				CategoryStatus.REQUESTED,
-				CategoryStatus.REJECTED,
-				CategoryStatus.APPROVED,
-			],
-			`Status must be either '${CategoryStatus.REQUESTED}', '${CategoryStatus.REJECTED}', or '${CategoryStatus.APPROVED}'`,
+			[ProfileStatus.PENDING, ProfileStatus.REJECTED, ProfileStatus.APPROVED],
+			`Status must be either '${ProfileStatus.PENDING}', '${ProfileStatus.REJECTED}', or '${ProfileStatus.APPROVED}'`,
 		)
 		.optional(),
 });
 
-export function AdminCategoryForm({
+export function AdminVendorProfileForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
 	className,
 	...props
 }: ComponentPropsWithoutRef<"form"> & {
-	defaultValues: z.infer<typeof adminCategoryFormSchema>;
+	defaultValues: z.infer<typeof adminVendorProfileFormSchema>;
 	isSubmitting: boolean;
 	submitHandler: ({
 		data,
 	}: {
-		data: z.infer<typeof adminCategoryFormSchema>;
+		data: z.infer<typeof adminVendorProfileFormSchema>;
 	}) => void;
 }) {
 	const form = useForm({
 		validators: {
-			onChange: adminCategoryFormSchema,
+			onChange: adminVendorProfileFormSchema,
 		},
 		defaultValues,
 		onSubmit: async ({ value: data }) => {
@@ -74,29 +66,6 @@ export function AdminCategoryForm({
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">
-					<form.Field name="name">
-						{(field) => {
-							const isInvalid =
-								field.state.meta.isTouched && !field.state.meta.isValid;
-							return (
-								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Name</FieldLabel>
-									<Input
-										id={field.name}
-										name={field.name}
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.value)}
-										aria-invalid={isInvalid}
-										placeholder="Enter name"
-									/>
-									{isInvalid && <FieldError errors={field.state.meta.errors} />}
-								</Field>
-							);
-						}}
-					</form.Field>
-				</div>
-				<div className="flex gap-2 items-start">
 					<form.Field name="status">
 						{(field) => {
 							const isInvalid =
@@ -107,7 +76,7 @@ export function AdminCategoryForm({
 									<Select
 										value={field.state.value}
 										onValueChange={(value) =>
-											field.handleChange(value ?? CategoryStatus.APPROVED)
+											field.handleChange(value ?? ProfileStatus.APPROVED)
 										}
 									>
 										<SelectTrigger
@@ -122,7 +91,7 @@ export function AdminCategoryForm({
 										</SelectTrigger>
 										<SelectContent align="start">
 											<SelectGroup>
-												{Object.values(CategoryStatus).map((status) => (
+												{Object.values(ProfileStatus).map((status) => (
 													<SelectItem key={status} value={status}>
 														{status}
 													</SelectItem>

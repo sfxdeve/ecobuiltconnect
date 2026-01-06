@@ -35,6 +35,7 @@ import { Route as userUserRequestsIndexRouteImport } from './routes/(user)/user.
 import { Route as userUserOrdersIndexRouteImport } from './routes/(user)/user.orders/index'
 import { Route as userUserCheckoutIndexRouteImport } from './routes/(user)/user.checkout/index'
 import { Route as publicProductsProductIdIndexRouteImport } from './routes/(public)/products/$productId/index'
+import { Route as adminAdminVendorsIndexRouteImport } from './routes/(admin)/admin.vendors/index'
 import { Route as adminAdminProductsIndexRouteImport } from './routes/(admin)/admin.products/index'
 import { Route as adminAdminOrdersIndexRouteImport } from './routes/(admin)/admin.orders/index'
 import { Route as adminAdminCategoriesIndexRouteImport } from './routes/(admin)/admin.categories/index'
@@ -170,6 +171,11 @@ const publicProductsProductIdIndexRoute =
     path: '/products/$productId/',
     getParentRoute: () => publicRouteRoute,
   } as any)
+const adminAdminVendorsIndexRoute = adminAdminVendorsIndexRouteImport.update({
+  id: '/admin/vendors/',
+  path: '/admin/vendors/',
+  getParentRoute: () => adminRouteRoute,
+} as any)
 const adminAdminProductsIndexRoute = adminAdminProductsIndexRouteImport.update({
   id: '/admin/products/',
   path: '/admin/products/',
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof adminAdminCategoriesIndexRoute
   '/admin/orders': typeof adminAdminOrdersIndexRoute
   '/admin/products': typeof adminAdminProductsIndexRoute
+  '/admin/vendors': typeof adminAdminVendorsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/user/checkout': typeof userUserCheckoutIndexRoute
   '/user/orders': typeof userUserOrdersIndexRoute
@@ -249,6 +256,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof adminAdminCategoriesIndexRoute
   '/admin/orders': typeof adminAdminOrdersIndexRoute
   '/admin/products': typeof adminAdminProductsIndexRoute
+  '/admin/vendors': typeof adminAdminVendorsIndexRoute
   '/products/$productId': typeof publicProductsProductIdIndexRoute
   '/user/checkout': typeof userUserCheckoutIndexRoute
   '/user/orders': typeof userUserOrdersIndexRoute
@@ -284,6 +292,7 @@ export interface FileRoutesById {
   '/(admin)/admin/categories/': typeof adminAdminCategoriesIndexRoute
   '/(admin)/admin/orders/': typeof adminAdminOrdersIndexRoute
   '/(admin)/admin/products/': typeof adminAdminProductsIndexRoute
+  '/(admin)/admin/vendors/': typeof adminAdminVendorsIndexRoute
   '/(public)/products/$productId/': typeof publicProductsProductIdIndexRoute
   '/(user)/user/checkout/': typeof userUserCheckoutIndexRoute
   '/(user)/user/orders/': typeof userUserOrdersIndexRoute
@@ -314,6 +323,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/orders'
     | '/admin/products'
+    | '/admin/vendors'
     | '/products/$productId'
     | '/user/checkout'
     | '/user/orders'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/orders'
     | '/admin/products'
+    | '/admin/vendors'
     | '/products/$productId'
     | '/user/checkout'
     | '/user/orders'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/(admin)/admin/categories/'
     | '/(admin)/admin/orders/'
     | '/(admin)/admin/products/'
+    | '/(admin)/admin/vendors/'
     | '/(public)/products/$productId/'
     | '/(user)/user/checkout/'
     | '/(user)/user/orders/'
@@ -582,6 +594,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicProductsProductIdIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
+    '/(admin)/admin/vendors/': {
+      id: '/(admin)/admin/vendors/'
+      path: '/admin/vendors'
+      fullPath: '/admin/vendors'
+      preLoaderRoute: typeof adminAdminVendorsIndexRouteImport
+      parentRoute: typeof adminRouteRoute
+    }
     '/(admin)/admin/products/': {
       id: '/(admin)/admin/products/'
       path: '/admin/products'
@@ -631,12 +650,14 @@ interface adminRouteRouteChildren {
   adminAdminCategoriesIndexRoute: typeof adminAdminCategoriesIndexRoute
   adminAdminOrdersIndexRoute: typeof adminAdminOrdersIndexRoute
   adminAdminProductsIndexRoute: typeof adminAdminProductsIndexRoute
+  adminAdminVendorsIndexRoute: typeof adminAdminVendorsIndexRoute
 }
 
 const adminRouteRouteChildren: adminRouteRouteChildren = {
   adminAdminCategoriesIndexRoute: adminAdminCategoriesIndexRoute,
   adminAdminOrdersIndexRoute: adminAdminOrdersIndexRoute,
   adminAdminProductsIndexRoute: adminAdminProductsIndexRoute,
+  adminAdminVendorsIndexRoute: adminAdminVendorsIndexRoute,
 }
 
 const adminRouteRouteWithChildren = adminRouteRoute._addFileChildren(

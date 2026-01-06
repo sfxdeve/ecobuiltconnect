@@ -51,6 +51,11 @@ const items: {
 		label: "Orders",
 		to: "/admin/orders",
 	},
+	{
+		icon: ShoppingBagIcon,
+		label: "Vendors",
+		to: "/admin/vendors",
+	},
 ];
 
 export function AdminSidebar() {
