@@ -27,6 +27,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
 import { getAdminProfile, upsertAdminProfile } from "@/lib/api/admin.profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
@@ -89,6 +90,8 @@ export function AdminSidebar() {
 		},
 	});
 
+	const { setOpenMobile } = useSidebar();
+
 	return (
 		<Sidebar>
 			<SidebarHeader>
@@ -102,6 +105,9 @@ export function AdminSidebar() {
 								render={
 									<Link to={item.to} activeProps={{ className: "bg-muted" }} />
 								}
+								onClick={() => {
+									setOpenMobile(false);
+								}}
 							>
 								<item.icon />
 								<span>{item.label}</span>

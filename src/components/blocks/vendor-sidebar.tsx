@@ -7,6 +7,7 @@ import {
 	type LucideIcon,
 	PackageIcon,
 	ShoppingBagIcon,
+	// TagIcon,
 	UserIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -27,6 +28,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
 import {
 	getVendorProfile,
@@ -35,11 +37,11 @@ import {
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 const items = [
-	{
-		icon: ShoppingBagIcon,
-		label: "Orders",
-		to: "/vendor/orders",
-	},
+	// {
+	// 	icon: TagIcon,
+	// 	label: "Categories",
+	// 	to: "/vendor/categories",
+	// },
 	{
 		icon: FileTextIcon,
 		label: "Requests",
@@ -49,6 +51,11 @@ const items = [
 		icon: PackageIcon,
 		label: "Products",
 		to: "/vendor/products",
+	},
+	{
+		icon: ShoppingBagIcon,
+		label: "Orders",
+		to: "/vendor/orders",
 	},
 ] satisfies {
 	icon: LucideIcon;
@@ -87,6 +94,8 @@ export function VendorSidebar() {
 		},
 	});
 
+	const { setOpenMobile } = useSidebar();
+
 	return (
 		<Sidebar>
 			<SidebarHeader>
@@ -100,6 +109,9 @@ export function VendorSidebar() {
 								render={
 									<Link to={item.to} activeProps={{ className: "bg-muted" }} />
 								}
+								onClick={() => {
+									setOpenMobile(false);
+								}}
 							>
 								<item.icon />
 								<span>{item.label}</span>

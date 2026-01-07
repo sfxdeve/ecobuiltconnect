@@ -5,14 +5,18 @@ import {
 	UserButton,
 } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "../ui/sidebar";
 
 export function DashboardHeader({ title }: { title: string }) {
 	return (
 		<header>
 			<div className={"p-4 flex items-center justify-between"}>
-				<div>
-					<h2>{title}</h2>
-					<p></p>
+				<div className="flex gap-2 items-center">
+					<SidebarTrigger className="md:hidden" />
+					<div>
+						<h2>{title}</h2>
+						<p></p>
+					</div>
 				</div>
 				<div className="flex items-center gap-4">
 					<SignedIn>
