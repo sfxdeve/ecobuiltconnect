@@ -74,29 +74,6 @@ export function UserProfileForm({
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">
-					<form.Field name="address">
-						{(field) => {
-							const isInvalid =
-								field.state.meta.isTouched && !field.state.meta.isValid;
-							return (
-								<Field data-invalid={isInvalid}>
-									<FieldLabel htmlFor={field.name}>Address</FieldLabel>
-									<Input
-										id={field.name}
-										name={field.name}
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.value)}
-										aria-invalid={isInvalid}
-										placeholder="Enter address"
-									/>
-									{isInvalid && <FieldError errors={field.state.meta.errors} />}
-								</Field>
-							);
-						}}
-					</form.Field>
-				</div>
-				<div className="flex gap-2 items-start">
 					<form.Field name="name">
 						{(field) => {
 							const isInvalid =
@@ -112,6 +89,29 @@ export function UserProfileForm({
 										onChange={(e) => field.handleChange(e.target.value)}
 										aria-invalid={isInvalid}
 										placeholder="Enter name"
+									/>
+									{isInvalid && <FieldError errors={field.state.meta.errors} />}
+								</Field>
+							);
+						}}
+					</form.Field>
+				</div>
+				<div className="flex gap-2 items-start">
+					<form.Field name="address">
+						{(field) => {
+							const isInvalid =
+								field.state.meta.isTouched && !field.state.meta.isValid;
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={field.name}>Address</FieldLabel>
+									<Input
+										id={field.name}
+										name={field.name}
+										value={field.state.value}
+										onBlur={field.handleBlur}
+										onChange={(e) => field.handleChange(e.target.value)}
+										aria-invalid={isInvalid}
+										placeholder="Enter address"
 									/>
 									{isInvalid && <FieldError errors={field.state.meta.errors} />}
 								</Field>

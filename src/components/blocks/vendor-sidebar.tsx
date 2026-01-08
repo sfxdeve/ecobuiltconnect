@@ -7,7 +7,6 @@ import {
 	type LucideIcon,
 	PackageIcon,
 	ShoppingBagIcon,
-	// TagIcon,
 	UserIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -34,11 +33,6 @@ import { getVendorProfile, upsertVendorProfile } from "@/remote/vendor.profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 const items = [
-	// {
-	// 	icon: TagIcon,
-	// 	label: "Categories",
-	// 	to: "/vendor/categories",
-	// },
 	{
 		icon: FileTextIcon,
 		label: "Requests",
