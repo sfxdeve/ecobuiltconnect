@@ -4,7 +4,7 @@ import { prisma } from "@/prisma";
 import { CategoryStatus } from "@/prisma/generated/enums";
 import type { CategoryWhereInput } from "@/prisma/generated/models";
 import { categorySelector } from "@/prisma/selectors";
-import { getAdminProfile } from "./admin.profile";
+import { getAdminProfile } from "@/remote/admin.profile";
 
 export const getCategories = createServerFn({ method: "GET" })
 	.inputValidator(

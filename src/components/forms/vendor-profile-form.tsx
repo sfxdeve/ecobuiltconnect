@@ -23,10 +23,9 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useFileUpload } from "@/hooks/use-file-upload";
-import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
-import { composeS3URL } from "@/lib/aws/client.s3";
-import { composeS3Key } from "@/lib/aws/shared.s3";
-import { fetchPlaceNamesByCountry } from "@/utils/cities";
+import { fetchPlaceNamesByCountry } from "@/lib/cities";
+import { composeS3Key, composeS3URL } from "@/lib/s3.shared";
+import { getS3ObjectUploadURL } from "@/remote/shared.s3";
 import { ProfileImagePicker } from "../blocks/profile-image-picker";
 
 export const vendorProfileFormSchema = z.object({

@@ -53,16 +53,16 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { formatDate } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
+import { CategoryStatus } from "@/prisma/generated/enums";
 import {
 	createCategory,
 	deleteCategory,
 	getCategories,
 	getCategory,
 	updateCategory,
-} from "@/lib/api/admin.categories";
-import { CategoryStatus } from "@/prisma/generated/enums";
-import { cn } from "@/utils";
-import { formatDate } from "@/utils/formatters";
+} from "@/remote/admin.categories";
 
 export const Route = createFileRoute("/(admin)/admin/categories/")({
 	validateSearch: z.object({

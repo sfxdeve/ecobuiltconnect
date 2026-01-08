@@ -36,12 +36,12 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { getProducts } from "@/lib/api/public.product";
-import { composeS3URL } from "@/lib/aws/shared.s3";
+import { formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
 import { ProductCondition } from "@/prisma/generated/enums";
+import { getProducts } from "@/remote/public.product";
 import { cartActions } from "@/stores/cart";
-import { cn } from "@/utils";
-import { formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(public)/products/")({
 	validateSearch: z.object({

@@ -20,7 +20,7 @@ import {
 	ItemMedia,
 	ItemTitle,
 } from "@/components/ui/item";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/(public)/")({
 	head: () => ({

@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { VendorSidebar } from "@/components/blocks/vendor-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { getVendorProfile } from "@/lib/api/vendor.profile";
+import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const Route = createFileRoute("/(vendor)")({
 	beforeLoad: async () => {

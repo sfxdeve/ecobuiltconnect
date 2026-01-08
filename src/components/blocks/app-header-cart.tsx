@@ -21,11 +21,11 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { getProduct } from "@/lib/api/public.product";
-import { composeS3URL } from "@/lib/aws/shared.s3";
+import { formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
+import { getProduct } from "@/remote/public.product";
 import { cartActions, cartStore } from "@/stores/cart";
-import { cn } from "@/utils";
-import { formatMoneyFromCents } from "@/utils/formatters";
 
 export function AppHeaderCart() {
 	const { isSignedIn } = useUser();

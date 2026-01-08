@@ -18,7 +18,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-import { fetchPlaceNamesByCountry } from "@/utils/cities";
+import { fetchPlaceNamesByCountry } from "@/lib/cities";
 
 export const userProfileFormSchema = z.object({
 	address: z

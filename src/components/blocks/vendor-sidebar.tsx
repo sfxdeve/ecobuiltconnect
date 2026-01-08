@@ -30,10 +30,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import {
-	getVendorProfile,
-	upsertVendorProfile,
-} from "@/lib/api/vendor.profile";
+import { getVendorProfile, upsertVendorProfile } from "@/remote/vendor.profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 const items = [

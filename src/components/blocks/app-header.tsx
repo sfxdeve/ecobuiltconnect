@@ -21,8 +21,8 @@ import { toast } from "sonner";
 import { AppHeaderCart } from "@/components/blocks/app-header-cart";
 import { AppHeaderRoleSpecificMenuGroup } from "@/components/blocks/app-header-role-specific-menu-group";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { getUserProfile, upsertUserProfile } from "@/lib/api/user.profile";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
+import { getUserProfile, upsertUserProfile } from "@/remote/user.profile";
 import { UserProfileForm } from "../forms/user-profile-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import {

@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/carousel";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { getProduct } from "@/lib/api/public.product";
-import { composeS3URL } from "@/lib/aws/shared.s3";
+import { formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { getProduct } from "@/remote/public.product";
 import { cartActions } from "@/stores/cart";
-import { formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(public)/products/$productId/")({
 	loader: ({ params }) => getProduct({ data: { productId: params.productId } }),

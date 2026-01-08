@@ -50,14 +50,14 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { formatDate } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
+import { ProfileStatus } from "@/prisma/generated/enums";
 import {
 	getVendorProfile,
 	getVendorProfiles,
 	updateVendorProfile,
-} from "@/lib/api/admin.vendor-profile";
-import { ProfileStatus } from "@/prisma/generated/enums";
-import { cn } from "@/utils";
-import { formatDate } from "@/utils/formatters";
+} from "@/remote/admin.vendor-profile";
 
 export const Route = createFileRoute("/(admin)/admin/vendors/")({
 	validateSearch: z.object({

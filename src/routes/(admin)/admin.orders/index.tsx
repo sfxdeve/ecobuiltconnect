@@ -56,13 +56,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
 import {
 	getOrderRequest,
 	getOrderRequests,
-} from "@/lib/api/admin.order-request";
-import { composeS3URL } from "@/lib/aws/shared.s3";
-import { cn } from "@/utils";
-import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
+} from "@/remote/admin.order-request";
 
 export const Route = createFileRoute("/(admin)/admin/orders/")({
 	validateSearch: z.object({

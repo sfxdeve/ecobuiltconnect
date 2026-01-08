@@ -67,15 +67,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import {
-	deleteProduct,
-	getProduct,
-	getProducts,
-} from "@/lib/api/admin.product";
-import { composeS3URL } from "@/lib/aws/shared.s3";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
 import { ProductCondition } from "@/prisma/generated/enums";
-import { cn } from "@/utils";
-import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
+import { deleteProduct, getProduct, getProducts } from "@/remote/admin.product";
 
 export const Route = createFileRoute("/(admin)/admin/products/")({
 	validateSearch: z.object({

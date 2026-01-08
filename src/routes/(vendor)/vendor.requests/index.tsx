@@ -47,13 +47,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { createProduct } from "@/lib/api/vendor.product";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
+import { createProduct } from "@/remote/vendor.product";
 import {
 	getProductRequest,
 	getProductRequests,
-} from "@/lib/api/vendor.product-request";
-import { cn } from "@/utils";
-import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
+} from "@/remote/vendor.product-request";
 
 export const Route = createFileRoute("/(vendor)/vendor/requests/")({
 	validateSearch: z.object({

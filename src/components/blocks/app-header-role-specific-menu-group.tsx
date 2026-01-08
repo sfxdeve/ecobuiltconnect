@@ -8,7 +8,7 @@ import {
 	DropdownMenuGroup,
 	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { getProfile } from "@/lib/api/shared.profile";
+import { getProfile } from "@/remote/shared.profile";
 
 export function AppHeaderRoleSpecificMenuGroup({
 	setProfileDialogType,

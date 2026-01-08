@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AdminSidebar } from "@/components/blocks/admin-sidebar";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { getAdminProfile } from "@/lib/api/admin.profile";
+import { getAdminProfile } from "@/remote/admin.profile";
 
 export const Route = createFileRoute("/(admin)")({
 	beforeLoad: async () => {

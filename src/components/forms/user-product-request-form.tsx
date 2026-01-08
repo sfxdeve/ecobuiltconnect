@@ -23,10 +23,9 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useFileUpload } from "@/hooks/use-file-upload";
-import { getCategories } from "@/lib/api/public.category";
-import { getS3ObjectUploadURL } from "@/lib/api/shared.s3";
-import { composeS3URL } from "@/lib/aws/client.s3";
-import { composeS3Key } from "@/lib/aws/shared.s3";
+import { composeS3Key, composeS3URL } from "@/lib/s3.shared";
+import { getCategories } from "@/remote/public.category";
+import { getS3ObjectUploadURL } from "@/remote/shared.s3";
 import { ProductImagesPicker } from "../blocks/product-images-picker";
 
 export const userProductRequestFormSchema = z.object({

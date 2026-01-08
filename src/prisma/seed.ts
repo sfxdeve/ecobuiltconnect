@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { env } from "@/lib/env/server";
+import { env } from "@/lib/env.server";
 import { PrismaClient } from "./generated/client";
 import {
 	CategoryStatus,

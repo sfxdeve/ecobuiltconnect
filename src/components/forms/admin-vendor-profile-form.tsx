@@ -17,8 +17,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import { ProfileStatus } from "@/prisma/generated/enums";
-import { cn } from "@/utils";
 
 export const adminVendorProfileFormSchema = z.object({
 	status: z

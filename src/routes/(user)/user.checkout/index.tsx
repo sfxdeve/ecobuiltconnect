@@ -30,13 +30,13 @@ import {
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { getProduct } from "@/lib/api/public.product";
-import { createOrderRequest } from "@/lib/api/user.order-request";
-import { initiateOrderRequestPayment } from "@/lib/api/user.ozow";
-import { getUserProfile } from "@/lib/api/user.profile";
-import { composeS3URL } from "@/lib/aws/shared.s3";
+import { formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { getProduct } from "@/remote/public.product";
+import { createOrderRequest } from "@/remote/user.order-request";
+import { initiateOrderRequestPayment } from "@/remote/user.ozow";
+import { getUserProfile } from "@/remote/user.profile";
 import { cartActions, cartStore } from "@/stores/cart";
-import { formatMoneyFromCents } from "@/utils/formatters";
 
 export const Route = createFileRoute("/(user)/user/checkout/")({
 	head: () => ({

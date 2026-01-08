@@ -61,14 +61,14 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
 import {
 	getOrderRequest,
 	getOrderRequests,
 	updateOrderRequest,
-} from "@/lib/api/vendor.order-request";
-import { composeS3URL } from "@/lib/aws/shared.s3";
-import { cn } from "@/utils";
-import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
+} from "@/remote/vendor.order-request";
 
 export const Route = createFileRoute("/(vendor)/vendor/orders/")({
 	validateSearch: z.object({

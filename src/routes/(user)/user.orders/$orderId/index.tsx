@@ -31,11 +31,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { createLogisticRequest } from "@/lib/api/user.logistic-request";
-import { getOrderRequest } from "@/lib/api/user.order-request";
-import { composeS3URL } from "@/lib/aws/shared.s3";
-import { cn } from "@/utils";
-import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
+import { createLogisticRequest } from "@/remote/user.logistic-request";
+import { getOrderRequest } from "@/remote/user.order-request";
 
 export const Route = createFileRoute("/(user)/user/orders/$orderId/")({
 	loader: ({ params }) =>

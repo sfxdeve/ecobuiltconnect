@@ -22,9 +22,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { getVendorProfiles } from "@/lib/api/public.vendor-profile";
-import { composeS3URL } from "@/lib/aws/shared.s3";
-import { cn } from "@/utils";
+import { composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
+import { getVendorProfiles } from "@/remote/public.vendor-profile";
 
 export const Route = createFileRoute("/(public)/vendors/")({
 	validateSearch: z.object({

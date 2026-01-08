@@ -29,7 +29,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { getAdminProfile, upsertAdminProfile } from "@/lib/api/admin.profile";
+import { getAdminProfile, upsertAdminProfile } from "@/remote/admin.profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 const items: {

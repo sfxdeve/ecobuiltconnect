@@ -68,17 +68,17 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
+import { ProductCondition } from "@/prisma/generated/enums";
 import {
 	createProduct,
 	deleteProduct,
 	getProduct,
 	getProducts,
 	updateProduct,
-} from "@/lib/api/vendor.product";
-import { composeS3URL } from "@/lib/aws/shared.s3";
-import { ProductCondition } from "@/prisma/generated/enums";
-import { cn } from "@/utils";
-import { formatDate, formatMoneyFromCents } from "@/utils/formatters";
+} from "@/remote/vendor.product";
 
 export const Route = createFileRoute("/(vendor)/vendor/products/")({
 	validateSearch: z.object({

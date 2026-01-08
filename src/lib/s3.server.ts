@@ -1,6 +1,6 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { createServerOnlyFn } from "@tanstack/react-start";
-import { env } from "@/lib/env/server";
+import { env } from "@/lib/env.server";
 
 export const s3 = new S3Client({
 	region: env.AWS_REGION,

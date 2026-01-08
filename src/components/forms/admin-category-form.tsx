@@ -18,8 +18,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import { CategoryStatus } from "@/prisma/generated/enums";
-import { cn } from "@/utils";
 
 export const adminCategoryFormSchema = z.object({
 	name: z

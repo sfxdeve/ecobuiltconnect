@@ -16,10 +16,10 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { upsertAdminProfile } from "@/lib/api/admin.profile";
-import { getProfile } from "@/lib/api/shared.profile";
-import { upsertUserProfile } from "@/lib/api/user.profile";
-import { upsertVendorProfile } from "@/lib/api/vendor.profile";
+import { upsertAdminProfile } from "@/remote/admin.profile";
+import { getProfile } from "@/remote/shared.profile";
+import { upsertUserProfile } from "@/remote/user.profile";
+import { upsertVendorProfile } from "@/remote/vendor.profile";
 
 export const Route = createFileRoute("/(public)")({
 	component: PublicLayout,
