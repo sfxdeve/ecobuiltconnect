@@ -29,6 +29,9 @@ export const upsertUserProfile = createServerFn({
 })
 	.inputValidator(
 		z.object({
+			name: z
+				.string("Name must be a string")
+				.min(3, "Name must be at least 3 characters"),
 			address: z
 				.string("Address must be a string")
 				.min(3, "Address must be at least 3 characters"),

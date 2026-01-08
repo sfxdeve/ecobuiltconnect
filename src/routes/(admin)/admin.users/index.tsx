@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { AppPending } from "@/components/blocks/app-pending";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
-import { AdminVendorProfileForm } from "@/components/forms/admin-vendor-profile-form";
+import { AdminUserProfileForm } from "@/components/forms/admin-user-profile-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Dialog,
@@ -54,12 +54,12 @@ import { formatDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { ProfileStatus } from "@/prisma/generated/enums";
 import {
-	getVendorProfile,
-	getVendorProfiles,
-	updateVendorProfile,
-} from "@/remote/admin.vendor-profile";
+	getUserProfile,
+	getUserProfiles,
+	updateUserProfile,
+} from "@/remote/admin.user-profile";
 
-export const Route = createFileRoute("/(admin)/admin/vendors/")({
+export const Route = createFileRoute("/(admin)/admin/users/")({
 	validateSearch: z.object({
 		page: z
 			.int("Page must be an integer")
@@ -88,37 +88,37 @@ export const Route = createFileRoute("/(admin)/admin/vendors/")({
 			.optional(),
 	}),
 	loaderDeps: ({ search }) => search,
-	loader: ({ deps }) => getVendorProfiles({ data: deps }),
+	loader: ({ deps }) => getUserProfiles({ data: deps }),
 	head: () => ({
 		meta: [
 			{
-				title: "Vendor Profiles",
+				title: "User Profiles",
 			},
 			{
 				name: "description",
-				content: "Manage your vendor profile listings and inventory.",
+				content: "Manage your user profile listings and inventory.",
 			},
 		],
 	}),
 	pendingComponent: AppPending,
-	component: VendorProfilesPage,
+	component: UserProfilesPage,
 });
 
-function VendorProfilesPage() {
+function UserProfilesPage() {
 	const loaderData = Route.useLoaderData();
 
-	const [selectedVendorProfileId, setSelectedVendorProfileId] = useState<
+	const [selectedUserProfileId, setSelectedUserProfileId] = useState<
 		string | null
 	>(null);
 	const [selectedAction, setSelectedAction] = useState<"update" | null>(null);
 
 	return (
 		<>
-			<DashboardHeader title="Vendor Profiles" />
+			<DashboardHeader title="User Profiles" />
 			<section>
 				<div className="p-4 space-y-6 min-h-screen">
-					<VendorProfilesPageSearch />
-					{loaderData.vendorProfiles.length > 0 ? (
+					<UserProfilesPageSearch />
+					{loaderData.userProfiles.length > 0 ? (
 						<>
 							<Table>
 								<TableHeader>
@@ -130,13 +130,13 @@ function VendorProfilesPage() {
 									</TableRow>
 								</TableHeader>
 								<TableBody>
-									{loaderData.vendorProfiles.map((vendorProfile) => {
+									{loaderData.userProfiles.map((userProfile) => {
 										return (
-											<TableRow key={vendorProfile.id}>
-												<TableCell>{vendorProfile.name}</TableCell>
-												<TableCell>{vendorProfile.status}</TableCell>
+											<TableRow key={userProfile.id}>
+												<TableCell>{userProfile.name}</TableCell>
+												<TableCell>{userProfile.status}</TableCell>
 												<TableCell>
-													{formatDate(vendorProfile.createdAt)}
+													{formatDate(userProfile.createdAt)}
 												</TableCell>
 												<TableCell>
 													<DropdownMenu>
@@ -149,7 +149,7 @@ function VendorProfilesPage() {
 														<DropdownMenuContent align="end">
 															<DropdownMenuItem
 																onClick={() => {
-																	setSelectedVendorProfileId(vendorProfile.id);
+																	setSelectedUserProfileId(userProfile.id);
 																	setSelectedAction("update");
 																}}
 															>
@@ -167,16 +167,16 @@ function VendorProfilesPage() {
 								open={selectedAction !== null}
 								onOpenChange={(open) => {
 									if (!open) {
-										setSelectedVendorProfileId(null);
+										setSelectedUserProfileId(null);
 										setSelectedAction(null);
 									}
 								}}
 							>
-								{selectedVendorProfileId && selectedAction === "update" && (
-									<UpdateVendorProfileDialogContent
-										vendorProfileId={selectedVendorProfileId}
+								{selectedUserProfileId && selectedAction === "update" && (
+									<UpdateUserProfileDialogContent
+										userProfileId={selectedUserProfileId}
 										closeDialog={() => {
-											setSelectedVendorProfileId(null);
+											setSelectedUserProfileId(null);
 											setSelectedAction(null);
 										}}
 									/>
@@ -194,34 +194,34 @@ function VendorProfilesPage() {
 							</EmptyHeader>
 						</Empty>
 					)}
-					<VendorProfilesPagePagination />
+					<UserProfilesPagePagination />
 				</div>
 			</section>
 		</>
 	);
 }
 
-function UpdateVendorProfileDialogContent({
-	vendorProfileId,
+function UpdateUserProfileDialogContent({
+	userProfileId,
 	closeDialog,
 }: {
-	vendorProfileId: string;
+	userProfileId: string;
 	closeDialog: () => void;
 }) {
 	const router = useRouter();
 
-	const getVendorProfileFn = useServerFn(getVendorProfile);
-	const updateVendorProfileFn = useServerFn(updateVendorProfile);
+	const getUserProfileFn = useServerFn(getUserProfile);
+	const updateUserProfileFn = useServerFn(updateUserProfile);
 
-	const vendorProfileResult = useQuery({
-		queryKey: ["vendorProfile", vendorProfileId],
-		queryFn: () => getVendorProfileFn({ data: { vendorProfileId } }),
+	const userProfileResult = useQuery({
+		queryKey: ["userProfile", userProfileId],
+		queryFn: () => getUserProfileFn({ data: { userProfileId } }),
 	});
 
-	const updateVendorProfileMutation = useMutation({
-		mutationFn: updateVendorProfileFn,
+	const updateUserProfileMutation = useMutation({
+		mutationFn: updateUserProfileFn,
 		onSuccess: () => {
-			toast.success("VendorProfile updated successfully");
+			toast.success("UserProfile updated successfully");
 
 			router.invalidate();
 
@@ -232,27 +232,27 @@ function UpdateVendorProfileDialogContent({
 		},
 	});
 
-	if (vendorProfileResult.isPending) {
+	if (userProfileResult.isPending) {
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Update VendorProfile</DialogTitle>
+					<DialogTitle>Update UserProfile</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-muted-foreground">
-					Loading vendorProfile details...
+					Loading userProfile details...
 				</div>
 			</DialogContent>
 		);
 	}
 
-	if (vendorProfileResult.isError) {
+	if (userProfileResult.isError) {
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Update VendorProfile</DialogTitle>
+					<DialogTitle>Update UserProfile</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-destructive">
-					Error loading vendorProfile: {vendorProfileResult.error.message}
+					Error loading userProfile: {userProfileResult.error.message}
 				</div>
 			</DialogContent>
 		);
@@ -261,16 +261,16 @@ function UpdateVendorProfileDialogContent({
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Update VendorProfile</DialogTitle>
+				<DialogTitle>Update UserProfile</DialogTitle>
 			</DialogHeader>
-			<AdminVendorProfileForm
+			<AdminUserProfileForm
 				defaultValues={{
-					status: vendorProfileResult.data.vendorProfile.status,
+					status: userProfileResult.data.userProfile.status,
 				}}
-				isSubmitting={updateVendorProfileMutation.isPending}
+				isSubmitting={updateUserProfileMutation.isPending}
 				submitHandler={({ data }) =>
-					updateVendorProfileMutation.mutate({
-						data: { ...data, vendorProfileId },
+					updateUserProfileMutation.mutate({
+						data: { ...data, userProfileId },
 					})
 				}
 				className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
@@ -279,7 +279,7 @@ function UpdateVendorProfileDialogContent({
 	);
 }
 
-function VendorProfilesPageSearch() {
+function UserProfilesPageSearch() {
 	const navigate = Route.useNavigate();
 
 	const debouncedSearch = debounce(
@@ -299,7 +299,7 @@ function VendorProfilesPageSearch() {
 	return (
 		<div className="flex gap-2 items-center justify-between">
 			<Input
-				placeholder="Search VendorProfiles"
+				placeholder="Search UserProfiles"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
@@ -307,7 +307,7 @@ function VendorProfilesPageSearch() {
 	);
 }
 
-function VendorProfilesPagePagination() {
+function UserProfilesPagePagination() {
 	const loaderData = Route.useLoaderData();
 	const navigate = Route.useNavigate();
 

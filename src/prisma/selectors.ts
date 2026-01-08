@@ -16,6 +16,7 @@ import type {
 export const userProfileSelector = {
 	id: true,
 	clerkId: true,
+	name: true,
 	address: true,
 	city: true,
 	postcode: true,

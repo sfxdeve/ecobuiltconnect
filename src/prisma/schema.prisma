@@ -17,6 +17,7 @@ model UserProfile {
   id String @id @default(uuid())
 
   clerkId  String        @unique @map("clerk_id")
+  name     String
   address  String
   city     String
   postcode String
