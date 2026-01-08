@@ -20,18 +20,23 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AppHeaderCart } from "@/components/blocks/app-header-cart";
 import { AppHeaderRoleSpecificMenuGroup } from "@/components/blocks/app-header-role-specific-menu-group";
+import { UserProfileForm } from "@/components/forms/user-profile-form";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { getUserProfile, upsertUserProfile } from "@/remote/user.profile";
-import { UserProfileForm } from "../forms/user-profile-form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { getUserProfile, upsertUserProfile } from "@/remote/user.profile";
 
 export function AppHeader() {
 	const { isSignedIn } = useUser();
@@ -245,6 +250,7 @@ function CreateProfileDialogContent({
 			</DialogHeader>
 			<UserProfileForm
 				defaultValues={{
+					name: userProfileResult.data?.userProfile?.name ?? "",
 					address: userProfileResult.data?.userProfile?.address ?? "",
 					city: userProfileResult.data?.userProfile?.city ?? "",
 					postcode: userProfileResult.data?.userProfile?.postcode ?? "",

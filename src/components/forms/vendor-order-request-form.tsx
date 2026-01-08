@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import type { ComponentPropsWithoutRef } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import { OrderStatus } from "@/prisma/generated/enums";
 
 export const vendorOrderRequestFormSchema = z.object({
@@ -31,7 +33,9 @@ export function VendorOrderRequestForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof vendorOrderRequestFormSchema>;
 	isSubmitting: boolean;
 	submitHandler: ({
@@ -45,7 +49,7 @@ export function VendorOrderRequestForm({
 			onChange: vendorOrderRequestFormSchema,
 		},
 		defaultValues,
-		onSubmit: ({ value: data }) => {
+		onSubmit: async ({ value: data }) => {
 			submitHandler({ data });
 		},
 	});
@@ -56,6 +60,8 @@ export function VendorOrderRequestForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn("space-y-6", className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">

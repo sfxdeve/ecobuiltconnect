@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import type { ComponentPropsWithoutRef } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 export const userProductRequestsFiltersFormSchema = z.object({
 	sortBy: z
@@ -58,7 +60,9 @@ export function UserProductRequestsFiltersForm({
 	defaultValues,
 	submitHandler,
 	resetHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof userProductRequestsFiltersFormSchema>;
 	submitHandler: ({
 		data,
@@ -76,7 +80,7 @@ export function UserProductRequestsFiltersForm({
 			onChange: userProductRequestsFiltersFormSchema,
 		},
 		defaultValues,
-		onSubmit: ({ value: data }) => {
+		onSubmit: async ({ value: data }) => {
 			submitHandler({ data });
 		},
 	});
@@ -87,6 +91,8 @@ export function UserProductRequestsFiltersForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn("space-y-6", className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">

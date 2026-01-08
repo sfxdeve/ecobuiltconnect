@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import type { ComponentPropsWithoutRef } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -24,6 +25,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { composeS3Key, composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
 import { getCategories } from "@/remote/public.category";
 import { getS3ObjectUploadURL } from "@/remote/shared.s3";
 import { ProductImagesPicker } from "../blocks/product-images-picker";
@@ -55,7 +57,9 @@ export function UserProductRequestForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof userProductRequestFormSchema>;
 	isSubmitting: boolean;
 	submitHandler: ({
@@ -140,6 +144,8 @@ export function UserProductRequestForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn("space-y-6", className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">

@@ -64,7 +64,7 @@ export function AdminCategoryForm({
 
 	return (
 		<form
-			onSubmit={async (event) => {
+			onSubmit={(event) => {
 				event.preventDefault();
 
 				form.handleSubmit();

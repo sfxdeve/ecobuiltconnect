@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import type { ComponentPropsWithoutRef } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 
 export const userLogisticRequestFormSchema = z.object({
 	requestedPrice: z
@@ -20,7 +22,9 @@ export function UserLogisticRequestForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof userLogisticRequestFormSchema>;
 	isSubmitting: boolean;
 	submitHandler: ({
@@ -34,7 +38,7 @@ export function UserLogisticRequestForm({
 			onChange: userLogisticRequestFormSchema,
 		},
 		defaultValues,
-		onSubmit: ({ value: data }) => {
+		onSubmit: async ({ value: data }) => {
 			submitHandler({ data });
 		},
 	});
@@ -45,6 +49,8 @@ export function UserLogisticRequestForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn("space-y-6", className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">

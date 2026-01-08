@@ -1,15 +1,8 @@
 import { useForm } from "@tanstack/react-form";
+import type { ComponentPropsWithoutRef } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import {
 	Field,
 	FieldContent,
@@ -18,8 +11,17 @@ import {
 	FieldLabel,
 	FieldSet,
 	FieldTitle,
-} from "../ui/field";
-import { Input } from "../ui/input";
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 export const userProductsFiltersFormSchema = z.object({
 	sortBy: z
@@ -63,7 +65,9 @@ export function UserProductsFiltersForm({
 	defaultValues,
 	submitHandler,
 	resetHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof userProductsFiltersFormSchema>;
 	submitHandler: ({
 		data,
@@ -81,7 +85,7 @@ export function UserProductsFiltersForm({
 			onChange: userProductsFiltersFormSchema,
 		},
 		defaultValues,
-		onSubmit: ({ value: data }) => {
+		onSubmit: async ({ value: data }) => {
 			submitHandler({ data });
 		},
 	});
@@ -92,6 +96,8 @@ export function UserProductsFiltersForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn("space-y-6", className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">

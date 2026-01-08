@@ -150,6 +150,7 @@ function CreateProfileDialogContent({
 				<TabsContent value="user">
 					<UserProfileForm
 						defaultValues={{
+							name: "",
 							address: "",
 							city: "",
 							postcode: "",

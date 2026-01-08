@@ -6,8 +6,10 @@ import {
 	type LucideIcon,
 	PackageIcon,
 	ShoppingBagIcon,
+	StoreIcon,
 	TagIcon,
 	UserIcon,
+	UsersIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -53,12 +55,12 @@ const items: {
 		to: "/admin/orders",
 	},
 	{
-		icon: ShoppingBagIcon,
+		icon: StoreIcon,
 		label: "Vendors",
 		to: "/admin/vendors",
 	},
 	{
-		icon: ShoppingBagIcon,
+		icon: UsersIcon,
 		label: "Users",
 		to: "/admin/users",
 	},

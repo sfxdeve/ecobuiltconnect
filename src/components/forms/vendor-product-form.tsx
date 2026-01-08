@@ -160,7 +160,7 @@ export function VendorProductForm({
 
 	return (
 		<form
-			onSubmit={async (event) => {
+			onSubmit={(event) => {
 				event.preventDefault();
 
 				form.handleSubmit();

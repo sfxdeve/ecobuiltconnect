@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import type { ComponentPropsWithoutRef } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -25,6 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { fetchPlaceNamesByCountry } from "@/lib/cities";
 import { composeS3Key, composeS3URL } from "@/lib/s3.shared";
+import { cn } from "@/lib/utils";
 import { getS3ObjectUploadURL } from "@/remote/shared.s3";
 import { ProfileImagePicker } from "../blocks/profile-image-picker";
 
@@ -54,7 +56,9 @@ export function VendorProfileForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof vendorProfileFormSchema>;
 	isSubmitting: boolean;
 	submitHandler: ({
@@ -140,6 +144,8 @@ export function VendorProfileForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn("space-y-6", className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">

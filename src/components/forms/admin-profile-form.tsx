@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import type { ComponentPropsWithoutRef } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 export const adminProfileFormSchema = z.object({
 	name: z
@@ -24,7 +26,9 @@ export function AdminProfileForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof adminProfileFormSchema>;
 	isSubmitting: boolean;
 	submitHandler: ({
@@ -49,6 +53,8 @@ export function AdminProfileForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn("space-y-6", className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">

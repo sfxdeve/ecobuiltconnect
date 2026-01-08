@@ -1,5 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
+import type { ComponentPropsWithoutRef } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { fetchPlaceNamesByCountry } from "@/lib/cities";
+import { cn } from "@/lib/utils";
 
 export const userProfileFormSchema = z.object({
 	name: z
@@ -39,7 +41,9 @@ export function UserProfileForm({
 	defaultValues,
 	isSubmitting,
 	submitHandler,
-}: {
+	className,
+	...props
+}: ComponentPropsWithoutRef<"form"> & {
 	defaultValues: z.infer<typeof userProfileFormSchema>;
 	isSubmitting: boolean;
 	submitHandler: ({
@@ -60,7 +64,7 @@ export function UserProfileForm({
 			onChange: userProfileFormSchema,
 		},
 		defaultValues,
-		onSubmit: ({ value: data }) => {
+		onSubmit: async ({ value: data }) => {
 			submitHandler({ data });
 		},
 	});
@@ -71,6 +75,8 @@ export function UserProfileForm({
 				event.preventDefault();
 				form.handleSubmit();
 			}}
+			className={cn("space-y-6", className)}
+			{...props}
 		>
 			<FieldGroup>
 				<div className="flex gap-2 items-start">
