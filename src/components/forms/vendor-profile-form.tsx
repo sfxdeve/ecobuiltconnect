@@ -86,7 +86,7 @@ export function VendorProfileForm({
 		})),
 		multiple: false,
 		maxFiles: 1,
-		maxSize: 5 * 1024 * 1024,
+		maxSize: 10 * 1024 * 1024,
 		accept: "image/*",
 		keyGenerator: (file) => composeS3Key(file.name, "profiles"),
 		onFilesChange: (files) => {

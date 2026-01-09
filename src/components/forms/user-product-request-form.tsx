@@ -86,7 +86,7 @@ export function UserProductRequestForm({
 		})),
 		multiple: true,
 		maxFiles: 5,
-		maxSize: 5 * 1024 * 1024,
+		maxSize: 10 * 1024 * 1024,
 		accept: "image/*",
 		keyGenerator: (file) => composeS3Key(file.name, "products"),
 		onFilesChange: (files) => {
