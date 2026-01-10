@@ -112,7 +112,7 @@ model Product {
   name          String
   description   String
   previousUsage String?          @map("previous_usage")
-  sku           String           @unique
+  sku           String
   stock         Int
   price         Int
   salePrice     Int?             @map("sale_price")
@@ -133,6 +133,8 @@ model Product {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([vendorProfileId, sku])
 }
 
 model ProductRequest {
