@@ -20,12 +20,9 @@ const config = defineConfig({
 		}),
 	],
 	resolve: {
-		alias: [
-			{
-				find: "use-sync-external-store/shim/index.js",
-				replacement: "react",
-			},
-		],
+		alias: {
+			"use-sync-external-store/shim/index.js": "react",
+		},
 	},
 });
 
