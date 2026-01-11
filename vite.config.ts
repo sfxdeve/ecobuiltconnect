@@ -25,10 +25,6 @@ const config = defineConfig({
 				find: "use-sync-external-store/shim/index.js",
 				replacement: "react",
 			},
-			{
-				find: "cookie",
-				replacement: "cookie-es",
-			},
 		],
 	},
 });
