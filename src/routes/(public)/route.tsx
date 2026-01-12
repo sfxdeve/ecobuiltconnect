@@ -157,6 +157,7 @@ function CreateProfileDialogContent({
 						}}
 						isSubmitting={upsertUserProfileMutation.isPending}
 						submitHandler={upsertUserProfileMutation.mutate}
+						className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 					/>
 				</TabsContent>
 				<TabsContent value="admin">
@@ -167,6 +168,7 @@ function CreateProfileDialogContent({
 						}}
 						isSubmitting={upsertAdminProfileMutation.isPending}
 						submitHandler={upsertAdminProfileMutation.mutate}
+						className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 					/>
 				</TabsContent>
 				<TabsContent value="vendor">
@@ -181,6 +183,7 @@ function CreateProfileDialogContent({
 						}}
 						isSubmitting={upsertVendorProfileMutation.isPending}
 						submitHandler={upsertVendorProfileMutation.mutate}
+						className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 					/>
 				</TabsContent>
 				<TabsContent value="logistic"></TabsContent>

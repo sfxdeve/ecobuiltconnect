@@ -257,6 +257,7 @@ function ProductRequestsPageSearch() {
 
 							setIsProductRequestsFiltersDialogOpen(false);
 						}}
+						className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 					/>
 				</DialogContent>
 			</Dialog>
@@ -295,6 +296,7 @@ function ProductRequestsPageSearch() {
 						submitHandler={({ data }) => {
 							createProductRequestMutation.mutate({ data });
 						}}
+						className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 					/>
 				</DialogContent>
 			</Dialog>

@@ -144,6 +144,7 @@ export function VendorSidebar() {
 								}}
 								isSubmitting={upsertVendorProfileMutation.isPending}
 								submitHandler={upsertVendorProfileMutation.mutate}
+								className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 							/>
 						</DialogContent>
 					</Dialog>

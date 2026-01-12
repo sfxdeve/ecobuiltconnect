@@ -283,6 +283,7 @@ function CreateProductDialogContent({
 				}}
 				isSubmitting={createProductMutation.isPending}
 				submitHandler={createProductMutation.mutate}
+				className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 			/>
 		</DialogContent>
 	);
@@ -371,6 +372,7 @@ function ProductRequestsPageSearch() {
 
 							setIsProductRequestsFiltersDialogOpen(false);
 						}}
+						className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
 					/>
 				</DialogContent>
 			</Dialog>
