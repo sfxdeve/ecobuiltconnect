@@ -46,11 +46,7 @@ export const userProductRequestFormSchema = z.object({
 	price: z
 		.number("Price must be a number")
 		.positive("Price must be a positive number"),
-	category: z.object({
-		connect: z.object({
-			id: z.uuid("Category id must be valid UUID"),
-		}),
-	}),
+	categoryId: z.uuid("Category id must be valid UUID"),
 });
 
 export function UserProductRequestForm({
@@ -223,7 +219,7 @@ export function UserProductRequestForm({
 					</form.Field>
 				</div>
 				<div className="flex gap-2 items-start">
-					<form.Field name="category.connect.id">
+					<form.Field name="categoryId">
 						{(field) => {
 							if (categoriesResult.isPending) {
 								return <Spinner />;

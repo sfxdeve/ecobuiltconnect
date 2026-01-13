@@ -286,11 +286,7 @@ function ProductRequestsPageSearch() {
 							description: "",
 							quantity: 0,
 							price: 0,
-							category: {
-								connect: {
-									id: "",
-								},
-							},
+							categoryId: "",
 						}}
 						isSubmitting={createProductRequestMutation.isPending}
 						submitHandler={({ data }) => {

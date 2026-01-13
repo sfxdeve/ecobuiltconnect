@@ -128,11 +128,7 @@ export const createProductRequest = createServerFn({ method: "POST" })
 				.number("Price must be a number")
 				.positive("Price must be a positive number")
 				.transform((val) => val * 100),
-			category: z.object({
-				connect: z.object({
-					id: z.uuid("Category id must be valid UUID"),
-				}),
-			}),
+			categoryId: z.uuid("Category id must be valid UUID"),
 		}),
 	)
 	.handler(async ({ data }) => {
@@ -140,7 +136,7 @@ export const createProductRequest = createServerFn({ method: "POST" })
 
 		const category = await prisma.category.findUnique({
 			where: {
-				id: data.category.connect.id,
+				id: data.categoryId,
 				status: "APPROVED",
 				isDeleted: false,
 			},
@@ -153,7 +149,7 @@ export const createProductRequest = createServerFn({ method: "POST" })
 		const productRequest = await prisma.productRequest.create({
 			data: {
 				...data,
-				userProfile: { connect: { id: userProfile.id } },
+				userProfileId: userProfile.id,
 			},
 			select: productRequestSelector,
 		});
