@@ -8,6 +8,9 @@ import {
 } from "lucide-react";
 import { AppPending } from "@/components/blocks/app-pending";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import {
 	Item,
 	ItemContent,
@@ -16,7 +19,15 @@ import {
 	ItemMedia,
 	ItemTitle,
 } from "@/components/ui/item";
-import { formatMoneyFromCents } from "@/lib/formatters";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
 
 export const Route = createFileRoute("/(admin)/admin/dashboard/")({
 	head: () => ({
@@ -36,6 +47,8 @@ export const Route = createFileRoute("/(admin)/admin/dashboard/")({
 });
 
 function AdminDashboardPage() {
+	const loaderData = Route.useLoaderData();
+
 	const items: {
 		icon: LucideIcon;
 		label: string;
@@ -84,6 +97,111 @@ function AdminDashboardPage() {
 							</Item>
 						))}
 					</ItemGroup>
+					<div className="flex flex-col md:flex-row gap-4">
+						<Card className="flex-1 md:flex-3">
+							<CardContent>
+								{loaderData?.orderRequests?.length > 0 ? (
+									<Table>
+										<TableHeader>
+											<TableRow>
+												<TableHead>Order Ref</TableHead>
+												<TableHead>Items</TableHead>
+												<TableHead>Status</TableHead>
+												<TableHead>Total</TableHead>
+												<TableHead>Date</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody>
+											{loaderData.orderRequests.map((orderRequest) => {
+												let statusBadgeVariant:
+													| "default"
+													| "outline"
+													| "destructive";
+
+												switch (orderRequest.status) {
+													case "PAID":
+													case "COMPLETED":
+														statusBadgeVariant = "default";
+														break;
+													case "CANCELLED":
+														statusBadgeVariant = "destructive";
+														break;
+													default:
+														statusBadgeVariant = "outline";
+														break;
+												}
+
+												return (
+													<TableRow key={orderRequest.id}>
+														<TableCell className="uppercase">
+															#{orderRequest.id.slice(24)}
+														</TableCell>
+														<TableCell>
+															{orderRequest._count.orderItems}
+														</TableCell>
+														<TableCell>
+															<Badge variant={statusBadgeVariant}>
+																{orderRequest.status}
+															</Badge>
+														</TableCell>
+														<TableCell>
+															{formatMoneyFromCents(orderRequest.total, {
+																locale: "en-ZA",
+																currency: "ZAR",
+															})}
+														</TableCell>
+														<TableCell>
+															{formatDate(orderRequest.createdAt)}
+														</TableCell>
+													</TableRow>
+												);
+											})}
+										</TableBody>
+									</Table>
+								) : (
+									<Empty className="bg-muted">
+										<EmptyHeader>
+											<EmptyTitle>No results found</EmptyTitle>
+										</EmptyHeader>
+									</Empty>
+								)}
+							</CardContent>
+						</Card>
+						<Card className="flex-1 md:flex-2">
+							<CardContent>
+								{loaderData?.userProfiles?.length > 0 ? (
+									<Table>
+										<TableHeader>
+											<TableRow>
+												<TableHead>Name</TableHead>
+												<TableHead>Status</TableHead>
+												<TableHead>Date</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody>
+											{loaderData.userProfiles.map((userProfile) => {
+												return (
+													<TableRow key={userProfile.id}>
+														<TableCell>{userProfile.name}</TableCell>
+														<TableCell>{userProfile.status}</TableCell>
+														<TableCell>
+															{formatDate(userProfile.createdAt)}
+														</TableCell>
+													</TableRow>
+												);
+											})}
+										</TableBody>
+									</Table>
+								) : (
+									<Empty className="bg-muted">
+										<EmptyHeader>
+											<EmptyTitle>No results found</EmptyTitle>
+										</EmptyHeader>
+									</Empty>
+								)}
+							</CardContent>
+						</Card>
+					</div>
 				</div>
 			</section>
 		</>
