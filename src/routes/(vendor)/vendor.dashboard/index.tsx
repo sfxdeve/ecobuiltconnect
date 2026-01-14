@@ -3,6 +3,7 @@ import {
 	type LucideIcon,
 	PackageIcon,
 	ShoppingBagIcon,
+	TrendingUpIcon,
 	UsersIcon,
 } from "lucide-react";
 import { AppPending } from "@/components/blocks/app-pending";
@@ -41,7 +42,7 @@ function VendorDashboardPage() {
 		kpi: string;
 	}[] = [
 		{
-			icon: ShoppingBagIcon,
+			icon: TrendingUpIcon,
 			label: "Total Sales",
 			kpi: formatMoneyFromCents(0, {
 				locale: "en-ZA",
