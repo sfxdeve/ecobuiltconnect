@@ -38,7 +38,7 @@ const items = [
 	{
 		icon: LayoutDashboardIcon,
 		label: "Dashboard",
-		to: "/admin/dashboard",
+		to: "/vendor/dashboard",
 	},
 	{
 		icon: FileTextIcon,

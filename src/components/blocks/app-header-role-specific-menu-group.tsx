@@ -70,7 +70,7 @@ export function AppHeaderRoleSpecificMenuGroup({
 				<DropdownMenuItem
 					render={
 						<Link
-							to="/admin/dashboard"
+							to="/vendor/dashboard"
 							activeProps={{ className: "bg-muted" }}
 						/>
 					}
