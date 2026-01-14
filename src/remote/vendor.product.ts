@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
@@ -359,6 +360,7 @@ export const deleteProduct = createServerFn({
 				vendorProfile: { id: vendorProfile.id },
 			},
 			data: {
+				sku: randomUUID(),
 				isDeleted: true,
 			},
 			select: productSelector,
