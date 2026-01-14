@@ -27,6 +27,7 @@ import { Route as legalPrivacyPolicyIndexRouteImport } from './routes/(legal)/pr
 import { Route as legalCookiesPolicyIndexRouteImport } from './routes/(legal)/cookies-policy/index'
 import { Route as authSignUpSplatRouteImport } from './routes/(auth)/sign-up/$'
 import { Route as authSignInSplatRouteImport } from './routes/(auth)/sign-in/$'
+import { Route as vendorVendorUsersIndexRouteImport } from './routes/(vendor)/vendor.users/index'
 import { Route as vendorVendorRequestsIndexRouteImport } from './routes/(vendor)/vendor.requests/index'
 import { Route as vendorVendorProductsIndexRouteImport } from './routes/(vendor)/vendor.products/index'
 import { Route as vendorVendorOrdersIndexRouteImport } from './routes/(vendor)/vendor.orders/index'
@@ -128,6 +129,11 @@ const authSignInSplatRoute = authSignInSplatRouteImport.update({
   id: '/sign-in/$',
   path: '/sign-in/$',
   getParentRoute: () => authRouteRoute,
+} as any)
+const vendorVendorUsersIndexRoute = vendorVendorUsersIndexRouteImport.update({
+  id: '/vendor/users/',
+  path: '/vendor/users/',
+  getParentRoute: () => vendorRouteRoute,
 } as any)
 const vendorVendorRequestsIndexRoute =
   vendorVendorRequestsIndexRouteImport.update({
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/vendor/orders': typeof vendorVendorOrdersIndexRoute
   '/vendor/products': typeof vendorVendorProductsIndexRoute
   '/vendor/requests': typeof vendorVendorRequestsIndexRoute
+  '/vendor/users': typeof vendorVendorUsersIndexRoute
   '/user/orders/$orderId': typeof userUserOrdersOrderIdIndexRoute
   '/user/orders/$orderId/delivery': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/vendor/orders': typeof vendorVendorOrdersIndexRoute
   '/vendor/products': typeof vendorVendorProductsIndexRoute
   '/vendor/requests': typeof vendorVendorRequestsIndexRoute
+  '/vendor/users': typeof vendorVendorUsersIndexRoute
   '/user/orders/$orderId': typeof userUserOrdersOrderIdIndexRoute
   '/user/orders/$orderId/delivery': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
@@ -320,6 +328,7 @@ export interface FileRoutesById {
   '/(vendor)/vendor/orders/': typeof vendorVendorOrdersIndexRoute
   '/(vendor)/vendor/products/': typeof vendorVendorProductsIndexRoute
   '/(vendor)/vendor/requests/': typeof vendorVendorRequestsIndexRoute
+  '/(vendor)/vendor/users/': typeof vendorVendorUsersIndexRoute
   '/(user)/user/orders/$orderId/': typeof userUserOrdersOrderIdIndexRoute
   '/(user)/user/orders/$orderId/delivery/': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
@@ -353,6 +362,7 @@ export interface FileRouteTypes {
     | '/vendor/orders'
     | '/vendor/products'
     | '/vendor/requests'
+    | '/vendor/users'
     | '/user/orders/$orderId'
     | '/user/orders/$orderId/delivery'
   fileRoutesByTo: FileRoutesByTo
@@ -384,6 +394,7 @@ export interface FileRouteTypes {
     | '/vendor/orders'
     | '/vendor/products'
     | '/vendor/requests'
+    | '/vendor/users'
     | '/user/orders/$orderId'
     | '/user/orders/$orderId/delivery'
   id:
@@ -421,6 +432,7 @@ export interface FileRouteTypes {
     | '/(vendor)/vendor/orders/'
     | '/(vendor)/vendor/products/'
     | '/(vendor)/vendor/requests/'
+    | '/(vendor)/vendor/users/'
     | '/(user)/user/orders/$orderId/'
     | '/(user)/user/orders/$orderId/delivery/'
   fileRoutesById: FileRoutesById
@@ -562,6 +574,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sign-in/$'
       preLoaderRoute: typeof authSignInSplatRouteImport
       parentRoute: typeof authRouteRoute
+    }
+    '/(vendor)/vendor/users/': {
+      id: '/(vendor)/vendor/users/'
+      path: '/vendor/users'
+      fullPath: '/vendor/users'
+      preLoaderRoute: typeof vendorVendorUsersIndexRouteImport
+      parentRoute: typeof vendorRouteRoute
     }
     '/(vendor)/vendor/requests/': {
       id: '/(vendor)/vendor/requests/'
@@ -789,6 +808,7 @@ interface vendorRouteRouteChildren {
   vendorVendorOrdersIndexRoute: typeof vendorVendorOrdersIndexRoute
   vendorVendorProductsIndexRoute: typeof vendorVendorProductsIndexRoute
   vendorVendorRequestsIndexRoute: typeof vendorVendorRequestsIndexRoute
+  vendorVendorUsersIndexRoute: typeof vendorVendorUsersIndexRoute
 }
 
 const vendorRouteRouteChildren: vendorRouteRouteChildren = {
@@ -796,6 +816,7 @@ const vendorRouteRouteChildren: vendorRouteRouteChildren = {
   vendorVendorOrdersIndexRoute: vendorVendorOrdersIndexRoute,
   vendorVendorProductsIndexRoute: vendorVendorProductsIndexRoute,
   vendorVendorRequestsIndexRoute: vendorVendorRequestsIndexRoute,
+  vendorVendorUsersIndexRoute: vendorVendorUsersIndexRoute,
 }
 
 const vendorRouteRouteWithChildren = vendorRouteRoute._addFileChildren(
