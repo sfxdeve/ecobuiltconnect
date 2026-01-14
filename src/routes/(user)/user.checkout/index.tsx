@@ -203,14 +203,32 @@ function CheckoutPage() {
 											Personal Details
 										</ItemTitle>
 										<ItemDescription>
-											<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
-												<span className="font-medium">Name:</span>
-												<span>{user?.fullName}</span>
-												<span className="font-medium">Email:</span>
-												<span className="break-all">
-													{user?.primaryEmailAddress?.emailAddress}
-												</span>
-											</div>
+											{(() => {
+												if (userProfileResult.isPending) {
+													return <Spinner />;
+												}
+
+												if (userProfileResult.isError) {
+													return null;
+												}
+
+												return (
+													<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
+														<span className="font-medium">Name:</span>
+														<span>
+															{userProfileResult.data.userProfile.name}
+														</span>
+														{user?.primaryEmailAddress != null && (
+															<>
+																<span className="font-medium">Email:</span>
+																<span className="break-all">
+																	{user.primaryEmailAddress.emailAddress}
+																</span>
+															</>
+														)}
+													</div>
+												);
+											})()}
 										</ItemDescription>
 									</ItemContent>
 								</Item>
@@ -228,20 +246,24 @@ function CheckoutPage() {
 													return <Spinner />;
 												}
 
-												if (!userProfileResult.data?.userProfile) {
+												if (userProfileResult.isError) {
 													return null;
 												}
-
-												const profile = userProfileResult.data.userProfile;
 
 												return (
 													<div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
 														<span className="font-medium">Address:</span>
-														<span className="break-all">{profile.address}</span>
+														<span className="break-all">
+															{userProfileResult.data.userProfile.address}
+														</span>
 														<span className="font-medium">City:</span>
-														<span>{profile.city}</span>
+														<span>
+															{userProfileResult.data.userProfile.city}
+														</span>
 														<span className="font-medium">Postal Code:</span>
-														<span>{profile.postcode}</span>
+														<span>
+															{userProfileResult.data.userProfile.postcode}
+														</span>
 													</div>
 												);
 											})()}
