@@ -28,8 +28,20 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { formatDate, formatMoneyFromCents } from "@/lib/formatters";
+import { getKpis } from "@/remote/vendor.kpis";
+import { getOrderRequests } from "@/remote/vendor.order-request";
+import { getUserProfiles } from "@/remote/vendor.user-profile";
 
 export const Route = createFileRoute("/(vendor)/vendor/dashboard/")({
+	loader: async () => {
+		const [kpisData, orderRequestData, userProfilesData] = await Promise.all([
+			getKpis(),
+			getOrderRequests({ data: { limit: 5 } }),
+			getUserProfiles({ data: { limit: 5 } }),
+		]);
+
+		return { ...kpisData, ...orderRequestData, ...userProfilesData };
+	},
 	head: () => ({
 		meta: [
 			{
@@ -57,7 +69,7 @@ function VendorDashboardPage() {
 		{
 			icon: TrendingUpIcon,
 			label: "Total Sales",
-			kpi: formatMoneyFromCents(0, {
+			kpi: formatMoneyFromCents(loaderData.totalSales, {
 				locale: "en-ZA",
 				currency: "ZAR",
 			}),
@@ -65,17 +77,17 @@ function VendorDashboardPage() {
 		{
 			icon: ShoppingBagIcon,
 			label: "Fulfilled Orders",
-			kpi: "0",
+			kpi: `${loaderData.fullfilledOrderRequests}`,
 		},
 		{
 			icon: PackageIcon,
 			label: "Live Products",
-			kpi: "0",
+			kpi: `${loaderData.liveProducts}`,
 		},
 		{
 			icon: UsersIcon,
-			label: "Active Customers",
-			kpi: "0",
+			label: "Active Users",
+			kpi: `${loaderData.activeUserProfiles}`,
 		},
 	];
 
@@ -100,7 +112,7 @@ function VendorDashboardPage() {
 					<div className="flex flex-col md:flex-row gap-4">
 						<Card className="flex-1 md:flex-3">
 							<CardContent>
-								{loaderData?.orderRequests?.length > 0 ? (
+								{loaderData.orderRequests.length > 0 ? (
 									<Table>
 										<TableHeader>
 											<TableRow>
