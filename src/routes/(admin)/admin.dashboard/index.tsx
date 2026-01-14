@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/item";
 import { formatMoneyFromCents } from "@/lib/formatters";
 
-export const Route = createFileRoute("/(vendor)/vendor/dashboard/")({
+export const Route = createFileRoute("/(admin)/admin/dashboard/")({
 	head: () => ({
 		meta: [
 			{
@@ -26,15 +26,15 @@ export const Route = createFileRoute("/(vendor)/vendor/dashboard/")({
 			{
 				name: "description",
 				content:
-					"Vendor dashboard overview. Monitor sales, orders, and performance.",
+					"Admin dashboard overview. Monitor sales, orders, and performance.",
 			},
 		],
 	}),
 	pendingComponent: AppPending,
-	component: VendorDashboardPage,
+	component: AdminDashboardPage,
 });
 
-function VendorDashboardPage() {
+function AdminDashboardPage() {
 	const items: {
 		icon: LucideIcon;
 		label: string;
@@ -60,7 +60,7 @@ function VendorDashboardPage() {
 		},
 		{
 			icon: UsersIcon,
-			label: "Active Customers",
+			label: "Active Users",
 			kpi: "0",
 		},
 	];

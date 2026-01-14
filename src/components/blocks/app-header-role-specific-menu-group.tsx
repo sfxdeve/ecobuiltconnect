@@ -69,7 +69,10 @@ export function AppHeaderRoleSpecificMenuGroup({
 			<DropdownMenuGroup className="mb-0">
 				<DropdownMenuItem
 					render={
-						<Link to="/vendor/orders" activeProps={{ className: "bg-muted" }} />
+						<Link
+							to="/admin/dashboard"
+							activeProps={{ className: "bg-muted" }}
+						/>
 					}
 				>
 					<PackageIcon />
@@ -85,7 +88,7 @@ export function AppHeaderRoleSpecificMenuGroup({
 				<DropdownMenuItem
 					render={
 						<Link
-							to="/admin/categories"
+							to="/admin/dashboard"
 							activeProps={{ className: "bg-muted" }}
 						/>
 					}

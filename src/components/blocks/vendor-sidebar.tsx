@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
 	FileTextIcon,
+	LayoutDashboardIcon,
 	type LucideIcon,
 	PackageIcon,
 	ShoppingBagIcon,
@@ -33,6 +34,11 @@ import { getVendorProfile, upsertVendorProfile } from "@/remote/vendor.profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 const items = [
+	{
+		icon: LayoutDashboardIcon,
+		label: "Dashboard",
+		to: "/admin/dashboard",
+	},
 	{
 		icon: FileTextIcon,
 		label: "Requests",

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
+	LayoutDashboardIcon,
 	type LucideIcon,
 	PackageIcon,
 	ShoppingBagIcon,
@@ -39,6 +40,11 @@ const items: {
 	label: string;
 	to: FileRouteTypes["to"];
 }[] = [
+	{
+		icon: LayoutDashboardIcon,
+		label: "Dashboard",
+		to: "/admin/dashboard",
+	},
 	{
 		icon: TagIcon,
 		label: "Categories",

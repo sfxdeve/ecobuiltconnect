@@ -39,6 +39,7 @@ import { Route as adminAdminVendorsIndexRouteImport } from './routes/(admin)/adm
 import { Route as adminAdminUsersIndexRouteImport } from './routes/(admin)/admin.users/index'
 import { Route as adminAdminProductsIndexRouteImport } from './routes/(admin)/admin.products/index'
 import { Route as adminAdminOrdersIndexRouteImport } from './routes/(admin)/admin.orders/index'
+import { Route as adminAdminDashboardIndexRouteImport } from './routes/(admin)/admin.dashboard/index'
 import { Route as adminAdminCategoriesIndexRouteImport } from './routes/(admin)/admin.categories/index'
 import { Route as apiApiOzowNotifyRouteImport } from './routes/(api)/api.ozow/notify'
 import { Route as userUserOrdersOrderIdIndexRouteImport } from './routes/(user)/user.orders/$orderId/index'
@@ -192,6 +193,12 @@ const adminAdminOrdersIndexRoute = adminAdminOrdersIndexRouteImport.update({
   path: '/admin/orders/',
   getParentRoute: () => adminRouteRoute,
 } as any)
+const adminAdminDashboardIndexRoute =
+  adminAdminDashboardIndexRouteImport.update({
+    id: '/admin/dashboard/',
+    path: '/admin/dashboard/',
+    getParentRoute: () => adminRouteRoute,
+  } as any)
 const adminAdminCategoriesIndexRoute =
   adminAdminCategoriesIndexRouteImport.update({
     id: '/admin/categories/',
@@ -231,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/vendors': typeof publicVendorsIndexRoute
   '/api/ozow/notify': typeof apiApiOzowNotifyRoute
   '/admin/categories': typeof adminAdminCategoriesIndexRoute
+  '/admin/dashboard': typeof adminAdminDashboardIndexRoute
   '/admin/orders': typeof adminAdminOrdersIndexRoute
   '/admin/products': typeof adminAdminProductsIndexRoute
   '/admin/users': typeof adminAdminUsersIndexRoute
@@ -261,6 +269,7 @@ export interface FileRoutesByTo {
   '/vendors': typeof publicVendorsIndexRoute
   '/api/ozow/notify': typeof apiApiOzowNotifyRoute
   '/admin/categories': typeof adminAdminCategoriesIndexRoute
+  '/admin/dashboard': typeof adminAdminDashboardIndexRoute
   '/admin/orders': typeof adminAdminOrdersIndexRoute
   '/admin/products': typeof adminAdminProductsIndexRoute
   '/admin/users': typeof adminAdminUsersIndexRoute
@@ -298,6 +307,7 @@ export interface FileRoutesById {
   '/(public)/vendors/': typeof publicVendorsIndexRoute
   '/(api)/api/ozow/notify': typeof apiApiOzowNotifyRoute
   '/(admin)/admin/categories/': typeof adminAdminCategoriesIndexRoute
+  '/(admin)/admin/dashboard/': typeof adminAdminDashboardIndexRoute
   '/(admin)/admin/orders/': typeof adminAdminOrdersIndexRoute
   '/(admin)/admin/products/': typeof adminAdminProductsIndexRoute
   '/(admin)/admin/users/': typeof adminAdminUsersIndexRoute
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/api/ozow/notify'
     | '/admin/categories'
+    | '/admin/dashboard'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/users'
@@ -360,6 +371,7 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/api/ozow/notify'
     | '/admin/categories'
+    | '/admin/dashboard'
     | '/admin/orders'
     | '/admin/products'
     | '/admin/users'
@@ -396,6 +408,7 @@ export interface FileRouteTypes {
     | '/(public)/vendors/'
     | '/(api)/api/ozow/notify'
     | '/(admin)/admin/categories/'
+    | '/(admin)/admin/dashboard/'
     | '/(admin)/admin/orders/'
     | '/(admin)/admin/products/'
     | '/(admin)/admin/users/'
@@ -634,6 +647,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof adminAdminOrdersIndexRouteImport
       parentRoute: typeof adminRouteRoute
     }
+    '/(admin)/admin/dashboard/': {
+      id: '/(admin)/admin/dashboard/'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof adminAdminDashboardIndexRouteImport
+      parentRoute: typeof adminRouteRoute
+    }
     '/(admin)/admin/categories/': {
       id: '/(admin)/admin/categories/'
       path: '/admin/categories'
@@ -667,6 +687,7 @@ declare module '@tanstack/react-router' {
 
 interface adminRouteRouteChildren {
   adminAdminCategoriesIndexRoute: typeof adminAdminCategoriesIndexRoute
+  adminAdminDashboardIndexRoute: typeof adminAdminDashboardIndexRoute
   adminAdminOrdersIndexRoute: typeof adminAdminOrdersIndexRoute
   adminAdminProductsIndexRoute: typeof adminAdminProductsIndexRoute
   adminAdminUsersIndexRoute: typeof adminAdminUsersIndexRoute
@@ -675,6 +696,7 @@ interface adminRouteRouteChildren {
 
 const adminRouteRouteChildren: adminRouteRouteChildren = {
   adminAdminCategoriesIndexRoute: adminAdminCategoriesIndexRoute,
+  adminAdminDashboardIndexRoute: adminAdminDashboardIndexRoute,
   adminAdminOrdersIndexRoute: adminAdminOrdersIndexRoute,
   adminAdminProductsIndexRoute: adminAdminProductsIndexRoute,
   adminAdminUsersIndexRoute: adminAdminUsersIndexRoute,
