@@ -9,6 +9,7 @@ import {
 	PackageIcon,
 	ShoppingBagIcon,
 	UserIcon,
+	UsersIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -53,6 +54,11 @@ const items = [
 		icon: ShoppingBagIcon,
 		label: "Orders",
 		to: "/vendor/orders",
+	},
+	{
+		icon: UsersIcon,
+		label: "Users",
+		to: "/vendor/users",
 	},
 ] satisfies {
 	icon: LucideIcon;
