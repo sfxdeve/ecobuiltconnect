@@ -9,7 +9,7 @@ import {
 import { AppPending } from "@/components/blocks/app-pending";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import {
 	Item,
@@ -36,8 +36,8 @@ export const Route = createFileRoute("/(admin)/admin/dashboard/")({
 	loader: async () => {
 		const [kpisData, orderRequestData, userProfilesData] = await Promise.all([
 			getKpis(),
-			getOrderRequests({ data: { limit: 5 } }),
-			getUserProfiles({ data: { limit: 5 } }),
+			getOrderRequests({ data: { limit: 10 } }),
+			getUserProfiles({ data: { limit: 10 } }),
 		]);
 
 		return { ...kpisData, ...orderRequestData, ...userProfilesData };
@@ -96,7 +96,7 @@ function AdminDashboardPage() {
 			<DashboardHeader title="Dashboard" />
 			<section>
 				<div className="p-4 space-y-6 min-h-screen">
-					<ItemGroup className="flex-row">
+					<ItemGroup className="md:flex-row">
 						{items.map((item) => (
 							<Item key={item.label} variant="outline">
 								<ItemMedia variant="icon">
@@ -109,8 +109,11 @@ function AdminDashboardPage() {
 							</Item>
 						))}
 					</ItemGroup>
-					<div className="flex flex-col md:flex-row gap-4">
-						<Card className="flex-1 md:flex-3">
+					<div className="flex flex-col md:flex-row gap-4 items-start">
+						<Card className="w-full md:flex-3">
+							<CardHeader>
+								<CardTitle>Recent Orders</CardTitle>
+							</CardHeader>
 							<CardContent>
 								{loaderData.orderRequests.length > 0 ? (
 									<Table>
@@ -179,7 +182,10 @@ function AdminDashboardPage() {
 								)}
 							</CardContent>
 						</Card>
-						<Card className="flex-1 md:flex-2">
+						<Card className="w-full md:flex-2">
+							<CardHeader>
+								<CardTitle>Recent Users</CardTitle>
+							</CardHeader>
 							<CardContent>
 								{loaderData?.userProfiles?.length > 0 ? (
 									<Table>
