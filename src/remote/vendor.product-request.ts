@@ -54,6 +54,7 @@ export const getProductRequests = createServerFn({
 			category: { status: "APPROVED", isDeleted: false },
 			products: {
 				none: {
+					isDeleted: false,
 					vendorProfile: {
 						id: vendorProfile.id,
 					},
@@ -134,6 +135,7 @@ export const getProductRequest = createServerFn({
 				category: { status: "APPROVED", isDeleted: false },
 				products: {
 					none: {
+						isDeleted: false,
 						vendorProfile: {
 							id: vendorProfile.id,
 						},
