@@ -9,12 +9,10 @@
 		"ignoreUnknown": true,
 		"includes": [
 			"**/src/**/*",
-			"**/prisma/**/*",
 			"**/*.json",
 			"**/*.config.ts",
 			"!**/src/styles.css",
-			"!**/src/routeTree.gen.ts",
-			"!**/src/generated/**/*"
+			"!**/src/routeTree.gen.ts"
 		]
 	},
 	"formatter": {
