@@ -23,6 +23,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useFileUpload } from "@/hooks/use-file-upload";
+import { formatMoneyFromCents } from "@/lib/formatters";
 import { composeS3Key, composeS3URL } from "@/lib/s3.shared";
 import { cn } from "@/lib/utils";
 import { ProductCondition } from "@/prisma/generated/enums";
@@ -157,6 +158,9 @@ export function VendorProductForm({
 			submitHandler({ data });
 		},
 	});
+
+	const price = form.getFieldValue("price");
+	const salePrice = form.getFieldValue("salePrice");
 
 	return (
 		<form
@@ -462,6 +466,15 @@ export function VendorProductForm({
 							);
 						}}
 					</form.Field>
+				</div>
+				<div>
+					<p className="text-center">
+						Platform fee (15%), You recieve:{" "}
+						{formatMoneyFromCents(salePrice ? salePrice : price, {
+							locale: "en-ZA",
+							currency: "ZAR",
+						})}
+					</p>
 				</div>
 				<div className="flex gap-2 items-start justify-stretch">
 					<Button
