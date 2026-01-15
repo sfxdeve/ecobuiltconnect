@@ -159,9 +159,6 @@ export function VendorProductForm({
 		},
 	});
 
-	const price = form.getFieldValue("price");
-	const salePrice = form.getFieldValue("salePrice");
-
 	return (
 		<form
 			onSubmit={(event) => {
@@ -468,18 +465,30 @@ export function VendorProductForm({
 					</form.Field>
 				</div>
 				<div>
-					<p className="text-center">
-						Platform fee (15%), You recieve:{" "}
-						{formatMoneyFromCents(
-							((salePrice ? salePrice : price) -
-								(salePrice ? salePrice : price) * 0.15) *
-								100,
-							{
-								locale: "en-ZA",
-								currency: "ZAR",
-							},
-						)}
-					</p>
+					<form.Subscribe
+						selector={(state) => ({
+							price: state.values.price,
+							salePrice: state.values.salePrice,
+						})}
+					>
+						{({ price, salePrice }) => {
+							const PLATFORM_FEE_PERCENTAGE = 15;
+
+							const amount = salePrice ?? price;
+
+							const feeAmount = amount * (PLATFORM_FEE_PERCENTAGE / 100);
+
+							return (
+								<p className="text-center">
+									Platform fee ({PLATFORM_FEE_PERCENTAGE}%), You receive:{" "}
+									{formatMoneyFromCents((amount - feeAmount) * 100, {
+										locale: "en-ZA",
+										currency: "ZAR",
+									})}
+								</p>
+							);
+						}}
+					</form.Subscribe>
 				</div>
 				<div className="flex gap-2 items-start justify-stretch">
 					<Button
