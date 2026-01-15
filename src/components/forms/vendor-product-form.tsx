@@ -470,10 +470,15 @@ export function VendorProductForm({
 				<div>
 					<p className="text-center">
 						Platform fee (15%), You recieve:{" "}
-						{formatMoneyFromCents(salePrice ? salePrice : price, {
-							locale: "en-ZA",
-							currency: "ZAR",
-						})}
+						{formatMoneyFromCents(
+							((salePrice ? salePrice : price) -
+								(salePrice ? salePrice : price) * 0.15) *
+								100,
+							{
+								locale: "en-ZA",
+								currency: "ZAR",
+							},
+						)}
 					</p>
 				</div>
 				<div className="flex gap-2 items-start justify-stretch">
