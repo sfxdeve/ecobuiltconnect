@@ -43,6 +43,8 @@ model VendorProfile {
   postcode    String
   status      ProfileStatus @default(PENDING)
 
+  bankAccount BankAccount?
+
   products Product[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -74,6 +76,22 @@ model AdminProfile {
   name        String
   description String
   status      ProfileStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model BankAccount {
+  id String @id @default(uuid())
+
+  bankName      String @map("bank_name")
+  branchCode    String @map("branch_code")
+  accountType   String @map("account_type")
+  accountName   String @map("account_name")
+  accountNumber String @map("account_number")
+
+  vendorProfileId String        @unique @map("vendor_profile_id")
+  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
