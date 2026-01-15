@@ -96,7 +96,7 @@ export const Route = createFileRoute("/(admin)/admin/vendors/")({
 			},
 			{
 				name: "description",
-				content: "Manage your vendor profile listings and inventory.",
+				content: "Browse and manage vendor profiles.",
 			},
 		],
 	}),
@@ -221,7 +221,7 @@ function UpdateVendorProfileDialogContent({
 	const updateVendorProfileMutation = useMutation({
 		mutationFn: updateVendorProfileFn,
 		onSuccess: () => {
-			toast.success("VendorProfile updated successfully");
+			toast.success("Vendor profile updated successfully");
 
 			router.invalidate();
 
@@ -236,10 +236,10 @@ function UpdateVendorProfileDialogContent({
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Update VendorProfile</DialogTitle>
+					<DialogTitle>Update Vendor Profile</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-muted-foreground">
-					Loading vendorProfile details...
+					Loading vendor profile details...
 				</div>
 			</DialogContent>
 		);
@@ -249,10 +249,10 @@ function UpdateVendorProfileDialogContent({
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Update VendorProfile</DialogTitle>
+					<DialogTitle>Update Vendor Profile</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-destructive">
-					Error loading vendorProfile: {vendorProfileResult.error.message}
+					Error loading vendor profile: {vendorProfileResult.error.message}
 				</div>
 			</DialogContent>
 		);
@@ -261,7 +261,7 @@ function UpdateVendorProfileDialogContent({
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Update VendorProfile</DialogTitle>
+				<DialogTitle>Update Vendor Profile</DialogTitle>
 			</DialogHeader>
 			<AdminVendorProfileForm
 				defaultValues={{
@@ -299,7 +299,7 @@ function VendorProfilesPageSearch() {
 	return (
 		<div className="flex gap-2 items-center justify-between">
 			<Input
-				placeholder="Search VendorProfiles"
+				placeholder="Search Vendor Profiles"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
@@ -324,7 +324,7 @@ function VendorProfilesPagePagination() {
 			<Field orientation="horizontal" className="w-fit">
 				<FieldLabel htmlFor={limitSelectId}>
 					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
-					{loaderData.total} categories
+					{loaderData.total} vendors
 				</FieldLabel>
 				<Select
 					key={loaderData.limit}

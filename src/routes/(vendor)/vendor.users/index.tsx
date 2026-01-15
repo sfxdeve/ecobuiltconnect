@@ -72,7 +72,7 @@ export const Route = createFileRoute("/(vendor)/vendor/users/")({
 			},
 			{
 				name: "description",
-				content: "Manage your user profile listings and inventory.",
+				content: "Browse and manage user profiles.",
 			},
 		],
 	}),
@@ -148,7 +148,7 @@ function UserProfilesPageSearch() {
 	return (
 		<div className="flex gap-2 items-center justify-between">
 			<Input
-				placeholder="Search UserProfiles"
+				placeholder="Search User Profiles"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
@@ -173,7 +173,7 @@ function UserProfilesPagePagination() {
 			<Field orientation="horizontal" className="w-fit">
 				<FieldLabel htmlFor={limitSelectId}>
 					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
-					{loaderData.total} categories
+					{loaderData.total} users
 				</FieldLabel>
 				<Select
 					key={loaderData.limit}

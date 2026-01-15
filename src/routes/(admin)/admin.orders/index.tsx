@@ -113,7 +113,7 @@ function VendorOrderRequestsPage() {
 
 	return (
 		<>
-			<DashboardHeader title="Orders" />
+			<DashboardHeader title="Order Requests" />
 			<section>
 				<div className="p-4 space-y-6 min-h-screen">
 					<OrderRequestsPageSearch />

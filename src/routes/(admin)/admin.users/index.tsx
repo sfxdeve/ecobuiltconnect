@@ -96,7 +96,7 @@ export const Route = createFileRoute("/(admin)/admin/users/")({
 			},
 			{
 				name: "description",
-				content: "Manage your user profile listings and inventory.",
+				content: "Browse and manage user profiles.",
 			},
 		],
 	}),
@@ -221,7 +221,7 @@ function UpdateUserProfileDialogContent({
 	const updateUserProfileMutation = useMutation({
 		mutationFn: updateUserProfileFn,
 		onSuccess: () => {
-			toast.success("UserProfile updated successfully");
+			toast.success("User profile updated successfully");
 
 			router.invalidate();
 
@@ -236,10 +236,10 @@ function UpdateUserProfileDialogContent({
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Update UserProfile</DialogTitle>
+					<DialogTitle>Update User Profile</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-muted-foreground">
-					Loading userProfile details...
+					Loading user profile details...
 				</div>
 			</DialogContent>
 		);
@@ -249,10 +249,10 @@ function UpdateUserProfileDialogContent({
 		return (
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Update UserProfile</DialogTitle>
+					<DialogTitle>Update User Profile</DialogTitle>
 				</DialogHeader>
 				<div className="py-8 text-center text-destructive">
-					Error loading userProfile: {userProfileResult.error.message}
+					Error loading user profile: {userProfileResult.error.message}
 				</div>
 			</DialogContent>
 		);
@@ -261,7 +261,7 @@ function UpdateUserProfileDialogContent({
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Update UserProfile</DialogTitle>
+				<DialogTitle>Update User Profile</DialogTitle>
 			</DialogHeader>
 			<AdminUserProfileForm
 				defaultValues={{
@@ -299,7 +299,7 @@ function UserProfilesPageSearch() {
 	return (
 		<div className="flex gap-2 items-center justify-between">
 			<Input
-				placeholder="Search UserProfiles"
+				placeholder="Search User Profiles"
 				defaultValue={Route.useSearch().searchTerm ?? ""}
 				onChange={(event) => debouncedSearch(event.target.value)}
 			/>
@@ -324,7 +324,7 @@ function UserProfilesPagePagination() {
 			<Field orientation="horizontal" className="w-fit">
 				<FieldLabel htmlFor={limitSelectId}>
 					Showing {loaderData.total === 0 ? 0 : start}-{end} of{" "}
-					{loaderData.total} categories
+					{loaderData.total} users
 				</FieldLabel>
 				<Select
 					key={loaderData.limit}
