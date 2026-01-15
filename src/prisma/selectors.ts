@@ -1,5 +1,6 @@
 import type {
 	AdminProfileSelect,
+	BankAccountSelect,
 	CategorySelect,
 	LogisticProfileSelect,
 	LogisticRequestSelect,
@@ -62,6 +63,17 @@ export const adminProfileSelector = {
 	createdAt: true,
 	updatedAt: true,
 } satisfies AdminProfileSelect;
+
+export const bankAccountSelector = {
+	id: true,
+	bankName: true,
+	branchCode: true,
+	accountType: true,
+	accountName: true,
+	accountNumber: true,
+	createdAt: true,
+	updatedAt: true,
+} satisfies BankAccountSelect;
 
 export const categorySelector = {
 	id: true,

@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
 	FileTextIcon,
+	LandmarkIcon,
 	LayoutDashboardIcon,
 	type LucideIcon,
 	PackageIcon,
@@ -31,8 +32,13 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import {
+	getBankAccount,
+	upsertBankAccount,
+} from "@/remote/vendor.bank-account";
 import { getVendorProfile, upsertVendorProfile } from "@/remote/vendor.profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
+import { VendorAccountForm } from "../forms/vendor-account-form";
 
 const items = [
 	{
@@ -69,13 +75,23 @@ const items = [
 export function VendorSidebar() {
 	const { user } = useUser();
 
+	const [isUpsertBankAccountDialogOpen, setIsUpsertBankAccountDialogOpen] =
+		useState(false);
 	const [isUpsertVendorProfileDialogOpen, setIsUpsertVendorProfileDialogOpen] =
 		useState(false);
 
+	const getBankAccountFn = useServerFn(getBankAccount);
+	const upsertBankAccountFn = useServerFn(upsertBankAccount);
 	const getVendorProfileFn = useServerFn(getVendorProfile);
 	const upsertVendorProfileFn = useServerFn(upsertVendorProfile);
 
 	const queryClient = useQueryClient();
+
+	const bankAccountResult = useQuery({
+		enabled: !!user?.id,
+		queryKey: ["bank-account", user?.id],
+		queryFn: () => getBankAccountFn(),
+	});
 
 	const vendorProfileResult = useQuery({
 		enabled: !!user?.id,
@@ -91,6 +107,20 @@ export function VendorSidebar() {
 			});
 
 			setIsUpsertVendorProfileDialogOpen(false);
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
+	const upsertBankAccountMutation = useMutation({
+		mutationFn: upsertBankAccountFn,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: ["bank-account", user?.id],
+			});
+
+			setIsUpsertBankAccountDialogOpen(false);
 		},
 		onError: (error) => {
 			toast.error(error.message);
@@ -121,6 +151,40 @@ export function VendorSidebar() {
 							</SidebarMenuButton>
 						</SidebarMenuItem>
 					))}
+					<Dialog
+						open={isUpsertBankAccountDialogOpen}
+						onOpenChange={setIsUpsertBankAccountDialogOpen}
+					>
+						<SidebarMenuItem>
+							<SidebarMenuButton render={<DialogTrigger />}>
+								<LandmarkIcon />
+								<span>Account</span>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle className="text-xl font-semibold">
+									Account
+								</DialogTitle>
+							</DialogHeader>
+							<VendorAccountForm
+								defaultValues={{
+									bankName: bankAccountResult.data?.bankAccount.bankName ?? "",
+									branchCode:
+										bankAccountResult.data?.bankAccount.branchCode ?? "",
+									accountType:
+										bankAccountResult.data?.bankAccount.accountType ?? "",
+									accountName:
+										bankAccountResult.data?.bankAccount.accountName ?? "",
+									accountNumber:
+										bankAccountResult.data?.bankAccount.accountNumber ?? "",
+								}}
+								isSubmitting={upsertBankAccountMutation.isPending}
+								submitHandler={upsertBankAccountMutation.mutate}
+								className="max-h-[80dvh] overflow-y-auto no-scrollbar p-1"
+							/>
+						</DialogContent>
+					</Dialog>
 				</SidebarMenu>
 			</SidebarContent>
 			<SidebarFooter>
