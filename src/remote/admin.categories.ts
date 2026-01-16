@@ -41,49 +41,57 @@ export const getCategories = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const where: CategoryWhereInput = {
-			isDeleted: false,
-			AND: [],
-		};
+			const where: CategoryWhereInput = {
+				isDeleted: false,
+				AND: [],
+			};
 
-		const eqFields = ["status"] as const;
+			const eqFields = ["status"] as const;
 
-		eqFields.forEach((field) => {
-			if (data[field] !== undefined) {
-				where[field] = data[field];
-			}
-		});
-
-		const searchFields = ["name"] as const;
-
-		if (data.searchTerm) {
-			(where.AND as CategoryWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
+			eqFields.forEach((field) => {
+				if (data[field] !== undefined) {
+					where[field] = data[field];
+				}
 			});
+
+			const searchFields = ["name"] as const;
+
+			if (data.searchTerm) {
+				(where.AND as CategoryWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			const [categories, total] = await Promise.all([
+				prisma.category.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: categorySelector,
+				}),
+				prisma.category.count({ where }),
+			]);
+
+			return {
+				categories,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch categories");
 		}
-
-		const [categories, total] = await Promise.all([
-			prisma.category.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: categorySelector,
-			}),
-			prisma.category.count({ where }),
-		]);
-
-		return {
-			categories,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
 	});
 
 export const getCategory = createServerFn({ method: "GET" })
@@ -93,19 +101,27 @@ export const getCategory = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		const category = await prisma.category.findUnique({
-			where: {
-				id: data.categoryId,
-				isDeleted: false,
-			},
-			select: categorySelector,
-		});
+		try {
+			const category = await prisma.category.findUnique({
+				where: {
+					id: data.categoryId,
+					isDeleted: false,
+				},
+				select: categorySelector,
+			});
 
-		if (!category) {
-			throw new Error("Category not found");
+			if (!category) {
+				throw new Error("Category not found");
+			}
+
+			return { category };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch category");
 		}
-
-		return { category };
 	});
 
 export const createCategory = createServerFn({ method: "POST" })
@@ -127,16 +143,24 @@ export const createCategory = createServerFn({ method: "POST" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		const category = await prisma.category.create({
-			data,
-			select: categorySelector,
-		});
+		try {
+			const category = await prisma.category.create({
+				data,
+				select: categorySelector,
+			});
 
-		if (!category) {
-			throw new Error("Category not found");
+			if (!category) {
+				throw new Error("Category not found");
+			}
+
+			return { category };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to create category");
 		}
-
-		return { category };
 	});
 
 export const updateCategory = createServerFn({ method: "POST" })
@@ -160,22 +184,30 @@ export const updateCategory = createServerFn({ method: "POST" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { categoryId, ...categoryData } = data;
+		try {
+			const { categoryId, ...categoryData } = data;
 
-		const category = await prisma.category.update({
-			where: {
-				id: categoryId,
-				isDeleted: false,
-			},
-			data: categoryData,
-			select: categorySelector,
-		});
+			const category = await prisma.category.update({
+				where: {
+					id: categoryId,
+					isDeleted: false,
+				},
+				data: categoryData,
+				select: categorySelector,
+			});
 
-		if (!category) {
-			throw new Error("Category not found");
+			if (!category) {
+				throw new Error("Category not found");
+			}
+
+			return { category };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to update category");
 		}
-
-		return { category };
 	});
 
 export const deleteCategory = createServerFn({ method: "POST" })
@@ -185,20 +217,28 @@ export const deleteCategory = createServerFn({ method: "POST" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		const category = await prisma.category.update({
-			where: {
-				id: data.categoryId,
-				isDeleted: false,
-			},
-			data: {
-				isDeleted: true,
-			},
-			select: categorySelector,
-		});
+		try {
+			const category = await prisma.category.update({
+				where: {
+					id: data.categoryId,
+					isDeleted: false,
+				},
+				data: {
+					isDeleted: true,
+				},
+				select: categorySelector,
+			});
 
-		if (!category) {
-			throw new Error("Category not found");
+			if (!category) {
+				throw new Error("Category not found");
+			}
+
+			return { category };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to delete category");
 		}
-
-		return { category };
 	});

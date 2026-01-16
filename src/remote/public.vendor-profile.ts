@@ -31,43 +31,51 @@ export const getVendorProfiles = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const where: VendorProfileWhereInput = {
-			status: "APPROVED",
-			AND: [],
-		};
+		try {
+			const where: VendorProfileWhereInput = {
+				status: "APPROVED",
+				AND: [],
+			};
 
-		const searchFields = [
-			"name",
-			"description",
-			"address",
-			"city",
-			"postcode",
-		] as const;
+			const searchFields = [
+				"name",
+				"description",
+				"address",
+				"city",
+				"postcode",
+			] as const;
 
-		if (data.searchTerm) {
-			(where.AND as VendorProfileWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
-			});
+			if (data.searchTerm) {
+				(where.AND as VendorProfileWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			const [vendorProfiles, total] = await Promise.all([
+				prisma.vendorProfile.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: vendorProfileSelector,
+				}),
+				prisma.vendorProfile.count({ where }),
+			]);
+
+			return {
+				vendorProfiles,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch vendor profiles");
 		}
-
-		const [vendorProfiles, total] = await Promise.all([
-			prisma.vendorProfile.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: vendorProfileSelector,
-			}),
-			prisma.vendorProfile.count({ where }),
-		]);
-
-		return {
-			vendorProfiles,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
 	});

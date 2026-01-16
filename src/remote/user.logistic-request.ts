@@ -17,27 +17,35 @@ export const createLogisticRequest = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { userProfile } = await getUserProfile();
+		try {
+			const { userProfile } = await getUserProfile();
 
-		const orderRequest = await prisma.orderRequest.findUnique({
-			where: {
-				id: data.orderRequestId,
-				status: {
-					notIn: ["PENDING", "CANCELLED"],
+			const orderRequest = await prisma.orderRequest.findUnique({
+				where: {
+					id: data.orderRequestId,
+					status: {
+						notIn: ["PENDING", "CANCELLED"],
+					},
+					userProfile: { id: userProfile.id },
+					logisticRequest: { is: null },
 				},
-				userProfile: { id: userProfile.id },
-				logisticRequest: { is: null },
-			},
-		});
+			});
 
-		if (!orderRequest) {
-			throw new Error("Order request not found");
+			if (!orderRequest) {
+				throw new Error("Order request not found");
+			}
+
+			const logisticRequest = await prisma.logisticRequest.create({
+				data,
+				select: logisticRequestSelector,
+			});
+
+			return { logisticRequest };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to create logistic request");
 		}
-
-		const logisticRequest = await prisma.logisticRequest.create({
-			data,
-			select: logisticRequestSelector,
-		});
-
-		return { logisticRequest };
 	});

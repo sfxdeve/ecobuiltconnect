@@ -56,81 +56,89 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const where: OrderRequestWhereInput = {
-			status: {
-				notIn: [OrderStatus.PENDING, OrderStatus.CANCELLED],
-			},
-			orderItems: {
-				some: {
-					product: {
-						AND: [],
-					},
+			const where: OrderRequestWhereInput = {
+				status: {
+					notIn: [OrderStatus.PENDING, OrderStatus.CANCELLED],
 				},
-			},
-			AND: [],
-		};
-
-		const eqFields = ["status"] as const;
-
-		eqFields.forEach((field) => {
-			if (data[field] !== undefined) {
-				where[field] = data[field];
-			}
-		});
-
-		const searchFields = [
-			"name",
-			"description",
-			"previousUsage",
-			"sku",
-		] as const;
-
-		if (data.searchTerm) {
-			(where.orderItems?.some?.product?.AND as ProductWhereInput[])?.push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
-			});
-		}
-
-		if (data.minTotal !== undefined || data.maxTotal !== undefined) {
-			const priceRange = {
-				gte: data.minTotal,
-				lte: data.maxTotal,
-			};
-
-			(where.AND as OrderRequestWhereInput[]).push({
-				total: priceRange,
-			});
-		}
-
-		const [orderRequests, total] = await Promise.all([
-			prisma.orderRequest.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: {
-					...orderRequestSelector,
-					_count: {
-						select: {
-							orderItems: true,
+				orderItems: {
+					some: {
+						product: {
+							AND: [],
 						},
 					},
 				},
-			}),
-			prisma.orderRequest.count({ where }),
-		]);
+				AND: [],
+			};
 
-		return {
-			orderRequests,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
+			const eqFields = ["status"] as const;
+
+			eqFields.forEach((field) => {
+				if (data[field] !== undefined) {
+					where[field] = data[field];
+				}
+			});
+
+			const searchFields = [
+				"name",
+				"description",
+				"previousUsage",
+				"sku",
+			] as const;
+
+			if (data.searchTerm) {
+				(where.orderItems?.some?.product?.AND as ProductWhereInput[])?.push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			if (data.minTotal !== undefined || data.maxTotal !== undefined) {
+				const priceRange = {
+					gte: data.minTotal,
+					lte: data.maxTotal,
+				};
+
+				(where.AND as OrderRequestWhereInput[]).push({
+					total: priceRange,
+				});
+			}
+
+			const [orderRequests, total] = await Promise.all([
+				prisma.orderRequest.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: {
+						...orderRequestSelector,
+						_count: {
+							select: {
+								orderItems: true,
+							},
+						},
+					},
+				}),
+				prisma.orderRequest.count({ where }),
+			]);
+
+			return {
+				orderRequests,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch order requests");
+		}
 	});
 
 export const getOrderRequest = createServerFn({ method: "GET" })
@@ -140,37 +148,45 @@ export const getOrderRequest = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const orderRequest = await prisma.orderRequest.findUnique({
-			where: {
-				id: data.orderRequestId,
-				status: {
-					notIn: [OrderStatus.PENDING, OrderStatus.CANCELLED],
-				},
-			},
-			select: {
-				...orderRequestSelector,
-				orderItems: {
-					select: {
-						...orderItemSelector,
-						product: {
-							select: productSelector,
-						},
-						review: {
-							select: reviewSelector,
-						},
+			const orderRequest = await prisma.orderRequest.findUnique({
+				where: {
+					id: data.orderRequestId,
+					status: {
+						notIn: [OrderStatus.PENDING, OrderStatus.CANCELLED],
 					},
 				},
-				userProfile: {
-					select: userProfileSelector,
+				select: {
+					...orderRequestSelector,
+					orderItems: {
+						select: {
+							...orderItemSelector,
+							product: {
+								select: productSelector,
+							},
+							review: {
+								select: reviewSelector,
+							},
+						},
+					},
+					userProfile: {
+						select: userProfileSelector,
+					},
 				},
-			},
-		});
+			});
 
-		if (!orderRequest) {
-			throw new Error("Order request not found");
+			if (!orderRequest) {
+				throw new Error("Order request not found");
+			}
+
+			return { orderRequest };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch order request");
 		}
-
-		return { orderRequest };
 	});

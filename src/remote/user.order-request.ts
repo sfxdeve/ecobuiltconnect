@@ -58,79 +58,87 @@ export const getOrderRequests = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { userProfile } = await getUserProfile();
+		try {
+			const { userProfile } = await getUserProfile();
 
-		const where: OrderRequestWhereInput = {
-			userProfile: { id: userProfile.id },
-			orderItems: {
-				some: {
-					product: {
-						AND: [],
-					},
-				},
-			},
-			AND: [],
-		};
-
-		const eqFields = ["status"] as const;
-
-		eqFields.forEach((field) => {
-			if (data[field] !== undefined) {
-				where[field] = data[field];
-			}
-		});
-
-		const searchFields = [
-			"name",
-			"description",
-			"previousUsage",
-			"sku",
-		] as const;
-
-		if (data.searchTerm) {
-			(where.orderItems?.some?.product?.AND as ProductWhereInput[])?.push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
-			});
-		}
-
-		if (data.minTotal !== undefined || data.maxTotal !== undefined) {
-			const priceRange = {
-				gte: data.minTotal,
-				lte: data.maxTotal,
-			};
-
-			(where.AND as OrderRequestWhereInput[]).push({
-				total: priceRange,
-			});
-		}
-
-		const [orderRequests, total] = await Promise.all([
-			prisma.orderRequest.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: {
-					...orderRequestSelector,
-					_count: {
-						select: {
-							orderItems: true,
+			const where: OrderRequestWhereInput = {
+				userProfile: { id: userProfile.id },
+				orderItems: {
+					some: {
+						product: {
+							AND: [],
 						},
 					},
 				},
-			}),
-			prisma.orderRequest.count({ where }),
-		]);
+				AND: [],
+			};
 
-		return {
-			orderRequests,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
+			const eqFields = ["status"] as const;
+
+			eqFields.forEach((field) => {
+				if (data[field] !== undefined) {
+					where[field] = data[field];
+				}
+			});
+
+			const searchFields = [
+				"name",
+				"description",
+				"previousUsage",
+				"sku",
+			] as const;
+
+			if (data.searchTerm) {
+				(where.orderItems?.some?.product?.AND as ProductWhereInput[])?.push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			if (data.minTotal !== undefined || data.maxTotal !== undefined) {
+				const priceRange = {
+					gte: data.minTotal,
+					lte: data.maxTotal,
+				};
+
+				(where.AND as OrderRequestWhereInput[]).push({
+					total: priceRange,
+				});
+			}
+
+			const [orderRequests, total] = await Promise.all([
+				prisma.orderRequest.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: {
+						...orderRequestSelector,
+						_count: {
+							select: {
+								orderItems: true,
+							},
+						},
+					},
+				}),
+				prisma.orderRequest.count({ where }),
+			]);
+
+			return {
+				orderRequests,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch order requests");
+		}
 	});
 
 export const getOrderRequest = createServerFn({
@@ -142,37 +150,45 @@ export const getOrderRequest = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { userProfile } = await getUserProfile();
+		try {
+			const { userProfile } = await getUserProfile();
 
-		const orderRequest = await prisma.orderRequest.findUnique({
-			where: {
-				id: data.orderRequestId,
-				userProfile: { id: userProfile.id },
-			},
-			select: {
-				...orderRequestSelector,
-				orderItems: {
-					select: {
-						...orderItemSelector,
-						product: {
-							select: productSelector,
-						},
-						review: {
-							select: reviewSelector,
+			const orderRequest = await prisma.orderRequest.findUnique({
+				where: {
+					id: data.orderRequestId,
+					userProfile: { id: userProfile.id },
+				},
+				select: {
+					...orderRequestSelector,
+					orderItems: {
+						select: {
+							...orderItemSelector,
+							product: {
+								select: productSelector,
+							},
+							review: {
+								select: reviewSelector,
+							},
 						},
 					},
+					logisticRequest: {
+						select: logisticRequestSelector,
+					},
 				},
-				logisticRequest: {
-					select: logisticRequestSelector,
-				},
-			},
-		});
+			});
 
-		if (!orderRequest) {
-			throw new Error("Order request not found");
+			if (!orderRequest) {
+				throw new Error("Order request not found");
+			}
+
+			return { orderRequest };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch order request");
 		}
-
-		return { orderRequest };
 	});
 
 export const createOrderRequest = createServerFn({
@@ -193,99 +209,108 @@ export const createOrderRequest = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { userProfile } = await getUserProfile();
+		try {
+			const { userProfile } = await getUserProfile();
 
-		const itemsMap = new Map<string, number>();
+			const itemsMap = new Map<string, number>();
 
-		for (const item of data.items) {
-			itemsMap.set(item.productId, item.quantity);
-		}
-
-		const productIds = [...itemsMap.keys()];
-
-		const products = await prisma.product.findMany({
-			where: {
-				id: { in: productIds },
-				isDeleted: false,
-				category: { status: "APPROVED", isDeleted: false },
-				vendorProfile: { status: "APPROVED" },
-			},
-			select: productSelector,
-		});
-
-		if (products.length !== productIds.length) {
-			throw new Error("Some products not found");
-		}
-
-		const stockIssues: {
-			name: string;
-			requested: number;
-			available: number;
-		}[] = [];
-
-		for (const product of products) {
-			// biome-ignore lint/style/noNonNullAssertion: Intentional
-			const requested = itemsMap.get(product.id)!;
-
-			if (product.stock < requested) {
-				stockIssues.push({
-					name: product.name,
-					requested,
-					available: product.stock,
-				});
+			for (const item of data.items) {
+				itemsMap.set(item.productId, item.quantity);
 			}
-		}
 
-		if (stockIssues.length > 0) {
-			throw new Error(
-				`Insufficient stock: ${stockIssues
-					.map((i) => `${i.name} (${i.requested}/${i.available})`)
-					.join(", ")}`,
-			);
-		}
+			const productIds = [...itemsMap.keys()];
 
-		const totalPrice = products.reduce(
-			(acc, product) =>
-				// biome-ignore lint/style/noNonNullAssertion: Intentional
-				acc + (product.salePrice ?? product.price) * itemsMap.get(product.id)!,
-			0,
-		);
-
-		const { orderRequest } = await prisma.$transaction(async (tx) => {
-			const orderRequest = await tx.orderRequest.create({
-				data: {
-					total: totalPrice,
-					userProfileId: userProfile.id,
-					orderItems: {
-						createMany: {
-							data: products.map((product) => ({
-								// biome-ignore lint/style/noNonNullAssertion: Intentional
-								quantity: itemsMap.get(product.id)!,
-								price: product.salePrice ?? product.price,
-								productId: product.id,
-							})),
-						},
-					},
+			const products = await prisma.product.findMany({
+				where: {
+					id: { in: productIds },
+					isDeleted: false,
+					category: { status: "APPROVED", isDeleted: false },
+					vendorProfile: { status: "APPROVED" },
 				},
-				select: orderRequestSelector,
+				select: productSelector,
 			});
 
-			await Promise.all(
-				products.map((product) =>
-					tx.product.update({
-						where: { id: product.id },
-						data: {
-							stock: {
-								// biome-ignore lint/style/noNonNullAssertion: Intentional
-								decrement: itemsMap.get(product.id)!,
-							},
-						},
-					}),
-				),
+			if (products.length !== productIds.length) {
+				throw new Error("Some products not found");
+			}
+
+			const stockIssues: {
+				name: string;
+				requested: number;
+				available: number;
+			}[] = [];
+
+			for (const product of products) {
+				// biome-ignore lint/style/noNonNullAssertion: Intentional
+				const requested = itemsMap.get(product.id)!;
+
+				if (product.stock < requested) {
+					stockIssues.push({
+						name: product.name,
+						requested,
+						available: product.stock,
+					});
+				}
+			}
+
+			if (stockIssues.length > 0) {
+				throw new Error(
+					`Insufficient stock: ${stockIssues
+						.map((i) => `${i.name} (${i.requested}/${i.available})`)
+						.join(", ")}`,
+				);
+			}
+
+			const totalPrice = products.reduce(
+				(acc, product) =>
+					acc +
+					// biome-ignore lint/style/noNonNullAssertion: Intentional
+					(product.salePrice ?? product.price) * itemsMap.get(product.id)!,
+				0,
 			);
 
-			return { orderRequest };
-		});
+			const { orderRequest } = await prisma.$transaction(async (tx) => {
+				const orderRequest = await tx.orderRequest.create({
+					data: {
+						total: totalPrice,
+						userProfileId: userProfile.id,
+						orderItems: {
+							createMany: {
+								data: products.map((product) => ({
+									// biome-ignore lint/style/noNonNullAssertion: Intentional
+									quantity: itemsMap.get(product.id)!,
+									price: product.salePrice ?? product.price,
+									productId: product.id,
+								})),
+							},
+						},
+					},
+					select: orderRequestSelector,
+				});
 
-		return { orderRequest };
+				await Promise.all(
+					products.map((product) =>
+						tx.product.update({
+							where: { id: product.id },
+							data: {
+								stock: {
+									// biome-ignore lint/style/noNonNullAssertion: Intentional
+									decrement: itemsMap.get(product.id)!,
+								},
+							},
+						}),
+					),
+				);
+
+				return { orderRequest };
+			});
+
+			return { orderRequest };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to create order request");
+		}
 	});

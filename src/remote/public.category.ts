@@ -23,28 +23,36 @@ export const getCategories = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const where: CategoryWhereInput = {
-			status: "APPROVED",
-			AND: [],
-		};
+		try {
+			const where: CategoryWhereInput = {
+				status: "APPROVED",
+				AND: [],
+			};
 
-		const searchFields = ["name"] as const;
+			const searchFields = ["name"] as const;
 
-		if (data.searchTerm) {
-			(where.AND as CategoryWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
+			if (data.searchTerm) {
+				(where.AND as CategoryWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			const categories = await prisma.category.findMany({
+				where,
+				orderBy: { [data.sortBy]: data.sortOrder },
+				select: categorySelector,
 			});
+
+			return {
+				categories,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch categories");
 		}
-
-		const categories = await prisma.category.findMany({
-			where,
-			orderBy: { [data.sortBy]: data.sortOrder },
-			select: categorySelector,
-		});
-
-		return {
-			categories,
-		};
 	});

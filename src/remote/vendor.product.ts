@@ -67,80 +67,91 @@ export const getProducts = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { vendorProfile } = await getVendorProfile();
+		try {
+			const { vendorProfile } = await getVendorProfile();
 
-		const where: ProductWhereInput = {
-			isDeleted: false,
-			vendorProfile: { id: vendorProfile.id },
-			AND: [],
-		};
-
-		const eqFields = [
-			"condition",
-			"isVerified",
-			"categoryId",
-			"productRequestId",
-		] as const;
-
-		eqFields.forEach((field) => {
-			if (data[field] !== undefined) {
-				where[field] = data[field];
-			}
-		});
-
-		const searchFields = [
-			"name",
-			"description",
-			"previousUsage",
-			"sku",
-		] as const;
-
-		if (data.searchTerm) {
-			(where.AND as ProductWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
-			});
-		}
-
-		if (data.minStock !== undefined) {
-			where.stock = { gte: data.minStock };
-		}
-
-		if (data.minPrice !== undefined || data.maxPrice !== undefined) {
-			const priceRange = {
-				gte: data.minPrice,
-				lte: data.maxPrice,
+			const where: ProductWhereInput = {
+				isDeleted: false,
+				vendorProfile: { id: vendorProfile.id },
+				AND: [],
 			};
 
-			(where.AND as ProductWhereInput[]).push({
-				OR: [{ salePrice: priceRange }, { salePrice: null, price: priceRange }],
+			const eqFields = [
+				"condition",
+				"isVerified",
+				"categoryId",
+				"productRequestId",
+			] as const;
+
+			eqFields.forEach((field) => {
+				if (data[field] !== undefined) {
+					where[field] = data[field];
+				}
 			});
+
+			const searchFields = [
+				"name",
+				"description",
+				"previousUsage",
+				"sku",
+			] as const;
+
+			if (data.searchTerm) {
+				(where.AND as ProductWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			if (data.minStock !== undefined) {
+				where.stock = { gte: data.minStock };
+			}
+
+			if (data.minPrice !== undefined || data.maxPrice !== undefined) {
+				const priceRange = {
+					gte: data.minPrice,
+					lte: data.maxPrice,
+				};
+
+				(where.AND as ProductWhereInput[]).push({
+					OR: [
+						{ salePrice: priceRange },
+						{ salePrice: null, price: priceRange },
+					],
+				});
+			}
+
+			const [products, total] = await Promise.all([
+				prisma.product.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: {
+						...productSelector,
+						category: { select: categorySelector },
+						vendorProfile: { select: vendorProfileSelector },
+						productRequestId: true,
+					},
+				}),
+				prisma.product.count({ where }),
+			]);
+
+			return {
+				products,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch products");
 		}
-
-		const [products, total] = await Promise.all([
-			prisma.product.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: {
-					...productSelector,
-					category: { select: categorySelector },
-					vendorProfile: { select: vendorProfileSelector },
-					productRequestId: true,
-				},
-			}),
-			prisma.product.count({ where }),
-		]);
-
-		return {
-			products,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
 	});
 
 export const getProduct = createServerFn({
@@ -152,27 +163,35 @@ export const getProduct = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { vendorProfile } = await getVendorProfile();
+		try {
+			const { vendorProfile } = await getVendorProfile();
 
-		const product = await prisma.product.findUnique({
-			where: {
-				id: data.productId,
-				isDeleted: false,
-				vendorProfile: { id: vendorProfile.id },
-			},
-			select: {
-				...productSelector,
-				category: { select: categorySelector },
-				vendorProfile: { select: vendorProfileSelector },
-				productRequestId: true,
-			},
-		});
+			const product = await prisma.product.findUnique({
+				where: {
+					id: data.productId,
+					isDeleted: false,
+					vendorProfile: { id: vendorProfile.id },
+				},
+				select: {
+					...productSelector,
+					category: { select: categorySelector },
+					vendorProfile: { select: vendorProfileSelector },
+					productRequestId: true,
+				},
+			});
 
-		if (!product) {
-			throw new Error("Product not found");
+			if (!product) {
+				throw new Error("Product not found");
+			}
+
+			return { product };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch product");
 		}
-
-		return { product };
 	});
 
 export const createProduct = createServerFn({
@@ -223,29 +242,37 @@ export const createProduct = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { vendorProfile } = await getVendorProfile();
+		try {
+			const { vendorProfile } = await getVendorProfile();
 
-		const category = await prisma.category.findUnique({
-			where: {
-				id: data.categoryId,
-				status: "APPROVED",
-				isDeleted: false,
-			},
-		});
+			const category = await prisma.category.findUnique({
+				where: {
+					id: data.categoryId,
+					status: "APPROVED",
+					isDeleted: false,
+				},
+			});
 
-		if (!category) {
-			throw new Error("Category not found");
+			if (!category) {
+				throw new Error("Category not found");
+			}
+
+			const product = await prisma.product.create({
+				data: {
+					...data,
+					vendorProfileId: vendorProfile.id,
+				},
+				select: productSelector,
+			});
+
+			return { product };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to create product");
 		}
-
-		const product = await prisma.product.create({
-			data: {
-				...data,
-				vendorProfileId: vendorProfile.id,
-			},
-			select: productSelector,
-		});
-
-		return { product };
 	});
 
 export const updateProduct = createServerFn({
@@ -305,41 +332,49 @@ export const updateProduct = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { vendorProfile } = await getVendorProfile();
+		try {
+			const { vendorProfile } = await getVendorProfile();
 
-		if (data.categoryId) {
-			const category = await prisma.category.findUnique({
+			if (data.categoryId) {
+				const category = await prisma.category.findUnique({
+					where: {
+						id: data.categoryId,
+						status: "APPROVED",
+						isDeleted: false,
+					},
+				});
+
+				if (!category) {
+					throw new Error("Category not found");
+				}
+			}
+
+			const { productId, ...productData } = data;
+
+			const product = await prisma.product.update({
 				where: {
-					id: data.categoryId,
-					status: "APPROVED",
+					id: productId,
 					isDeleted: false,
+					vendorProfile: { id: vendorProfile.id },
 				},
+				data: {
+					...productData,
+				},
+				select: productSelector,
 			});
 
-			if (!category) {
-				throw new Error("Category not found");
+			if (!product) {
+				throw new Error("Product not found");
 			}
+
+			return { product };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to update product");
 		}
-
-		const { productId, ...productData } = data;
-
-		const product = await prisma.product.update({
-			where: {
-				id: productId,
-				isDeleted: false,
-				vendorProfile: { id: vendorProfile.id },
-			},
-			data: {
-				...productData,
-			},
-			select: productSelector,
-		});
-
-		if (!product) {
-			throw new Error("Product not found");
-		}
-
-		return { product };
 	});
 
 export const deleteProduct = createServerFn({
@@ -351,24 +386,32 @@ export const deleteProduct = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { vendorProfile } = await getVendorProfile();
+		try {
+			const { vendorProfile } = await getVendorProfile();
 
-		const product = await prisma.product.update({
-			where: {
-				id: data.productId,
-				isDeleted: false,
-				vendorProfile: { id: vendorProfile.id },
-			},
-			data: {
-				sku: randomUUID(),
-				isDeleted: true,
-			},
-			select: productSelector,
-		});
+			const product = await prisma.product.update({
+				where: {
+					id: data.productId,
+					isDeleted: false,
+					vendorProfile: { id: vendorProfile.id },
+				},
+				data: {
+					sku: randomUUID(),
+					isDeleted: true,
+				},
+				select: productSelector,
+			});
 
-		if (!product) {
-			throw new Error("Product not found");
+			if (!product) {
+				throw new Error("Product not found");
+			}
+
+			return { product };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to delete product");
 		}
-
-		return { product };
 	});

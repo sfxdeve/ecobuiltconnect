@@ -32,57 +32,65 @@ export const getUserProfiles = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { vendorProfile } = await getVendorProfile();
+		try {
+			const { vendorProfile } = await getVendorProfile();
 
-		const where: UserProfileWhereInput = {
-			orderRequests: {
-				some: {
-					orderItems: {
-						every: {
-							product: {
-								vendorProfile: {
-									id: vendorProfile.id,
+			const where: UserProfileWhereInput = {
+				orderRequests: {
+					some: {
+						orderItems: {
+							every: {
+								product: {
+									vendorProfile: {
+										id: vendorProfile.id,
+									},
 								},
 							},
 						},
 					},
 				},
-			},
-			AND: [],
-		};
+				AND: [],
+			};
 
-		const searchFields = [
-			"name",
-			"description",
-			"address",
-			"city",
-			"postcode",
-		] as const;
+			const searchFields = [
+				"name",
+				"description",
+				"address",
+				"city",
+				"postcode",
+			] as const;
 
-		if (data.searchTerm) {
-			(where.AND as UserProfileWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
-			});
+			if (data.searchTerm) {
+				(where.AND as UserProfileWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			const [userProfiles, total] = await Promise.all([
+				prisma.userProfile.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: userProfileSelector,
+				}),
+				prisma.userProfile.count({ where }),
+			]);
+
+			return {
+				userProfiles,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch user profiles");
 		}
-
-		const [userProfiles, total] = await Promise.all([
-			prisma.userProfile.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: userProfileSelector,
-			}),
-			prisma.userProfile.count({ where }),
-		]);
-
-		return {
-			userProfiles,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
 	});

@@ -25,7 +25,11 @@ export const getS3ObjectUploadURL = createServerFn({
 			const url = await getSignedUrl(s3, command, { expiresIn: 60 });
 
 			return { url };
-		} catch {
-			throw new Error("Failed to generate signed URL");
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch signed URL");
 		}
 	});

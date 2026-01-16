@@ -43,54 +43,62 @@ export const getUserProfiles = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const where: UserProfileWhereInput = {
-			AND: [],
-		};
+			const where: UserProfileWhereInput = {
+				AND: [],
+			};
 
-		const eqFields = ["status"] as const;
+			const eqFields = ["status"] as const;
 
-		eqFields.forEach((field) => {
-			if (data[field] !== undefined) {
-				where[field] = data[field];
-			}
-		});
-
-		const searchFields = [
-			"name",
-			"description",
-			"address",
-			"city",
-			"postcode",
-		] as const;
-
-		if (data.searchTerm) {
-			(where.AND as UserProfileWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
+			eqFields.forEach((field) => {
+				if (data[field] !== undefined) {
+					where[field] = data[field];
+				}
 			});
+
+			const searchFields = [
+				"name",
+				"description",
+				"address",
+				"city",
+				"postcode",
+			] as const;
+
+			if (data.searchTerm) {
+				(where.AND as UserProfileWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			const [userProfiles, total] = await Promise.all([
+				prisma.userProfile.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: userProfileSelector,
+				}),
+				prisma.userProfile.count({ where }),
+			]);
+
+			return {
+				userProfiles,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch user profiles");
 		}
-
-		const [userProfiles, total] = await Promise.all([
-			prisma.userProfile.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: userProfileSelector,
-			}),
-			prisma.userProfile.count({ where }),
-		]);
-
-		return {
-			userProfiles,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
 	});
 
 export const getUserProfile = createServerFn({ method: "GET" })
@@ -100,20 +108,28 @@ export const getUserProfile = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const userProfile = await prisma.userProfile.findUnique({
-			where: {
-				id: data.userProfileId,
-			},
-			select: userProfileSelector,
-		});
+			const userProfile = await prisma.userProfile.findUnique({
+				where: {
+					id: data.userProfileId,
+				},
+				select: userProfileSelector,
+			});
 
-		if (!userProfile) {
-			throw new Error("User profile not found");
+			if (!userProfile) {
+				throw new Error("User profile not found");
+			}
+
+			return { userProfile };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch user profile");
 		}
-
-		return { userProfile };
 	});
 
 export const updateUserProfile = createServerFn({
@@ -135,21 +151,29 @@ export const updateUserProfile = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const { userProfileId, ...userProfileData } = data;
+			const { userProfileId, ...userProfileData } = data;
 
-		const userProfile = await prisma.userProfile.update({
-			where: {
-				id: userProfileId,
-			},
-			data: userProfileData,
-			select: userProfileSelector,
-		});
+			const userProfile = await prisma.userProfile.update({
+				where: {
+					id: userProfileId,
+				},
+				data: userProfileData,
+				select: userProfileSelector,
+			});
 
-		if (!userProfile) {
-			throw new Error("User profile not found");
+			if (!userProfile) {
+				throw new Error("User profile not found");
+			}
+
+			return { userProfile };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to update user profile");
 		}
-
-		return { userProfile };
 	});

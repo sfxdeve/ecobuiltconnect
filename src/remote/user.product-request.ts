@@ -47,66 +47,74 @@ export const getProductRequests = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { userProfile } = await getUserProfile();
+		try {
+			const { userProfile } = await getUserProfile();
 
-		const where: ProductRequestWhereInput = {
-			isDeleted: false,
-			userProfile: { id: userProfile.id },
-			AND: [],
-		};
-
-		const eqFields = ["categoryId"] as const;
-
-		eqFields.forEach((field) => {
-			if (data[field] !== undefined) {
-				where[field] = data[field];
-			}
-		});
-
-		const searchFields = ["name", "description"] as const;
-
-		if (data.searchTerm) {
-			(where.AND as ProductRequestWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
-			});
-		}
-
-		if (data.minQuantity !== undefined) {
-			where.quantity = { gte: data.minQuantity };
-		}
-
-		if (data.minPrice !== undefined || data.maxPrice !== undefined) {
-			const priceRange = {
-				gte: data.minPrice,
-				lte: data.maxPrice,
+			const where: ProductRequestWhereInput = {
+				isDeleted: false,
+				userProfile: { id: userProfile.id },
+				AND: [],
 			};
 
-			where.price = priceRange;
+			const eqFields = ["categoryId"] as const;
+
+			eqFields.forEach((field) => {
+				if (data[field] !== undefined) {
+					where[field] = data[field];
+				}
+			});
+
+			const searchFields = ["name", "description"] as const;
+
+			if (data.searchTerm) {
+				(where.AND as ProductRequestWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			if (data.minQuantity !== undefined) {
+				where.quantity = { gte: data.minQuantity };
+			}
+
+			if (data.minPrice !== undefined || data.maxPrice !== undefined) {
+				const priceRange = {
+					gte: data.minPrice,
+					lte: data.maxPrice,
+				};
+
+				where.price = priceRange;
+			}
+
+			const [productRequests, total] = await Promise.all([
+				prisma.productRequest.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: {
+						...productRequestSelector,
+						category: { select: categorySelector },
+					},
+				}),
+				prisma.productRequest.count({ where }),
+			]);
+
+			return {
+				productRequests,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch product requests");
 		}
-
-		const [productRequests, total] = await Promise.all([
-			prisma.productRequest.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: {
-					...productRequestSelector,
-					category: { select: categorySelector },
-				},
-			}),
-			prisma.productRequest.count({ where }),
-		]);
-
-		return {
-			productRequests,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
 	});
 
 export const createProductRequest = createServerFn({ method: "POST" })
@@ -132,27 +140,35 @@ export const createProductRequest = createServerFn({ method: "POST" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { userProfile } = await getUserProfile();
+		try {
+			const { userProfile } = await getUserProfile();
 
-		const category = await prisma.category.findUnique({
-			where: {
-				id: data.categoryId,
-				status: "APPROVED",
-				isDeleted: false,
-			},
-		});
+			const category = await prisma.category.findUnique({
+				where: {
+					id: data.categoryId,
+					status: "APPROVED",
+					isDeleted: false,
+				},
+			});
 
-		if (!category) {
-			throw new Error("Category not found");
+			if (!category) {
+				throw new Error("Category not found");
+			}
+
+			const productRequest = await prisma.productRequest.create({
+				data: {
+					...data,
+					userProfileId: userProfile.id,
+				},
+				select: productRequestSelector,
+			});
+
+			return { productRequest };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to create product request");
 		}
-
-		const productRequest = await prisma.productRequest.create({
-			data: {
-				...data,
-				userProfileId: userProfile.id,
-			},
-			select: productRequestSelector,
-		});
-
-		return { productRequest };
 	});

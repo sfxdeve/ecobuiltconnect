@@ -7,21 +7,29 @@ import { getClerkId } from "./shared.clerk";
 export const getVendorProfile = createServerFn({
 	method: "GET",
 }).handler(async () => {
-	const { clerkId } = await getClerkId();
+	try {
+		const { clerkId } = await getClerkId();
 
-	const vendorProfile = await prisma.vendorProfile.findUnique({
-		where: {
-			clerkId,
-			status: "APPROVED",
-		},
-		select: vendorProfileSelector,
-	});
+		const vendorProfile = await prisma.vendorProfile.findUnique({
+			where: {
+				clerkId,
+				status: "APPROVED",
+			},
+			select: vendorProfileSelector,
+		});
 
-	if (!vendorProfile) {
-		throw new Error("Vendor profile not found");
+		if (!vendorProfile) {
+			throw new Error("Vendor profile not found");
+		}
+
+		return { vendorProfile };
+	} catch (error) {
+		if (error instanceof Error) {
+			console.error(error.message);
+		}
+
+		throw new Error("Failed to fetch vendor profile");
 	}
-
-	return { vendorProfile };
 });
 
 export const upsertVendorProfile = createServerFn({
@@ -51,21 +59,29 @@ export const upsertVendorProfile = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { clerkId } = await getClerkId();
+		try {
+			const { clerkId } = await getClerkId();
 
-		const vendorProfile = await prisma.vendorProfile.upsert({
-			where: {
-				clerkId,
-			},
-			update: {
-				...data,
-			},
-			create: {
-				clerkId,
-				...data,
-			},
-			select: vendorProfileSelector,
-		});
+			const vendorProfile = await prisma.vendorProfile.upsert({
+				where: {
+					clerkId,
+				},
+				update: {
+					...data,
+				},
+				create: {
+					clerkId,
+					...data,
+				},
+				select: vendorProfileSelector,
+			});
 
-		return { vendorProfile };
+			return { vendorProfile };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to upsert vendor profile");
+		}
 	});

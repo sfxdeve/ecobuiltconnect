@@ -68,79 +68,90 @@ export const getProducts = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const where: ProductWhereInput = {
-			isDeleted: false,
-			category: { status: "APPROVED", isDeleted: false },
-			vendorProfile: { status: "APPROVED" },
-			AND: [],
-		};
-
-		const eqFields = [
-			"condition",
-			"isVerified",
-			"categoryId",
-			"vendorProfileId",
-			"productRequestId",
-		] as const;
-
-		eqFields.forEach((field) => {
-			if (data[field] !== undefined) {
-				where[field] = data[field];
-			}
-		});
-
-		const searchFields = [
-			"name",
-			"description",
-			"previousUsage",
-			"sku",
-		] as const;
-
-		if (data.searchTerm) {
-			(where.AND as ProductWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
-			});
-		}
-
-		if (data.minStock !== undefined) {
-			where.stock = { gte: data.minStock };
-		}
-
-		if (data.minPrice !== undefined || data.maxPrice !== undefined) {
-			const priceRange = {
-				gte: data.minPrice,
-				lte: data.maxPrice,
+		try {
+			const where: ProductWhereInput = {
+				isDeleted: false,
+				category: { status: "APPROVED", isDeleted: false },
+				vendorProfile: { status: "APPROVED" },
+				AND: [],
 			};
 
-			(where.AND as ProductWhereInput[]).push({
-				OR: [{ salePrice: priceRange }, { salePrice: null, price: priceRange }],
+			const eqFields = [
+				"condition",
+				"isVerified",
+				"categoryId",
+				"vendorProfileId",
+				"productRequestId",
+			] as const;
+
+			eqFields.forEach((field) => {
+				if (data[field] !== undefined) {
+					where[field] = data[field];
+				}
 			});
+
+			const searchFields = [
+				"name",
+				"description",
+				"previousUsage",
+				"sku",
+			] as const;
+
+			if (data.searchTerm) {
+				(where.AND as ProductWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			if (data.minStock !== undefined) {
+				where.stock = { gte: data.minStock };
+			}
+
+			if (data.minPrice !== undefined || data.maxPrice !== undefined) {
+				const priceRange = {
+					gte: data.minPrice,
+					lte: data.maxPrice,
+				};
+
+				(where.AND as ProductWhereInput[]).push({
+					OR: [
+						{ salePrice: priceRange },
+						{ salePrice: null, price: priceRange },
+					],
+				});
+			}
+
+			const [products, total] = await Promise.all([
+				prisma.product.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: {
+						...productSelector,
+						category: { select: categorySelector },
+						vendorProfile: { select: vendorProfileSelector },
+					},
+				}),
+				prisma.product.count({ where }),
+			]);
+
+			return {
+				products,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch products");
 		}
-
-		const [products, total] = await Promise.all([
-			prisma.product.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: {
-					...productSelector,
-					category: { select: categorySelector },
-					vendorProfile: { select: vendorProfileSelector },
-				},
-			}),
-			prisma.product.count({ where }),
-		]);
-
-		return {
-			products,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
 	});
 
 export const getProduct = createServerFn({
@@ -152,23 +163,31 @@ export const getProduct = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const product = await prisma.product.findUnique({
-			where: {
-				id: data.productId,
-				isDeleted: false,
-				category: { status: "APPROVED", isDeleted: false },
-				vendorProfile: { status: "APPROVED" },
-			},
-			select: {
-				...productSelector,
-				category: { select: categorySelector },
-				vendorProfile: { select: vendorProfileSelector },
-			},
-		});
+		try {
+			const product = await prisma.product.findUnique({
+				where: {
+					id: data.productId,
+					isDeleted: false,
+					category: { status: "APPROVED", isDeleted: false },
+					vendorProfile: { status: "APPROVED" },
+				},
+				select: {
+					...productSelector,
+					category: { select: categorySelector },
+					vendorProfile: { select: vendorProfileSelector },
+				},
+			});
 
-		if (!product) {
-			throw new Error("Product not found");
+			if (!product) {
+				throw new Error("Product not found");
+			}
+
+			return { product };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch product");
 		}
-
-		return { product };
 	});

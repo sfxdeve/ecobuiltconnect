@@ -43,54 +43,62 @@ export const getVendorProfiles = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const where: VendorProfileWhereInput = {
-			AND: [],
-		};
+			const where: VendorProfileWhereInput = {
+				AND: [],
+			};
 
-		const eqFields = ["status"] as const;
+			const eqFields = ["status"] as const;
 
-		eqFields.forEach((field) => {
-			if (data[field] !== undefined) {
-				where[field] = data[field];
-			}
-		});
-
-		const searchFields = [
-			"name",
-			"description",
-			"address",
-			"city",
-			"postcode",
-		] as const;
-
-		if (data.searchTerm) {
-			(where.AND as VendorProfileWhereInput[]).push({
-				OR: searchFields.map((field) => ({
-					[field]: { contains: data.searchTerm, mode: "insensitive" },
-				})),
+			eqFields.forEach((field) => {
+				if (data[field] !== undefined) {
+					where[field] = data[field];
+				}
 			});
+
+			const searchFields = [
+				"name",
+				"description",
+				"address",
+				"city",
+				"postcode",
+			] as const;
+
+			if (data.searchTerm) {
+				(where.AND as VendorProfileWhereInput[]).push({
+					OR: searchFields.map((field) => ({
+						[field]: { contains: data.searchTerm, mode: "insensitive" },
+					})),
+				});
+			}
+
+			const [vendorProfiles, total] = await Promise.all([
+				prisma.vendorProfile.findMany({
+					where,
+					take: data.limit,
+					skip: (data.page - 1) * data.limit,
+					orderBy: { [data.sortBy]: data.sortOrder },
+					select: vendorProfileSelector,
+				}),
+				prisma.vendorProfile.count({ where }),
+			]);
+
+			return {
+				vendorProfiles,
+				total,
+				pages: Math.ceil(total / data.limit),
+				limit: data.limit,
+				page: data.page,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch vendor profiles");
 		}
-
-		const [vendorProfiles, total] = await Promise.all([
-			prisma.vendorProfile.findMany({
-				where,
-				take: data.limit,
-				skip: (data.page - 1) * data.limit,
-				orderBy: { [data.sortBy]: data.sortOrder },
-				select: vendorProfileSelector,
-			}),
-			prisma.vendorProfile.count({ where }),
-		]);
-
-		return {
-			vendorProfiles,
-			total,
-			pages: Math.ceil(total / data.limit),
-			limit: data.limit,
-			page: data.page,
-		};
 	});
 
 export const getVendorProfile = createServerFn({ method: "GET" })
@@ -100,20 +108,28 @@ export const getVendorProfile = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const vendorProfile = await prisma.vendorProfile.findUnique({
-			where: {
-				id: data.vendorProfileId,
-			},
-			select: vendorProfileSelector,
-		});
+			const vendorProfile = await prisma.vendorProfile.findUnique({
+				where: {
+					id: data.vendorProfileId,
+				},
+				select: vendorProfileSelector,
+			});
 
-		if (!vendorProfile) {
-			throw new Error("Vendor profile not found");
+			if (!vendorProfile) {
+				throw new Error("Vendor profile not found");
+			}
+
+			return { vendorProfile };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to fetch vendor profile");
 		}
-
-		return { vendorProfile };
 	});
 
 export const updateVendorProfile = createServerFn({
@@ -135,21 +151,29 @@ export const updateVendorProfile = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		await getAdminProfile();
+		try {
+			await getAdminProfile();
 
-		const { vendorProfileId, ...vendorProfileData } = data;
+			const { vendorProfileId, ...vendorProfileData } = data;
 
-		const vendorProfile = await prisma.vendorProfile.update({
-			where: {
-				id: vendorProfileId,
-			},
-			data: vendorProfileData,
-			select: vendorProfileSelector,
-		});
+			const vendorProfile = await prisma.vendorProfile.update({
+				where: {
+					id: vendorProfileId,
+				},
+				data: vendorProfileData,
+				select: vendorProfileSelector,
+			});
 
-		if (!vendorProfile) {
-			throw new Error("Vendor profile not found");
+			if (!vendorProfile) {
+				throw new Error("Vendor profile not found");
+			}
+
+			return { vendorProfile };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to update vendor profile");
 		}
-
-		return { vendorProfile };
 	});

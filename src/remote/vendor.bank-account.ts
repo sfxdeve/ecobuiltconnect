@@ -7,20 +7,28 @@ import { getVendorProfile } from "./vendor.profile";
 export const getBankAccount = createServerFn({
 	method: "GET",
 }).handler(async () => {
-	const { vendorProfile } = await getVendorProfile();
+	try {
+		const { vendorProfile } = await getVendorProfile();
 
-	const bankAccount = await prisma.bankAccount.findUnique({
-		where: {
-			vendorProfileId: vendorProfile.id,
-		},
-		select: bankAccountSelector,
-	});
+		const bankAccount = await prisma.bankAccount.findUnique({
+			where: {
+				vendorProfileId: vendorProfile.id,
+			},
+			select: bankAccountSelector,
+		});
 
-	if (!bankAccount) {
-		throw new Error("Bank account not found");
+		if (!bankAccount) {
+			throw new Error("Bank account not found");
+		}
+
+		return { bankAccount };
+	} catch (error) {
+		if (error instanceof Error) {
+			console.error(error.message);
+		}
+
+		throw new Error("Failed to fetch bank account");
 	}
-
-	return { bankAccount };
 });
 
 export const upsertBankAccount = createServerFn({
@@ -46,21 +54,29 @@ export const upsertBankAccount = createServerFn({
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { vendorProfile } = await getVendorProfile();
+		try {
+			const { vendorProfile } = await getVendorProfile();
 
-		const bankAccount = await prisma.bankAccount.upsert({
-			where: {
-				vendorProfileId: vendorProfile.id,
-			},
-			update: {
-				...data,
-			},
-			create: {
-				...data,
-				vendorProfileId: vendorProfile.id,
-			},
-			select: bankAccountSelector,
-		});
+			const bankAccount = await prisma.bankAccount.upsert({
+				where: {
+					vendorProfileId: vendorProfile.id,
+				},
+				update: {
+					...data,
+				},
+				create: {
+					...data,
+					vendorProfileId: vendorProfile.id,
+				},
+				select: bankAccountSelector,
+			});
 
-		return { bankAccount };
+			return { bankAccount };
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			throw new Error("Failed to upsert bank account");
+		}
 	});
