@@ -44,6 +44,8 @@ import { Route as adminAdminDashboardIndexRouteImport } from './routes/(admin)/a
 import { Route as adminAdminCategoriesIndexRouteImport } from './routes/(admin)/admin.categories/index'
 import { Route as apiApiOzowNotifyRouteImport } from './routes/(api)/api.ozow/notify'
 import { Route as userUserOrdersOrderIdIndexRouteImport } from './routes/(user)/user.orders/$orderId/index'
+import { Route as userUserCheckoutErrorIndexRouteImport } from './routes/(user)/user.checkout/error/index'
+import { Route as userUserCheckoutCancelledIndexRouteImport } from './routes/(user)/user.checkout/cancelled/index'
 import { Route as userUserOrdersOrderIdDeliveryIndexRouteImport } from './routes/(user)/user.orders/$orderId/delivery/index'
 
 const vendorRouteRoute = vendorRouteRouteImport.update({
@@ -222,6 +224,18 @@ const userUserOrdersOrderIdIndexRoute =
     path: '/user/orders/$orderId/',
     getParentRoute: () => userRouteRoute,
   } as any)
+const userUserCheckoutErrorIndexRoute =
+  userUserCheckoutErrorIndexRouteImport.update({
+    id: '/user/checkout/error/',
+    path: '/user/checkout/error/',
+    getParentRoute: () => userRouteRoute,
+  } as any)
+const userUserCheckoutCancelledIndexRoute =
+  userUserCheckoutCancelledIndexRouteImport.update({
+    id: '/user/checkout/cancelled/',
+    path: '/user/checkout/cancelled/',
+    getParentRoute: () => userRouteRoute,
+  } as any)
 const userUserOrdersOrderIdDeliveryIndexRoute =
   userUserOrdersOrderIdDeliveryIndexRouteImport.update({
     id: '/user/orders/$orderId/delivery/',
@@ -258,6 +272,8 @@ export interface FileRoutesByFullPath {
   '/vendor/products': typeof vendorVendorProductsIndexRoute
   '/vendor/requests': typeof vendorVendorRequestsIndexRoute
   '/vendor/users': typeof vendorVendorUsersIndexRoute
+  '/user/checkout/cancelled': typeof userUserCheckoutCancelledIndexRoute
+  '/user/checkout/error': typeof userUserCheckoutErrorIndexRoute
   '/user/orders/$orderId': typeof userUserOrdersOrderIdIndexRoute
   '/user/orders/$orderId/delivery': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
@@ -290,6 +306,8 @@ export interface FileRoutesByTo {
   '/vendor/products': typeof vendorVendorProductsIndexRoute
   '/vendor/requests': typeof vendorVendorRequestsIndexRoute
   '/vendor/users': typeof vendorVendorUsersIndexRoute
+  '/user/checkout/cancelled': typeof userUserCheckoutCancelledIndexRoute
+  '/user/checkout/error': typeof userUserCheckoutErrorIndexRoute
   '/user/orders/$orderId': typeof userUserOrdersOrderIdIndexRoute
   '/user/orders/$orderId/delivery': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
@@ -329,6 +347,8 @@ export interface FileRoutesById {
   '/(vendor)/vendor/products/': typeof vendorVendorProductsIndexRoute
   '/(vendor)/vendor/requests/': typeof vendorVendorRequestsIndexRoute
   '/(vendor)/vendor/users/': typeof vendorVendorUsersIndexRoute
+  '/(user)/user/checkout/cancelled/': typeof userUserCheckoutCancelledIndexRoute
+  '/(user)/user/checkout/error/': typeof userUserCheckoutErrorIndexRoute
   '/(user)/user/orders/$orderId/': typeof userUserOrdersOrderIdIndexRoute
   '/(user)/user/orders/$orderId/delivery/': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
@@ -363,6 +383,8 @@ export interface FileRouteTypes {
     | '/vendor/products'
     | '/vendor/requests'
     | '/vendor/users'
+    | '/user/checkout/cancelled'
+    | '/user/checkout/error'
     | '/user/orders/$orderId'
     | '/user/orders/$orderId/delivery'
   fileRoutesByTo: FileRoutesByTo
@@ -395,6 +417,8 @@ export interface FileRouteTypes {
     | '/vendor/products'
     | '/vendor/requests'
     | '/vendor/users'
+    | '/user/checkout/cancelled'
+    | '/user/checkout/error'
     | '/user/orders/$orderId'
     | '/user/orders/$orderId/delivery'
   id:
@@ -433,6 +457,8 @@ export interface FileRouteTypes {
     | '/(vendor)/vendor/products/'
     | '/(vendor)/vendor/requests/'
     | '/(vendor)/vendor/users/'
+    | '/(user)/user/checkout/cancelled/'
+    | '/(user)/user/checkout/error/'
     | '/(user)/user/orders/$orderId/'
     | '/(user)/user/orders/$orderId/delivery/'
   fileRoutesById: FileRoutesById
@@ -694,6 +720,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof userUserOrdersOrderIdIndexRouteImport
       parentRoute: typeof userRouteRoute
     }
+    '/(user)/user/checkout/error/': {
+      id: '/(user)/user/checkout/error/'
+      path: '/user/checkout/error'
+      fullPath: '/user/checkout/error'
+      preLoaderRoute: typeof userUserCheckoutErrorIndexRouteImport
+      parentRoute: typeof userRouteRoute
+    }
+    '/(user)/user/checkout/cancelled/': {
+      id: '/(user)/user/checkout/cancelled/'
+      path: '/user/checkout/cancelled'
+      fullPath: '/user/checkout/cancelled'
+      preLoaderRoute: typeof userUserCheckoutCancelledIndexRouteImport
+      parentRoute: typeof userRouteRoute
+    }
     '/(user)/user/orders/$orderId/delivery/': {
       id: '/(user)/user/orders/$orderId/delivery/'
       path: '/user/orders/$orderId/delivery'
@@ -786,6 +826,8 @@ interface userRouteRouteChildren {
   userUserCheckoutIndexRoute: typeof userUserCheckoutIndexRoute
   userUserOrdersIndexRoute: typeof userUserOrdersIndexRoute
   userUserRequestsIndexRoute: typeof userUserRequestsIndexRoute
+  userUserCheckoutCancelledIndexRoute: typeof userUserCheckoutCancelledIndexRoute
+  userUserCheckoutErrorIndexRoute: typeof userUserCheckoutErrorIndexRoute
   userUserOrdersOrderIdIndexRoute: typeof userUserOrdersOrderIdIndexRoute
   userUserOrdersOrderIdDeliveryIndexRoute: typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
@@ -794,6 +836,8 @@ const userRouteRouteChildren: userRouteRouteChildren = {
   userUserCheckoutIndexRoute: userUserCheckoutIndexRoute,
   userUserOrdersIndexRoute: userUserOrdersIndexRoute,
   userUserRequestsIndexRoute: userUserRequestsIndexRoute,
+  userUserCheckoutCancelledIndexRoute: userUserCheckoutCancelledIndexRoute,
+  userUserCheckoutErrorIndexRoute: userUserCheckoutErrorIndexRoute,
   userUserOrdersOrderIdIndexRoute: userUserOrdersOrderIdIndexRoute,
   userUserOrdersOrderIdDeliveryIndexRoute:
     userUserOrdersOrderIdDeliveryIndexRoute,
