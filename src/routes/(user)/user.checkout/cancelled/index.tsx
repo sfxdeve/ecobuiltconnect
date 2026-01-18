@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ShoppingBagIcon, XCircleIcon } from "lucide-react";
+import { XCircleIcon } from "lucide-react";
 import { AppPending } from "@/components/blocks/app-pending";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -35,7 +35,7 @@ function RouteComponent() {
 				<Empty className="bg-muted">
 					<EmptyHeader>
 						<EmptyMedia variant="icon">
-							<XCircleIcon className="size-5" />
+							<XCircleIcon className="size-8" />
 						</EmptyMedia>
 						<EmptyTitle>Checkout cancelled</EmptyTitle>
 						<EmptyDescription>
@@ -47,9 +47,8 @@ function RouteComponent() {
 					<EmptyContent className="max-w-md flex-row flex-wrap justify-center">
 						<Link
 							to="/products"
-							className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+							className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
 						>
-							<ShoppingBagIcon className="size-4" />
 							Continue shopping
 						</Link>
 					</EmptyContent>
