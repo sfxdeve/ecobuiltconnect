@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { AlertTriangleIcon, LifeBuoyIcon } from "lucide-react";
+import { AlertTriangleIcon } from "lucide-react";
 import { AppPending } from "@/components/blocks/app-pending";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -35,7 +35,7 @@ function RouteComponent() {
 				<Empty className="bg-muted">
 					<EmptyHeader>
 						<EmptyMedia variant="icon">
-							<AlertTriangleIcon className="size-5" />
+							<AlertTriangleIcon className="size-8" />
 						</EmptyMedia>
 						<EmptyTitle>We could not process your payment</EmptyTitle>
 						<EmptyDescription>
@@ -47,9 +47,8 @@ function RouteComponent() {
 					<EmptyContent className="max-w-md flex-row flex-wrap justify-center">
 						<Link
 							to="/contact"
-							className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+							className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
 						>
-							<LifeBuoyIcon className="size-4" />
 							Contact support
 						</Link>
 					</EmptyContent>
