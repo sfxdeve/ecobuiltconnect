@@ -49,7 +49,9 @@ export function AppHeader() {
 		<header className="absolute top-0 left-0 right-0 z-50 bg-background">
 			<div className="container mx-auto py-4 px-4 flex items-center justify-between">
 				<div>
-					<img className="size-18" src="/logo-192x192.png" alt="Logo" />
+					<Link to="/" aria-label="Go to home">
+						<img className="size-18" src="/logo-192x192.png" alt="Logo" />
+					</Link>
 				</div>
 				<nav>
 					<ul className="hidden md:flex lg:gap-4 gap-2 items-center">
