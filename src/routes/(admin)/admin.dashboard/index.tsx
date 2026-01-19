@@ -109,8 +109,8 @@ function AdminDashboardPage() {
 							</Item>
 						))}
 					</ItemGroup>
-					<div className="flex flex-col md:flex-row gap-4 items-start">
-						<Card className="w-full md:flex-3">
+					<div className="flex flex-col lg:flex-row gap-4 items-start">
+						<Card className="w-full lg:flex-3">
 							<CardHeader>
 								<CardTitle>Recent Orders</CardTitle>
 							</CardHeader>
@@ -182,7 +182,7 @@ function AdminDashboardPage() {
 								)}
 							</CardContent>
 						</Card>
-						<Card className="w-full md:flex-2">
+						<Card className="w-full lg:flex-2">
 							<CardHeader>
 								<CardTitle>Recent Users</CardTitle>
 							</CardHeader>
