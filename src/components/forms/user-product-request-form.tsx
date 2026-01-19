@@ -5,6 +5,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ProductImagesPicker } from "@/components/blocks/product-images-picker";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
@@ -28,7 +29,6 @@ import { composeS3Key, composeS3URL } from "@/lib/s3.shared";
 import { cn } from "@/lib/utils";
 import { getCategories } from "@/remote/public.category";
 import { getS3ObjectUploadURL } from "@/remote/shared.s3";
-import { ProductImagesPicker } from "../blocks/product-images-picker";
 
 export const userProductRequestFormSchema = z.object({
 	pictureKeys: z

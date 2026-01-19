@@ -12,7 +12,7 @@ import {
 	userProfileSelector,
 	vendorProfileSelector,
 } from "@/prisma/selectors";
-import { getClerkId } from "./shared.clerk";
+import { getClerkId } from "@/remote/shared.clerk";
 
 export const getProfile = createServerFn({ method: "GET" }).handler(
 	async () => {

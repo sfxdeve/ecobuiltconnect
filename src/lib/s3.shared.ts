@@ -1,6 +1,6 @@
 import { createIsomorphicFn } from "@tanstack/react-start";
-import { composeS3URL as composeS3URLOnClient } from "./s3.client";
-import { composeS3URL as composeS3URLOnServer } from "./s3.server";
+import { composeS3URL as composeS3URLOnClient } from "@/lib/s3.client";
+import { composeS3URL as composeS3URLOnServer } from "@/lib/s3.server";
 
 export const composeS3URL = createIsomorphicFn()
 	.server(composeS3URLOnServer)

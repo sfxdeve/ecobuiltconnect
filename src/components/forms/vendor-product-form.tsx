@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { type ComponentPropsWithoutRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ProductImagesPicker } from "@/components/blocks/product-images-picker";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
@@ -29,7 +30,6 @@ import { cn } from "@/lib/utils";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { getCategories } from "@/remote/public.category";
 import { getS3ObjectUploadURL } from "@/remote/shared.s3";
-import { ProductImagesPicker } from "../blocks/product-images-picker";
 
 export const vendorProductFormSchema = z.object({
 	pictureKeys: z

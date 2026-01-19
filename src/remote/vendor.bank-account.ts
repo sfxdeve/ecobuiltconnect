@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
 import { bankAccountSelector } from "@/prisma/selectors";
-import { getVendorProfile } from "./vendor.profile";
+import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getBankAccount = createServerFn({
 	method: "GET",

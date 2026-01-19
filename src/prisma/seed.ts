@@ -1,12 +1,12 @@
 import { faker } from "@faker-js/faker";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { env } from "@/lib/env.server";
-import { PrismaClient } from "./generated/client";
+import { PrismaClient } from "@/prisma/generated/client";
 import {
 	CategoryStatus,
 	ProductCondition,
 	ProfileStatus,
-} from "./generated/enums";
+} from "@/prisma/generated/enums";
 
 const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });

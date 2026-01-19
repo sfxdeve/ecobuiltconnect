@@ -5,7 +5,7 @@ import {
 	UserButton,
 } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "../ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function DashboardHeader({ title }: { title: string }) {
 	return (

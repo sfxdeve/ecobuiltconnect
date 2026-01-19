@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { UserProfileWhereInput } from "@/prisma/generated/models";
 import { userProfileSelector } from "@/prisma/selectors";
-import { getVendorProfile } from "./vendor.profile";
+import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getUserProfiles = createServerFn({
 	method: "GET",

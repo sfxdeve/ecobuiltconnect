@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
 import { userProfileSelector } from "@/prisma/selectors";
-import { getClerkId } from "./shared.clerk";
+import { getClerkId } from "@/remote/shared.clerk";
 
 export const getUserProfile = createServerFn({
 	method: "GET",

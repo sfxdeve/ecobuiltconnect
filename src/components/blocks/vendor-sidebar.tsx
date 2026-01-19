@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { VendorAccountForm } from "@/components/forms/vendor-account-form";
 import { VendorProfileForm } from "@/components/forms/vendor-profile-form";
 import {
 	Dialog,
@@ -38,7 +39,6 @@ import {
 } from "@/remote/vendor.bank-account";
 import { getVendorProfile, upsertVendorProfile } from "@/remote/vendor.profile";
 import type { FileRouteTypes } from "@/routeTree.gen";
-import { VendorAccountForm } from "../forms/vendor-account-form";
 
 const items = [
 	{

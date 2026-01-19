@@ -9,7 +9,7 @@ import {
 	productSelector,
 	vendorProfileSelector,
 } from "@/prisma/selectors";
-import { getAdminProfile } from "./admin.profile";
+import { getAdminProfile } from "@/remote/admin.profile";
 
 export const getProducts = createServerFn({
 	method: "GET",

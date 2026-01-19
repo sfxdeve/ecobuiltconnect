@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/prisma";
-import { getVendorProfile } from "./vendor.profile";
+import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
 	try {

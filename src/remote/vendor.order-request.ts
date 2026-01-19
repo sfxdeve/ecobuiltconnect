@@ -13,7 +13,7 @@ import {
 	reviewSelector,
 	userProfileSelector,
 } from "@/prisma/selectors";
-import { getVendorProfile } from "./vendor.profile";
+import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getOrderRequests = createServerFn({ method: "GET" })
 	.inputValidator(

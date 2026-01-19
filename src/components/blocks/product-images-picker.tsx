@@ -1,9 +1,9 @@
 import { PlusIcon, XIcon } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import type { FileUploadReturn } from "@/hooks/use-file-upload";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 
 export function ProductImagesPicker({
 	files,

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { ProductRequestWhereInput } from "@/prisma/generated/models";
 import { categorySelector, productRequestSelector } from "@/prisma/selectors";
-import { getVendorProfile } from "./vendor.profile";
+import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getProductRequests = createServerFn({
 	method: "GET",

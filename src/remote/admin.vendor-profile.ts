@@ -4,7 +4,7 @@ import { prisma } from "@/prisma";
 import { ProfileStatus } from "@/prisma/generated/enums";
 import type { VendorProfileWhereInput } from "@/prisma/generated/models";
 import { vendorProfileSelector } from "@/prisma/selectors";
-import { getAdminProfile } from "./admin.profile";
+import { getAdminProfile } from "@/remote/admin.profile";
 
 export const getVendorProfiles = createServerFn({
 	method: "GET",

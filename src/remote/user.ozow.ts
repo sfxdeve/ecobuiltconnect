@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { env } from "@/lib/env.server";
 import { generateOzowHash } from "@/lib/ozow.server";
-import { getOrderRequest } from "./user.order-request";
+import { getOrderRequest } from "@/remote/user.order-request";
 
 export const initiateOrderRequestPayment = createServerFn({
 	method: "POST",

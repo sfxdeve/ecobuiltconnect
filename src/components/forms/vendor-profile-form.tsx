@@ -5,6 +5,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ProfileImagePicker } from "@/components/blocks/profile-image-picker";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
@@ -28,7 +29,6 @@ import { fetchPlaceNamesByCountry } from "@/lib/cities";
 import { composeS3Key, composeS3URL } from "@/lib/s3.shared";
 import { cn } from "@/lib/utils";
 import { getS3ObjectUploadURL } from "@/remote/shared.s3";
-import { ProfileImagePicker } from "../blocks/profile-image-picker";
 
 export const vendorProfileFormSchema = z.object({
 	pictureKeys: z
