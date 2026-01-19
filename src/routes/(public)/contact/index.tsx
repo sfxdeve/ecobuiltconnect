@@ -1,16 +1,10 @@
-import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { AppPending } from "@/components/blocks/app-pending";
-import { Button } from "@/components/ui/button";
-import {
-	Field,
-	FieldError,
-	FieldGroup,
-	FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { ContactForm } from "@/components/forms/contact-form";
+import { sendMessage } from "@/remote/public.contact";
 
 export const Route = createFileRoute("/(public)/contact/")({
 	head: () => ({
@@ -29,156 +23,48 @@ export const Route = createFileRoute("/(public)/contact/")({
 	component: ContactPage,
 });
 
-const contactFormSchema = z.object({
-	name: z
-		.string("Name must be a string")
-		.min(3, "Name must be at least 3 characters"),
-	email: z.email("Email must be a valid email address"),
-	subject: z
-		.string("Subject must be a string")
-		.min(3, "Subject must be at least 3 characters"),
-	message: z
-		.string("Message must be a string")
-		.min(10, "Message must be at least 10 characters"),
-});
-
 function ContactPage() {
-	const form = useForm({
-		validators: {
-			onChange: contactFormSchema,
+	const sendMessageFn = useServerFn(sendMessage);
+
+	const submitContactMutation = useMutation({
+		mutationFn: sendMessageFn,
+		onSuccess: () => {
+			toast.success("Message sent successfully");
 		},
-		defaultValues: {
-			name: "",
-			email: "",
-			subject: "",
-			message: "",
-		} as z.infer<typeof contactFormSchema>,
-		onSubmit: async ({ value }) => {
-			console.log(value);
+		onError: (error) => {
+			toast.error(error.message);
 		},
 	});
 
 	return (
 		<section>
-			<div className="container mx-auto py-12 px-4 pt-28 flex gap-6 items-start">
-				<form
-					onSubmit={(event) => {
-						event.preventDefault();
-						form.handleSubmit();
-					}}
-					className="flex-1"
-				>
-					<FieldGroup>
-						<form.Field name="name">
-							{(field) => {
-								const isInvalid =
-									field.state.meta.isTouched && !field.state.meta.isValid;
-								return (
-									<Field data-invalid={isInvalid}>
-										<FieldLabel htmlFor={field.name}>Name</FieldLabel>
-										<Input
-											id={field.name}
-											name={field.name}
-											value={field.state.value}
-											onBlur={field.handleBlur}
-											onChange={(e) => field.handleChange(e.target.value)}
-											placeholder="John Doe"
-											aria-invalid={isInvalid}
-										/>
-										{isInvalid && (
-											<FieldError errors={field.state.meta.errors} />
-										)}
-									</Field>
-								);
-							}}
-						</form.Field>
-						<form.Field name="email">
-							{(field) => {
-								const isInvalid =
-									field.state.meta.isTouched && !field.state.meta.isValid;
-								return (
-									<Field data-invalid={isInvalid}>
-										<FieldLabel htmlFor={field.name}>Email</FieldLabel>
-										<Input
-											id={field.name}
-											type="email"
-											name={field.name}
-											value={field.state.value}
-											onBlur={field.handleBlur}
-											onChange={(e) => field.handleChange(e.target.value)}
-											placeholder="john@example.com"
-											aria-invalid={isInvalid}
-										/>
-										{isInvalid && (
-											<FieldError errors={field.state.meta.errors} />
-										)}
-									</Field>
-								);
-							}}
-						</form.Field>
-						<form.Field name="subject">
-							{(field) => {
-								const isInvalid =
-									field.state.meta.isTouched && !field.state.meta.isValid;
-								return (
-									<Field data-invalid={isInvalid}>
-										<FieldLabel htmlFor={field.name}>Subject</FieldLabel>
-										<Input
-											id={field.name}
-											name={field.name}
-											value={field.state.value}
-											onBlur={field.handleBlur}
-											onChange={(e) => field.handleChange(e.target.value)}
-											placeholder="What is this regarding?"
-											aria-invalid={isInvalid}
-										/>
-										{isInvalid && (
-											<FieldError errors={field.state.meta.errors} />
-										)}
-									</Field>
-								);
-							}}
-						</form.Field>
-						<form.Field name="message">
-							{(field) => {
-								const isInvalid =
-									field.state.meta.isTouched && !field.state.meta.isValid;
-								return (
-									<Field data-invalid={isInvalid}>
-										<FieldLabel htmlFor={field.name}>Message</FieldLabel>
-										<Textarea
-											id={field.name}
-											name={field.name}
-											value={field.state.value}
-											onBlur={field.handleBlur}
-											onChange={(e) => field.handleChange(e.target.value)}
-											placeholder="How can we help?"
-											aria-invalid={isInvalid}
-										/>
-										{isInvalid && (
-											<FieldError errors={field.state.meta.errors} />
-										)}
-									</Field>
-								);
-							}}
-						</form.Field>
-						<Button
-							type="submit"
-							variant="default"
-							size="lg"
-							className="w-full"
-						>
-							Send Message
-						</Button>
-					</FieldGroup>
-				</form>
+			<div className="container mx-auto py-12 px-4 pt-28 space-y-6 grid gap-6 lg:grid-cols-2 items-start">
+				<div className="space-y-2">
+					<h2 className="text-3xl font-semibold">Contact</h2>
+					<p className="text-muted-foreground">
+						Reach out to the EcobuiltConnect team with your sustainable building
+						questions or partnership requests.
+					</p>
+					<ContactForm
+						defaultValues={{
+							name: "",
+							email: "",
+							subject: "",
+							message: "",
+						}}
+						isSubmitting={submitContactMutation.isPending}
+						submitHandler={({ data }) => {
+							submitContactMutation.mutate({ data });
+						}}
+					/>
+				</div>
 				<iframe
 					src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52980.82232536073!2d18.498110158556987!3d-33.90764174186438!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dcc5bada98e54b5%3A0x1012b82d9ba600e3!2sGoodwood%2C%20Cape%20Town%2C%207460!5e0!3m2!1sen!2sza!4v1739165123371!5m2!1sen!2sza"
 					loading="eager"
 					title="Goodwood, Cape Town, 7460"
 					width="100%"
 					height="100%"
-					className="flex-1 hidden md:block h-128 rounded-3xl"
+					className="hidden md:block h-128 rounded-3xl w-full"
 				></iframe>
 			</div>
 		</section>
