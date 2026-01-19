@@ -112,7 +112,7 @@ function HomePage() {
 						</div>
 						<div className="flex gap-2 items-center">
 							<Link
-								to="/"
+								to="/community"
 								className={cn(
 									buttonVariants({ variant: "outline", size: "lg" }),
 								)}
@@ -120,7 +120,7 @@ function HomePage() {
 								Learn more
 							</Link>
 							<Link
-								to="/"
+								to="/products"
 								className={cn(
 									buttonVariants({ variant: "default", size: "lg" }),
 								)}
@@ -161,7 +161,7 @@ function HomePage() {
 						</div>
 						<div className="flex gap-2 items-center">
 							<Link
-								to="/"
+								to="/vendors"
 								className={cn(
 									buttonVariants({ variant: "default", size: "lg" }),
 								)}
