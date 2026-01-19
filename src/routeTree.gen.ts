@@ -247,35 +247,35 @@ export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
   '/sign-in/$': typeof authSignInSplatRoute
   '/sign-up/$': typeof authSignUpSplatRoute
-  '/cookies-policy': typeof legalCookiesPolicyIndexRoute
-  '/privacy-policy': typeof legalPrivacyPolicyIndexRoute
-  '/returns-policy': typeof legalReturnsPolicyIndexRoute
-  '/terms-of-sales': typeof legalTermsOfSalesIndexRoute
-  '/terms-of-use': typeof legalTermsOfUseIndexRoute
-  '/community': typeof publicCommunityIndexRoute
-  '/contact': typeof publicContactIndexRoute
-  '/products': typeof publicProductsIndexRoute
-  '/vendors': typeof publicVendorsIndexRoute
+  '/cookies-policy/': typeof legalCookiesPolicyIndexRoute
+  '/privacy-policy/': typeof legalPrivacyPolicyIndexRoute
+  '/returns-policy/': typeof legalReturnsPolicyIndexRoute
+  '/terms-of-sales/': typeof legalTermsOfSalesIndexRoute
+  '/terms-of-use/': typeof legalTermsOfUseIndexRoute
+  '/community/': typeof publicCommunityIndexRoute
+  '/contact/': typeof publicContactIndexRoute
+  '/products/': typeof publicProductsIndexRoute
+  '/vendors/': typeof publicVendorsIndexRoute
   '/api/ozow/notify': typeof apiApiOzowNotifyRoute
-  '/admin/categories': typeof adminAdminCategoriesIndexRoute
-  '/admin/dashboard': typeof adminAdminDashboardIndexRoute
-  '/admin/orders': typeof adminAdminOrdersIndexRoute
-  '/admin/products': typeof adminAdminProductsIndexRoute
-  '/admin/users': typeof adminAdminUsersIndexRoute
-  '/admin/vendors': typeof adminAdminVendorsIndexRoute
-  '/products/$productId': typeof publicProductsProductIdIndexRoute
-  '/user/checkout': typeof userUserCheckoutIndexRoute
-  '/user/orders': typeof userUserOrdersIndexRoute
-  '/user/requests': typeof userUserRequestsIndexRoute
-  '/vendor/dashboard': typeof vendorVendorDashboardIndexRoute
-  '/vendor/orders': typeof vendorVendorOrdersIndexRoute
-  '/vendor/products': typeof vendorVendorProductsIndexRoute
-  '/vendor/requests': typeof vendorVendorRequestsIndexRoute
-  '/vendor/users': typeof vendorVendorUsersIndexRoute
-  '/user/checkout/cancelled': typeof userUserCheckoutCancelledIndexRoute
-  '/user/checkout/error': typeof userUserCheckoutErrorIndexRoute
-  '/user/orders/$orderId': typeof userUserOrdersOrderIdIndexRoute
-  '/user/orders/$orderId/delivery': typeof userUserOrdersOrderIdDeliveryIndexRoute
+  '/admin/categories/': typeof adminAdminCategoriesIndexRoute
+  '/admin/dashboard/': typeof adminAdminDashboardIndexRoute
+  '/admin/orders/': typeof adminAdminOrdersIndexRoute
+  '/admin/products/': typeof adminAdminProductsIndexRoute
+  '/admin/users/': typeof adminAdminUsersIndexRoute
+  '/admin/vendors/': typeof adminAdminVendorsIndexRoute
+  '/products/$productId/': typeof publicProductsProductIdIndexRoute
+  '/user/checkout/': typeof userUserCheckoutIndexRoute
+  '/user/orders/': typeof userUserOrdersIndexRoute
+  '/user/requests/': typeof userUserRequestsIndexRoute
+  '/vendor/dashboard/': typeof vendorVendorDashboardIndexRoute
+  '/vendor/orders/': typeof vendorVendorOrdersIndexRoute
+  '/vendor/products/': typeof vendorVendorProductsIndexRoute
+  '/vendor/requests/': typeof vendorVendorRequestsIndexRoute
+  '/vendor/users/': typeof vendorVendorUsersIndexRoute
+  '/user/checkout/cancelled/': typeof userUserCheckoutCancelledIndexRoute
+  '/user/checkout/error/': typeof userUserCheckoutErrorIndexRoute
+  '/user/orders/$orderId/': typeof userUserOrdersOrderIdIndexRoute
+  '/user/orders/$orderId/delivery/': typeof userUserOrdersOrderIdDeliveryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
@@ -358,35 +358,35 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in/$'
     | '/sign-up/$'
-    | '/cookies-policy'
-    | '/privacy-policy'
-    | '/returns-policy'
-    | '/terms-of-sales'
-    | '/terms-of-use'
-    | '/community'
-    | '/contact'
-    | '/products'
-    | '/vendors'
+    | '/cookies-policy/'
+    | '/privacy-policy/'
+    | '/returns-policy/'
+    | '/terms-of-sales/'
+    | '/terms-of-use/'
+    | '/community/'
+    | '/contact/'
+    | '/products/'
+    | '/vendors/'
     | '/api/ozow/notify'
-    | '/admin/categories'
-    | '/admin/dashboard'
-    | '/admin/orders'
-    | '/admin/products'
-    | '/admin/users'
-    | '/admin/vendors'
-    | '/products/$productId'
-    | '/user/checkout'
-    | '/user/orders'
-    | '/user/requests'
-    | '/vendor/dashboard'
-    | '/vendor/orders'
-    | '/vendor/products'
-    | '/vendor/requests'
-    | '/vendor/users'
-    | '/user/checkout/cancelled'
-    | '/user/checkout/error'
-    | '/user/orders/$orderId'
-    | '/user/orders/$orderId/delivery'
+    | '/admin/categories/'
+    | '/admin/dashboard/'
+    | '/admin/orders/'
+    | '/admin/products/'
+    | '/admin/users/'
+    | '/admin/vendors/'
+    | '/products/$productId/'
+    | '/user/checkout/'
+    | '/user/orders/'
+    | '/user/requests/'
+    | '/vendor/dashboard/'
+    | '/vendor/orders/'
+    | '/vendor/products/'
+    | '/vendor/requests/'
+    | '/vendor/users/'
+    | '/user/checkout/cancelled/'
+    | '/user/checkout/error/'
+    | '/user/orders/$orderId/'
+    | '/user/orders/$orderId/delivery/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -527,63 +527,63 @@ declare module '@tanstack/react-router' {
     '/(public)/vendors/': {
       id: '/(public)/vendors/'
       path: '/vendors'
-      fullPath: '/vendors'
+      fullPath: '/vendors/'
       preLoaderRoute: typeof publicVendorsIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/products/': {
       id: '/(public)/products/'
       path: '/products'
-      fullPath: '/products'
+      fullPath: '/products/'
       preLoaderRoute: typeof publicProductsIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/contact/': {
       id: '/(public)/contact/'
       path: '/contact'
-      fullPath: '/contact'
+      fullPath: '/contact/'
       preLoaderRoute: typeof publicContactIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/community/': {
       id: '/(public)/community/'
       path: '/community'
-      fullPath: '/community'
+      fullPath: '/community/'
       preLoaderRoute: typeof publicCommunityIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(legal)/terms-of-use/': {
       id: '/(legal)/terms-of-use/'
       path: '/terms-of-use'
-      fullPath: '/terms-of-use'
+      fullPath: '/terms-of-use/'
       preLoaderRoute: typeof legalTermsOfUseIndexRouteImport
       parentRoute: typeof legalRouteRoute
     }
     '/(legal)/terms-of-sales/': {
       id: '/(legal)/terms-of-sales/'
       path: '/terms-of-sales'
-      fullPath: '/terms-of-sales'
+      fullPath: '/terms-of-sales/'
       preLoaderRoute: typeof legalTermsOfSalesIndexRouteImport
       parentRoute: typeof legalRouteRoute
     }
     '/(legal)/returns-policy/': {
       id: '/(legal)/returns-policy/'
       path: '/returns-policy'
-      fullPath: '/returns-policy'
+      fullPath: '/returns-policy/'
       preLoaderRoute: typeof legalReturnsPolicyIndexRouteImport
       parentRoute: typeof legalRouteRoute
     }
     '/(legal)/privacy-policy/': {
       id: '/(legal)/privacy-policy/'
       path: '/privacy-policy'
-      fullPath: '/privacy-policy'
+      fullPath: '/privacy-policy/'
       preLoaderRoute: typeof legalPrivacyPolicyIndexRouteImport
       parentRoute: typeof legalRouteRoute
     }
     '/(legal)/cookies-policy/': {
       id: '/(legal)/cookies-policy/'
       path: '/cookies-policy'
-      fullPath: '/cookies-policy'
+      fullPath: '/cookies-policy/'
       preLoaderRoute: typeof legalCookiesPolicyIndexRouteImport
       parentRoute: typeof legalRouteRoute
     }
@@ -604,105 +604,105 @@ declare module '@tanstack/react-router' {
     '/(vendor)/vendor/users/': {
       id: '/(vendor)/vendor/users/'
       path: '/vendor/users'
-      fullPath: '/vendor/users'
+      fullPath: '/vendor/users/'
       preLoaderRoute: typeof vendorVendorUsersIndexRouteImport
       parentRoute: typeof vendorRouteRoute
     }
     '/(vendor)/vendor/requests/': {
       id: '/(vendor)/vendor/requests/'
       path: '/vendor/requests'
-      fullPath: '/vendor/requests'
+      fullPath: '/vendor/requests/'
       preLoaderRoute: typeof vendorVendorRequestsIndexRouteImport
       parentRoute: typeof vendorRouteRoute
     }
     '/(vendor)/vendor/products/': {
       id: '/(vendor)/vendor/products/'
       path: '/vendor/products'
-      fullPath: '/vendor/products'
+      fullPath: '/vendor/products/'
       preLoaderRoute: typeof vendorVendorProductsIndexRouteImport
       parentRoute: typeof vendorRouteRoute
     }
     '/(vendor)/vendor/orders/': {
       id: '/(vendor)/vendor/orders/'
       path: '/vendor/orders'
-      fullPath: '/vendor/orders'
+      fullPath: '/vendor/orders/'
       preLoaderRoute: typeof vendorVendorOrdersIndexRouteImport
       parentRoute: typeof vendorRouteRoute
     }
     '/(vendor)/vendor/dashboard/': {
       id: '/(vendor)/vendor/dashboard/'
       path: '/vendor/dashboard'
-      fullPath: '/vendor/dashboard'
+      fullPath: '/vendor/dashboard/'
       preLoaderRoute: typeof vendorVendorDashboardIndexRouteImport
       parentRoute: typeof vendorRouteRoute
     }
     '/(user)/user/requests/': {
       id: '/(user)/user/requests/'
       path: '/user/requests'
-      fullPath: '/user/requests'
+      fullPath: '/user/requests/'
       preLoaderRoute: typeof userUserRequestsIndexRouteImport
       parentRoute: typeof userRouteRoute
     }
     '/(user)/user/orders/': {
       id: '/(user)/user/orders/'
       path: '/user/orders'
-      fullPath: '/user/orders'
+      fullPath: '/user/orders/'
       preLoaderRoute: typeof userUserOrdersIndexRouteImport
       parentRoute: typeof userRouteRoute
     }
     '/(user)/user/checkout/': {
       id: '/(user)/user/checkout/'
       path: '/user/checkout'
-      fullPath: '/user/checkout'
+      fullPath: '/user/checkout/'
       preLoaderRoute: typeof userUserCheckoutIndexRouteImport
       parentRoute: typeof userRouteRoute
     }
     '/(public)/products/$productId/': {
       id: '/(public)/products/$productId/'
       path: '/products/$productId'
-      fullPath: '/products/$productId'
+      fullPath: '/products/$productId/'
       preLoaderRoute: typeof publicProductsProductIdIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(admin)/admin/vendors/': {
       id: '/(admin)/admin/vendors/'
       path: '/admin/vendors'
-      fullPath: '/admin/vendors'
+      fullPath: '/admin/vendors/'
       preLoaderRoute: typeof adminAdminVendorsIndexRouteImport
       parentRoute: typeof adminRouteRoute
     }
     '/(admin)/admin/users/': {
       id: '/(admin)/admin/users/'
       path: '/admin/users'
-      fullPath: '/admin/users'
+      fullPath: '/admin/users/'
       preLoaderRoute: typeof adminAdminUsersIndexRouteImport
       parentRoute: typeof adminRouteRoute
     }
     '/(admin)/admin/products/': {
       id: '/(admin)/admin/products/'
       path: '/admin/products'
-      fullPath: '/admin/products'
+      fullPath: '/admin/products/'
       preLoaderRoute: typeof adminAdminProductsIndexRouteImport
       parentRoute: typeof adminRouteRoute
     }
     '/(admin)/admin/orders/': {
       id: '/(admin)/admin/orders/'
       path: '/admin/orders'
-      fullPath: '/admin/orders'
+      fullPath: '/admin/orders/'
       preLoaderRoute: typeof adminAdminOrdersIndexRouteImport
       parentRoute: typeof adminRouteRoute
     }
     '/(admin)/admin/dashboard/': {
       id: '/(admin)/admin/dashboard/'
       path: '/admin/dashboard'
-      fullPath: '/admin/dashboard'
+      fullPath: '/admin/dashboard/'
       preLoaderRoute: typeof adminAdminDashboardIndexRouteImport
       parentRoute: typeof adminRouteRoute
     }
     '/(admin)/admin/categories/': {
       id: '/(admin)/admin/categories/'
       path: '/admin/categories'
-      fullPath: '/admin/categories'
+      fullPath: '/admin/categories/'
       preLoaderRoute: typeof adminAdminCategoriesIndexRouteImport
       parentRoute: typeof adminRouteRoute
     }
@@ -716,28 +716,28 @@ declare module '@tanstack/react-router' {
     '/(user)/user/orders/$orderId/': {
       id: '/(user)/user/orders/$orderId/'
       path: '/user/orders/$orderId'
-      fullPath: '/user/orders/$orderId'
+      fullPath: '/user/orders/$orderId/'
       preLoaderRoute: typeof userUserOrdersOrderIdIndexRouteImport
       parentRoute: typeof userRouteRoute
     }
     '/(user)/user/checkout/error/': {
       id: '/(user)/user/checkout/error/'
       path: '/user/checkout/error'
-      fullPath: '/user/checkout/error'
+      fullPath: '/user/checkout/error/'
       preLoaderRoute: typeof userUserCheckoutErrorIndexRouteImport
       parentRoute: typeof userRouteRoute
     }
     '/(user)/user/checkout/cancelled/': {
       id: '/(user)/user/checkout/cancelled/'
       path: '/user/checkout/cancelled'
-      fullPath: '/user/checkout/cancelled'
+      fullPath: '/user/checkout/cancelled/'
       preLoaderRoute: typeof userUserCheckoutCancelledIndexRouteImport
       parentRoute: typeof userRouteRoute
     }
     '/(user)/user/orders/$orderId/delivery/': {
       id: '/(user)/user/orders/$orderId/delivery/'
       path: '/user/orders/$orderId/delivery'
-      fullPath: '/user/orders/$orderId/delivery'
+      fullPath: '/user/orders/$orderId/delivery/'
       preLoaderRoute: typeof userUserOrdersOrderIdDeliveryIndexRouteImport
       parentRoute: typeof userRouteRoute
     }
