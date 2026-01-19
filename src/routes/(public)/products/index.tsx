@@ -132,9 +132,9 @@ function ProductsPage() {
 											EcobuiltConnect
 										</Badge>
 									)}
-									<CardHeader>
+									<CardHeader className="h-64 flex items-center justify-center">
 										<img
-											className="aspect-square object-contain"
+											className="h-full w-full object-contain"
 											src={composeS3URL(product.pictureKeys[0])}
 											alt={product.name}
 										/>
