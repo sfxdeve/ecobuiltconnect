@@ -228,7 +228,7 @@ function CreateProfileDialogContent({
 	const userProfileResult = useQuery({
 		enabled: !!user?.id,
 		queryKey: ["user-profile", user?.id],
-		queryFn: getUserProfileFn,
+		queryFn: () => getUserProfileFn(),
 	});
 
 	const upsertUserProfileMutation = useMutation({
