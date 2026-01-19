@@ -214,7 +214,7 @@ function UpdateUserProfileDialogContent({
 	const updateUserProfileFn = useServerFn(updateUserProfile);
 
 	const userProfileResult = useQuery({
-		queryKey: ["userProfile", userProfileId],
+		queryKey: ["user-profile", userProfileId],
 		queryFn: () => getUserProfileFn({ data: { userProfileId } }),
 	});
 

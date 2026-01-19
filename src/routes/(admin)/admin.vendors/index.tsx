@@ -35,6 +35,13 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
+	Item,
+	ItemContent,
+	ItemDescription,
+	ItemGroup,
+	ItemTitle,
+} from "@/components/ui/item";
+import {
 	Select,
 	SelectContent,
 	SelectGroup,
@@ -53,6 +60,7 @@ import {
 import { formatDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { ProfileStatus } from "@/prisma/generated/enums";
+import { getBankAccount } from "@/remote/admin.bank-account";
 import {
 	getVendorProfile,
 	getVendorProfiles,
@@ -110,7 +118,9 @@ function VendorProfilesPage() {
 	const [selectedVendorProfileId, setSelectedVendorProfileId] = useState<
 		string | null
 	>(null);
-	const [selectedAction, setSelectedAction] = useState<"update" | null>(null);
+	const [selectedAction, setSelectedAction] = useState<
+		"view" | "update" | null
+	>(null);
 
 	return (
 		<>
@@ -150,6 +160,14 @@ function VendorProfilesPage() {
 															<DropdownMenuItem
 																onClick={() => {
 																	setSelectedVendorProfileId(vendorProfile.id);
+																	setSelectedAction("view");
+																}}
+															>
+																View
+															</DropdownMenuItem>
+															<DropdownMenuItem
+																onClick={() => {
+																	setSelectedVendorProfileId(vendorProfile.id);
 																	setSelectedAction("update");
 																}}
 															>
@@ -172,6 +190,11 @@ function VendorProfilesPage() {
 									}
 								}}
 							>
+								{selectedVendorProfileId && selectedAction === "view" && (
+									<ViewVendorProfileDialogContent
+										vendorProfileId={selectedVendorProfileId}
+									/>
+								)}
 								{selectedVendorProfileId && selectedAction === "update" && (
 									<UpdateVendorProfileDialogContent
 										vendorProfileId={selectedVendorProfileId}
@@ -201,6 +224,101 @@ function VendorProfilesPage() {
 	);
 }
 
+function ViewVendorProfileDialogContent({
+	vendorProfileId,
+}: {
+	vendorProfileId: string;
+}) {
+	const getBankAccountFn = useServerFn(getBankAccount);
+
+	const bankAccountResult = useQuery({
+		queryKey: ["bank-account", vendorProfileId],
+		queryFn: () => getBankAccountFn({ data: { vendorProfileId } }),
+	});
+
+	if (bankAccountResult.isPending) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Bank Account</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-muted-foreground">
+					Loading bank account details...
+				</div>
+			</DialogContent>
+		);
+	}
+
+	if (bankAccountResult.isError) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Bank Account</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-destructive">
+					Error loading bank account: {bankAccountResult.error.message}
+				</div>
+			</DialogContent>
+		);
+	}
+
+	return (
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>Bank Account</DialogTitle>
+			</DialogHeader>
+			<ItemGroup>
+				<Item variant="muted">
+					<ItemContent>
+						<ItemTitle className="text-muted-foreground">Bank Name</ItemTitle>
+						<ItemDescription className="font-medium">
+							{bankAccountResult.data.bankAccount.bankName}
+						</ItemDescription>
+					</ItemContent>
+				</Item>
+				<Item variant="muted">
+					<ItemContent>
+						<ItemTitle className="text-muted-foreground">Branch Code</ItemTitle>
+						<ItemDescription className="font-medium">
+							{bankAccountResult.data.bankAccount.branchCode}
+						</ItemDescription>
+					</ItemContent>
+				</Item>
+				<Item variant="muted">
+					<ItemContent>
+						<ItemTitle className="text-muted-foreground">
+							Account Type
+						</ItemTitle>
+						<ItemDescription className="font-medium">
+							{bankAccountResult.data.bankAccount.accountType}
+						</ItemDescription>
+					</ItemContent>
+				</Item>
+				<Item variant="muted">
+					<ItemContent>
+						<ItemTitle className="text-muted-foreground">
+							Account Name
+						</ItemTitle>
+						<ItemDescription className="font-medium">
+							{bankAccountResult.data.bankAccount.accountName}
+						</ItemDescription>
+					</ItemContent>
+				</Item>
+				<Item variant="muted">
+					<ItemContent>
+						<ItemTitle className="text-muted-foreground">
+							Account Number
+						</ItemTitle>
+						<ItemDescription className="font-medium">
+							{bankAccountResult.data.bankAccount.accountNumber}
+						</ItemDescription>
+					</ItemContent>
+				</Item>
+			</ItemGroup>
+		</DialogContent>
+	);
+}
+
 function UpdateVendorProfileDialogContent({
 	vendorProfileId,
 	closeDialog,
@@ -214,7 +332,7 @@ function UpdateVendorProfileDialogContent({
 	const updateVendorProfileFn = useServerFn(updateVendorProfile);
 
 	const vendorProfileResult = useQuery({
-		queryKey: ["vendorProfile", vendorProfileId],
+		queryKey: ["vendor-profile", vendorProfileId],
 		queryFn: () => getVendorProfileFn({ data: { vendorProfileId } }),
 	});
 

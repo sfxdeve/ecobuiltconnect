@@ -62,7 +62,7 @@ import {
 	getCategories,
 	getCategory,
 	updateCategory,
-} from "@/remote/admin.categories";
+} from "@/remote/admin.category";
 
 export const Route = createFileRoute("/(admin)/admin/categories/")({
 	validateSearch: z.object({
