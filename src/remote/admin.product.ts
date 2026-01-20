@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
@@ -72,6 +71,7 @@ export const getProducts = createServerFn({
 
 			const where: ProductWhereInput = {
 				isDeleted: false,
+				vendorProfile: { status: "APPROVED" },
 				AND: [],
 			};
 
@@ -169,6 +169,7 @@ export const getProduct = createServerFn({
 				where: {
 					id: data.productId,
 					isDeleted: false,
+					vendorProfile: { status: "APPROVED" },
 				},
 				select: {
 					...productSelector,
@@ -210,7 +211,7 @@ export const deleteProduct = createServerFn({
 					isDeleted: false,
 				},
 				data: {
-					sku: randomUUID(),
+					sku: crypto.randomUUID(),
 					isDeleted: true,
 				},
 				select: productSelector,

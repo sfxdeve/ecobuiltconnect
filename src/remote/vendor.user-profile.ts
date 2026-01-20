@@ -41,9 +41,7 @@ export const getUserProfiles = createServerFn({
 						orderItems: {
 							every: {
 								product: {
-									vendorProfile: {
-										id: vendorProfile.id,
-									},
+									vendorProfileId: vendorProfile.id,
 								},
 							},
 						},

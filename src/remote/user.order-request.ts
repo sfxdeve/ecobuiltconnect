@@ -62,7 +62,7 @@ export const getOrderRequests = createServerFn({
 			const { userProfile } = await getUserProfile();
 
 			const where: OrderRequestWhereInput = {
-				userProfile: { id: userProfile.id },
+				userProfileId: userProfile.id,
 				orderItems: {
 					some: {
 						product: {
@@ -156,7 +156,7 @@ export const getOrderRequest = createServerFn({
 			const orderRequest = await prisma.orderRequest.findUnique({
 				where: {
 					id: data.orderRequestId,
-					userProfile: { id: userProfile.id },
+					userProfileId: userProfile.id,
 				},
 				select: {
 					...orderRequestSelector,

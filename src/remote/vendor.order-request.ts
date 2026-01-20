@@ -68,9 +68,7 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 						product: {
 							AND: [
 								{
-									vendorProfile: {
-										id: vendorProfile.id,
-									},
+									vendorProfileId: vendorProfile.id,
 								},
 							],
 						},
@@ -171,9 +169,7 @@ export const getOrderRequest = createServerFn({ method: "GET" })
 					orderItems: {
 						every: {
 							product: {
-								vendorProfile: {
-									id: vendorProfile.id,
-								},
+								vendorProfileId: vendorProfile.id,
 							},
 						},
 					},
@@ -238,9 +234,7 @@ export const updateOrderRequest = createServerFn({ method: "POST" })
 					orderItems: {
 						every: {
 							product: {
-								vendorProfile: {
-									id: vendorProfile.id,
-								},
+								vendorProfileId: vendorProfile.id,
 							},
 						},
 					},

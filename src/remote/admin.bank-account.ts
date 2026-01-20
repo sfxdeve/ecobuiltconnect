@@ -19,6 +19,9 @@ export const getBankAccount = createServerFn({
 			const bankAccount = await prisma.bankAccount.findUnique({
 				where: {
 					vendorProfileId: data.vendorProfileId,
+					vendorProfile: {
+						status: "APPROVED",
+					},
 				},
 				select: bankAccountSelector,
 			});

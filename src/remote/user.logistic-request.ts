@@ -26,8 +26,8 @@ export const createLogisticRequest = createServerFn({
 					status: {
 						notIn: ["PENDING", "CANCELLED"],
 					},
-					userProfile: { id: userProfile.id },
-					logisticRequest: { is: null },
+					userProfileId: userProfile.id,
+					logisticRequest: null,
 				},
 			});
 

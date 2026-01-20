@@ -72,7 +72,7 @@ export const getProducts = createServerFn({
 
 			const where: ProductWhereInput = {
 				isDeleted: false,
-				vendorProfile: { id: vendorProfile.id },
+				vendorProfileId: vendorProfile.id,
 				AND: [],
 			};
 
@@ -170,7 +170,7 @@ export const getProduct = createServerFn({
 				where: {
 					id: data.productId,
 					isDeleted: false,
-					vendorProfile: { id: vendorProfile.id },
+					vendorProfileId: vendorProfile.id,
 				},
 				select: {
 					...productSelector,
@@ -355,7 +355,7 @@ export const updateProduct = createServerFn({
 				where: {
 					id: productId,
 					isDeleted: false,
-					vendorProfile: { id: vendorProfile.id },
+					vendorProfileId: vendorProfile.id,
 				},
 				data: {
 					...productData,
@@ -393,7 +393,7 @@ export const deleteProduct = createServerFn({
 				where: {
 					id: data.productId,
 					isDeleted: false,
-					vendorProfile: { id: vendorProfile.id },
+					vendorProfileId: vendorProfile.id,
 				},
 				data: {
 					sku: randomUUID(),

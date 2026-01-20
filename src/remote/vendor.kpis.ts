@@ -14,9 +14,7 @@ export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
 						orderItems: {
 							every: {
 								product: {
-									vendorProfile: {
-										id: vendorProfile.id,
-									},
+									vendorProfileId: vendorProfile.id,
 								},
 							},
 						},
@@ -33,9 +31,7 @@ export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
 				orderItems: {
 					every: {
 						product: {
-							vendorProfile: {
-								id: vendorProfile.id,
-							},
+							vendorProfileId: vendorProfile.id,
 						},
 					},
 				},
@@ -59,9 +55,7 @@ export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
 						orderItems: {
 							every: {
 								product: {
-									vendorProfile: {
-										id: vendorProfile.id,
-									},
+									vendorProfileId: vendorProfile.id,
 								},
 							},
 						},

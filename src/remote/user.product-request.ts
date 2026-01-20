@@ -52,7 +52,7 @@ export const getProductRequests = createServerFn({
 
 			const where: ProductRequestWhereInput = {
 				isDeleted: false,
-				userProfile: { id: userProfile.id },
+				userProfileId: userProfile.id,
 				AND: [],
 			};
 
