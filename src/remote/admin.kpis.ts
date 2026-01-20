@@ -27,6 +27,7 @@ export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
 		const liveProducts = await prisma.product.count({
 			where: {
 				isDeleted: false,
+				vendorProfile: { status: "APPROVED" },
 			},
 		});
 

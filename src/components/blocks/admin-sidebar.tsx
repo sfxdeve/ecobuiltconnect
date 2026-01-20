@@ -106,12 +106,12 @@ export function AdminSidebar() {
 	const { setOpenMobile } = useSidebar();
 
 	return (
-			<Sidebar>
-				<SidebarHeader>
-					<Link to="/" aria-label="Go to home">
-						<img className="h-24 mx-auto" src="/logo-512x512.png" alt="Logo" />
-					</Link>
-				</SidebarHeader>
+		<Sidebar>
+			<SidebarHeader>
+				<Link to="/" aria-label="Go to home">
+					<img className="h-24 mx-auto" src="/logo-512x512.png" alt="Logo" />
+				</Link>
+			</SidebarHeader>
 			<SidebarContent className="p-2">
 				<SidebarMenu>
 					{items.map((item) => (

@@ -56,9 +56,7 @@ export const getProductRequests = createServerFn({
 				products: {
 					none: {
 						isDeleted: false,
-						vendorProfile: {
-							id: vendorProfile.id,
-						},
+						vendorProfileId: vendorProfile.id,
 					},
 				},
 				AND: [],
@@ -145,9 +143,7 @@ export const getProductRequest = createServerFn({
 					products: {
 						none: {
 							isDeleted: false,
-							vendorProfile: {
-								id: vendorProfile.id,
-							},
+							vendorProfileId: vendorProfile.id,
 						},
 					},
 				},
