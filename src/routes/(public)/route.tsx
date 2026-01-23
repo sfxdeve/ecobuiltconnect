@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/tanstack-react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -12,10 +12,18 @@ import { VendorProfileForm } from "@/components/forms/vendor-profile-form";
 import {
 	Dialog,
 	DialogContent,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import {
+	Item,
+	ItemContent,
+	ItemDescription,
+	ItemTitle,
+} from "@/components/ui/item";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ProfileStatus } from "@/prisma/generated/enums";
 import { upsertAdminProfile } from "@/remote/admin.profile";
 import { getProfile } from "@/remote/shared.profile";
 import { upsertUserProfile } from "@/remote/user.profile";
@@ -29,8 +37,8 @@ function PublicLayout() {
 	const { user } = useUser();
 
 	const [profileDialogType, setProfileDialogType] = useState<
-		"create-profile" | "prodile-status-info" | null
-	>(null);
+		"create-profile" | "profile-status-info" | null
+	>("profile-status-info");
 
 	const getProfileFn = useServerFn(getProfile);
 
@@ -45,7 +53,7 @@ function PublicLayout() {
 			if (!profileResult.data.profile) {
 				setProfileDialogType("create-profile");
 			} else if (profileResult.data.profile.status !== "APPROVED") {
-				setProfileDialogType("prodile-status-info");
+				setProfileDialogType("profile-status-info");
 			}
 		}
 	}, [profileResult.data]);
@@ -72,7 +80,7 @@ function PublicLayout() {
 						}}
 					/>
 				)}
-				{profileDialogType === "prodile-status-info" && (
+				{profileDialogType === "profile-status-info" && (
 					<ProfileStatusInfoDialogContent />
 				)}
 			</Dialog>
@@ -193,15 +201,95 @@ function CreateProfileDialogContent({
 }
 
 function ProfileStatusInfoDialogContent() {
-	// const navigate = Route.useNavigate();
+	const { user } = useUser();
 
-	// const { user } = useUser();
+	const getProfileFn = useServerFn(getProfile);
+
+	const profileResult = useQuery({
+		enabled: !!user?.id,
+		queryKey: ["shared-profile", user?.id],
+		queryFn: () => getProfileFn(),
+	});
+
+	if (profileResult.isPending) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Profile Status</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-muted-foreground">
+					Loading profile status...
+				</div>
+			</DialogContent>
+		);
+	}
+
+	if (profileResult.isError) {
+		return (
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Profile Status</DialogTitle>
+				</DialogHeader>
+				<div className="py-8 text-center text-destructive">
+					Unable to load profile status: {profileResult.error.message}
+				</div>
+			</DialogContent>
+		);
+	}
+
+	const status = profileResult.data.profile?.status ?? null;
+
+	const statusCopy = {
+		[ProfileStatus.PENDING]: {
+			title: "Under review",
+			description:
+				"Your profile is being reviewed by our team. You will get access once it is approved.",
+		},
+		[ProfileStatus.REJECTED]: {
+			title: "Needs attention",
+			description:
+				"Your profile was not approved. Please contact support for guidance on next steps.",
+		},
+		[ProfileStatus.APPROVED]: {
+			title: "Approved",
+			description: "Your profile is approved and ready to use.",
+		},
+	} as const;
+
+	const activeStatus = status ? statusCopy[status] : null;
 
 	return (
-		<DialogContent>
+		<DialogContent className="sm:max-w-lg">
 			<DialogHeader>
-				<DialogTitle>Profile Status Info</DialogTitle>
+				<DialogTitle>Profile Status</DialogTitle>
 			</DialogHeader>
+			<div className="space-y-4">
+				<Item variant="outline">
+					<ItemContent>
+						<ItemTitle>{activeStatus?.title ?? "Status"}</ItemTitle>
+						<ItemDescription>
+							{activeStatus?.description ??
+								"Your profile status is currently unavailable."}
+						</ItemDescription>
+					</ItemContent>
+				</Item>
+			</div>
+			<DialogFooter>
+				<p>
+					Need help? Email{" "}
+					<a
+						href="mailto:support@ecobuiltconnect.co.za"
+						className="text-primary"
+					>
+						support@ecobuiltconnect.co.za
+					</a>{" "}
+					or visit our{" "}
+					<Link to="/contact" className="text-primary">
+						contact page
+					</Link>
+					.
+				</p>
+			</DialogFooter>
 		</DialogContent>
 	);
 }
