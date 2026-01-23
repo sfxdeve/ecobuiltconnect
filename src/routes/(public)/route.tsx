@@ -38,7 +38,7 @@ function PublicLayout() {
 
 	const [profileDialogType, setProfileDialogType] = useState<
 		"create-profile" | "profile-status-info" | null
-	>("profile-status-info");
+	>(null);
 
 	const getProfileFn = useServerFn(getProfile);
 
