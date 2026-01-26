@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
 import { Building2Icon, CheckIcon, MinusIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { AppPending } from "@/components/blocks/app-pending";
@@ -17,7 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { composeS3URL } from "@/lib/s3.shared";
 import { getProduct } from "@/remote/public.product";
-import { cartActions } from "@/stores/cart";
+import { cartActions, cartStore } from "@/stores/cart";
 
 export const Route = createFileRoute("/(public)/products/$productId/")({
 	loader: ({ params }) => getProduct({ data: { productId: params.productId } }),
@@ -39,7 +40,15 @@ export const Route = createFileRoute("/(public)/products/$productId/")({
 function ProductDetailsPage() {
 	const { product } = Route.useLoaderData();
 
-	const [quantity, setQuantity] = useState(1);
+	const quantites = useStore(cartStore, ({ items }) =>
+		items.reduce<Record<string, number>>((acc, item) => {
+			acc[item.productId] = item.quantity;
+
+			return acc;
+		}, {}),
+	);
+
+	const [currQuantity, setCurrQuantity] = useState(1);
 
 	return (
 		<section>
@@ -137,25 +146,25 @@ function ProductDetailsPage() {
 								variant="outline"
 								size="icon"
 								onClick={() => {
-									if (quantity > 1) {
-										setQuantity(quantity - 1);
+									if (currQuantity > 1) {
+										setCurrQuantity(currQuantity - 1);
 									}
 								}}
-								disabled={quantity <= 1}
+								disabled={currQuantity <= 1}
 							>
 								<MinusIcon className="size-4" />
 							</Button>
 							<Input
 								type="number"
 								min="1"
-								max={product.stock}
-								value={quantity}
+								value={currQuantity}
 								onChange={(event) => {
 									if (
 										event.target.valueAsNumber >= 1 &&
-										event.target.valueAsNumber <= product.stock
+										event.target.valueAsNumber + (quantites[product.id] ?? 0) <=
+											product.stock
 									) {
-										setQuantity(event.target.valueAsNumber);
+										setCurrQuantity(event.target.valueAsNumber);
 									}
 								}}
 								disabled={product.stock < 1}
@@ -165,11 +174,16 @@ function ProductDetailsPage() {
 								variant="outline"
 								size="icon"
 								onClick={() => {
-									if (quantity < product.stock) {
-										setQuantity(quantity + 1);
+									if (
+										currQuantity + (quantites[product.id] ?? 0) <
+										product.stock
+									) {
+										setCurrQuantity(currQuantity + 1);
 									}
 								}}
-								disabled={quantity >= product.stock}
+								disabled={
+									currQuantity + (quantites[product.id] ?? 0) >= product.stock
+								}
 							>
 								<PlusIcon className="size-4" />
 							</Button>
@@ -178,11 +192,18 @@ function ProductDetailsPage() {
 							size="lg"
 							className="w-full"
 							onClick={() =>
-								cartActions.addItem({ productId: product.id, quantity: quantity })
+								cartActions.addItem({
+									productId: product.id,
+									quantity: currQuantity,
+								})
 							}
-							disabled={quantity > product.stock}
+							disabled={
+								currQuantity + (quantites[product.id] ?? 0) > product.stock
+							}
 						>
-							{quantity > product.stock ? "Out of stock" : "Add to Cart"}
+							{currQuantity + (quantites[product.id] ?? 0) > product.stock
+								? "Out of stock"
+								: "Add to Cart"}
 						</Button>
 					</div>
 				</div>
