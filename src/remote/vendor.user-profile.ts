@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { UserProfileWhereInput } from "@/prisma/generated/models";
 import { userProfileSelector } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getUserProfiles = createServerFn({
@@ -87,6 +88,10 @@ export const getUserProfiles = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch user profiles");

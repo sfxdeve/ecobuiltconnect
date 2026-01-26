@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { env } from "@/lib/env.server";
 import { generateOzowHash } from "@/lib/ozow.server";
+import { RemoteError } from "@/remote/error";
 import { getOrderRequest } from "@/remote/user.order-request";
 
 export const initiateOrderRequestPayment = createServerFn({
@@ -50,7 +51,7 @@ export const initiateOrderRequestPayment = createServerFn({
 			if (!response.ok) {
 				const errorText = await response.text();
 
-				throw new Error(`Ozow API error: ${response.status} - ${errorText}`);
+				throw new RemoteError(`Ozow API error: ${response.status} - ${errorText}`);
 			}
 
 			const { url } = (await response.json()) as { url: string };
@@ -59,6 +60,10 @@ export const initiateOrderRequestPayment = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to initiate payment");

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { VendorProfileWhereInput } from "@/prisma/generated/models";
 import { vendorProfileSelector } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 
 export const getVendorProfiles = createServerFn({
 	method: "GET",
@@ -74,6 +75,10 @@ export const getVendorProfiles = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch vendor profiles");

@@ -2,7 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
 import { bankAccountSelector } from "@/prisma/selectors";
-import { getAdminProfile } from "./admin.profile";
+import { getAdminProfile } from "@/remote/admin.profile";
+import { RemoteError } from "@/remote/error";
 
 export const getBankAccount = createServerFn({
 	method: "GET",
@@ -27,13 +28,17 @@ export const getBankAccount = createServerFn({
 			});
 
 			if (!bankAccount) {
-				throw new Error("Bank account not found");
+				throw new RemoteError("Bank account not found");
 			}
 
 			return { bankAccount };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch bank account");

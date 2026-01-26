@@ -5,6 +5,7 @@ import { ProfileStatus } from "@/prisma/generated/enums";
 import type { UserProfileWhereInput } from "@/prisma/generated/models";
 import { userProfileSelector } from "@/prisma/selectors";
 import { getAdminProfile } from "@/remote/admin.profile";
+import { RemoteError } from "@/remote/error";
 
 export const getUserProfiles = createServerFn({
 	method: "GET",
@@ -97,6 +98,10 @@ export const getUserProfiles = createServerFn({
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch user profiles");
 		}
 	});
@@ -119,13 +124,17 @@ export const getUserProfile = createServerFn({ method: "GET" })
 			});
 
 			if (!userProfile) {
-				throw new Error("User profile not found");
+				throw new RemoteError("User profile not found");
 			}
 
 			return { userProfile };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch user profile");
@@ -165,13 +174,17 @@ export const updateUserProfile = createServerFn({
 			});
 
 			if (!userProfile) {
-				throw new Error("User profile not found");
+				throw new RemoteError("User profile not found");
 			}
 
 			return { userProfile };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to update user profile");

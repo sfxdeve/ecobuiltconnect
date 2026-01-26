@@ -5,6 +5,7 @@ import { ProfileStatus } from "@/prisma/generated/enums";
 import type { VendorProfileWhereInput } from "@/prisma/generated/models";
 import { vendorProfileSelector } from "@/prisma/selectors";
 import { getAdminProfile } from "@/remote/admin.profile";
+import { RemoteError } from "@/remote/error";
 
 export const getVendorProfiles = createServerFn({
 	method: "GET",
@@ -97,6 +98,10 @@ export const getVendorProfiles = createServerFn({
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch vendor profiles");
 		}
 	});
@@ -119,13 +124,17 @@ export const getVendorProfile = createServerFn({ method: "GET" })
 			});
 
 			if (!vendorProfile) {
-				throw new Error("Vendor profile not found");
+				throw new RemoteError("Vendor profile not found");
 			}
 
 			return { vendorProfile };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch vendor profile");
@@ -165,13 +174,17 @@ export const updateVendorProfile = createServerFn({
 			});
 
 			if (!vendorProfile) {
-				throw new Error("Vendor profile not found");
+				throw new RemoteError("Vendor profile not found");
 			}
 
 			return { vendorProfile };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to update vendor profile");

@@ -8,6 +8,7 @@ import {
 	productSelector,
 	vendorProfileSelector,
 } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 
 export const getProducts = createServerFn({
 	method: "GET",
@@ -150,6 +151,10 @@ export const getProducts = createServerFn({
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch products");
 		}
 	});
@@ -179,13 +184,17 @@ export const getProduct = createServerFn({
 			});
 
 			if (!product) {
-				throw new Error("Product not found");
+				throw new RemoteError("Product not found");
 			}
 
 			return { product };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch product");

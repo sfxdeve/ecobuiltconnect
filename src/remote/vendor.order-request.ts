@@ -13,6 +13,7 @@ import {
 	reviewSelector,
 	userProfileSelector,
 } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getOrderRequests = createServerFn({ method: "GET" })
@@ -146,6 +147,10 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch order requests");
 		}
 	});
@@ -194,13 +199,17 @@ export const getOrderRequest = createServerFn({ method: "GET" })
 			});
 
 			if (!orderRequest) {
-				throw new Error("Order request not found");
+				throw new RemoteError("Order request not found");
 			}
 
 			return { orderRequest };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch order request");
@@ -251,6 +260,10 @@ export const updateOrderRequest = createServerFn({ method: "POST" })
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to update order request");

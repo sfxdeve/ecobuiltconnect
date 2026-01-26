@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { ProductRequestWhereInput } from "@/prisma/generated/models";
 import { categorySelector, productRequestSelector } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getProductRequests = createServerFn({
@@ -119,6 +120,10 @@ export const getProductRequests = createServerFn({
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch product requests");
 		}
 	});
@@ -154,13 +159,17 @@ export const getProductRequest = createServerFn({
 			});
 
 			if (!productRequest) {
-				throw new Error("Product not found");
+				throw new RemoteError("Product not found");
 			}
 
 			return { productRequest };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch product request");

@@ -4,6 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { env } from "@/lib/env.server";
 import { s3 } from "@/lib/s3.server";
+import { RemoteError } from "@/remote/error";
 
 export const getS3ObjectUploadURL = createServerFn({
 	method: "GET",
@@ -28,6 +29,10 @@ export const getS3ObjectUploadURL = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch signed URL");

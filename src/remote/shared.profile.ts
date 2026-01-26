@@ -12,6 +12,7 @@ import {
 	userProfileSelector,
 	vendorProfileSelector,
 } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getClerkId } from "@/remote/shared.clerk";
 
 export const getProfile = createServerFn({ method: "GET" }).handler(
@@ -99,6 +100,10 @@ export const getProfile = createServerFn({ method: "GET" }).handler(
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch profile");

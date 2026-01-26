@@ -13,6 +13,7 @@ import {
 	productSelector,
 	reviewSelector,
 } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getUserProfile } from "@/remote/user.profile";
 
 export const getOrderRequests = createServerFn({
@@ -137,6 +138,10 @@ export const getOrderRequests = createServerFn({
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch order requests");
 		}
 	});
@@ -178,13 +183,17 @@ export const getOrderRequest = createServerFn({
 			});
 
 			if (!orderRequest) {
-				throw new Error("Order request not found");
+				throw new RemoteError("Order request not found");
 			}
 
 			return { orderRequest };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch order request");
@@ -231,7 +240,7 @@ export const createOrderRequest = createServerFn({
 			});
 
 			if (products.length !== productIds.length) {
-				throw new Error("Some products not found");
+				throw new RemoteError("Some products not found");
 			}
 
 			const stockIssues: {
@@ -254,7 +263,7 @@ export const createOrderRequest = createServerFn({
 			}
 
 			if (stockIssues.length > 0) {
-				throw new Error(
+				throw new RemoteError(
 					`Insufficient stock: ${stockIssues
 						.map((i) => `${i.name} (${i.requested}/${i.available})`)
 						.join(", ")}`,
@@ -309,6 +318,10 @@ export const createOrderRequest = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to create order request");

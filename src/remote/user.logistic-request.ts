@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
 import { logisticRequestSelector } from "@/prisma/selectors.ts";
+import { RemoteError } from "@/remote/error";
 import { getUserProfile } from "@/remote/user.profile";
 
 export const createLogisticRequest = createServerFn({
@@ -32,7 +33,7 @@ export const createLogisticRequest = createServerFn({
 			});
 
 			if (!orderRequest) {
-				throw new Error("Order request not found");
+				throw new RemoteError("Order request not found");
 			}
 
 			const logisticRequest = await prisma.logisticRequest.create({
@@ -44,6 +45,10 @@ export const createLogisticRequest = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to create logistic request");

@@ -9,6 +9,7 @@ import {
 	productSelector,
 	vendorProfileSelector,
 } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getProducts = createServerFn({
@@ -150,6 +151,10 @@ export const getProducts = createServerFn({
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch products");
 		}
 	});
@@ -181,13 +186,17 @@ export const getProduct = createServerFn({
 			});
 
 			if (!product) {
-				throw new Error("Product not found");
+				throw new RemoteError("Product not found");
 			}
 
 			return { product };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch product");
@@ -254,7 +263,7 @@ export const createProduct = createServerFn({
 			});
 
 			if (!category) {
-				throw new Error("Category not found");
+				throw new RemoteError("Category not found");
 			}
 
 			const product = await prisma.product.create({
@@ -269,6 +278,10 @@ export const createProduct = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to create product");
@@ -345,7 +358,7 @@ export const updateProduct = createServerFn({
 				});
 
 				if (!category) {
-					throw new Error("Category not found");
+					throw new RemoteError("Category not found");
 				}
 			}
 
@@ -364,13 +377,17 @@ export const updateProduct = createServerFn({
 			});
 
 			if (!product) {
-				throw new Error("Product not found");
+				throw new RemoteError("Product not found");
 			}
 
 			return { product };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to update product");
@@ -403,13 +420,17 @@ export const deleteProduct = createServerFn({
 			});
 
 			if (!product) {
-				throw new Error("Product not found");
+				throw new RemoteError("Product not found");
 			}
 
 			return { product };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to delete product");

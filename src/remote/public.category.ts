@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { CategoryWhereInput } from "@/prisma/generated/models";
 import { categorySelector } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 
 export const getCategories = createServerFn({
 	method: "GET",
@@ -51,6 +52,10 @@ export const getCategories = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch categories");

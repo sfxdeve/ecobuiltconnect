@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
 import { adminProfileSelector } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getClerkId } from "@/remote/shared.clerk";
 
 export const getAdminProfile = createServerFn({
@@ -19,13 +20,17 @@ export const getAdminProfile = createServerFn({
 		});
 
 		if (!adminProfile) {
-			throw new Error("Admin profile not found");
+			throw new RemoteError("Admin profile not found");
 		}
 
 		return { adminProfile };
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error.message);
+		}
+
+		if (error instanceof RemoteError) {
+			throw error;
 		}
 
 		throw new Error("Failed to fetch admin profile");
@@ -67,6 +72,10 @@ export const upsertAdminProfile = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to upsert admin profile");

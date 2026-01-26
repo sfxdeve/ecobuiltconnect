@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
 import { vendorProfileSelector } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getClerkId } from "@/remote/shared.clerk";
 
 export const getVendorProfile = createServerFn({
@@ -19,13 +20,17 @@ export const getVendorProfile = createServerFn({
 		});
 
 		if (!vendorProfile) {
-			throw new Error("Vendor profile not found");
+			throw new RemoteError("Vendor profile not found");
 		}
 
 		return { vendorProfile };
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error.message);
+		}
+
+		if (error instanceof RemoteError) {
+			throw error;
 		}
 
 		throw new Error("Failed to fetch vendor profile");
@@ -80,6 +85,10 @@ export const upsertVendorProfile = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to upsert vendor profile");

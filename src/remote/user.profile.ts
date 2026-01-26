@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { prisma } from "@/prisma";
 import { userProfileSelector } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getClerkId } from "@/remote/shared.clerk";
 
 export const getUserProfile = createServerFn({
@@ -19,13 +20,17 @@ export const getUserProfile = createServerFn({
 		});
 
 		if (!userProfile) {
-			throw new Error("User profile not found");
+			throw new RemoteError("User profile not found");
 		}
 
 		return { userProfile };
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error.message);
+		}
+
+		if (error instanceof RemoteError) {
+			throw error;
 		}
 
 		throw new Error("Failed to fetch user profile");
@@ -73,6 +78,10 @@ export const upsertUserProfile = createServerFn({
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to upsert user profile");

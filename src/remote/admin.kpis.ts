@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/prisma";
 import { getAdminProfile } from "@/remote/admin.profile";
+import { RemoteError } from "@/remote/error";
 
 export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
 	try {
@@ -46,6 +47,10 @@ export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error.message);
+		}
+
+		if (error instanceof RemoteError) {
+			throw error;
 		}
 
 		throw new Error("Failed to fetch admin KPIs");

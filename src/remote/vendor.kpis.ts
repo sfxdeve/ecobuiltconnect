@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/prisma";
+import { RemoteError } from "@/remote/error";
 import { getVendorProfile } from "@/remote/vendor.profile";
 
 export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
@@ -71,6 +72,10 @@ export const getKpis = createServerFn({ method: "GET" }).handler(async () => {
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error.message);
+		}
+
+		if (error instanceof RemoteError) {
+			throw error;
 		}
 
 		throw new Error("Failed to fetch vendor KPIs");

@@ -5,6 +5,7 @@ import { CategoryStatus } from "@/prisma/generated/enums";
 import type { CategoryWhereInput } from "@/prisma/generated/models";
 import { categorySelector } from "@/prisma/selectors";
 import { getAdminProfile } from "@/remote/admin.profile";
+import { RemoteError } from "@/remote/error";
 
 export const getCategories = createServerFn({ method: "GET" })
 	.inputValidator(
@@ -90,6 +91,10 @@ export const getCategories = createServerFn({ method: "GET" })
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch categories");
 		}
 	});
@@ -111,13 +116,17 @@ export const getCategory = createServerFn({ method: "GET" })
 			});
 
 			if (!category) {
-				throw new Error("Category not found");
+				throw new RemoteError("Category not found");
 			}
 
 			return { category };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch category");
@@ -150,13 +159,17 @@ export const createCategory = createServerFn({ method: "POST" })
 			});
 
 			if (!category) {
-				throw new Error("Category not found");
+				throw new RemoteError("Category not found");
 			}
 
 			return { category };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to create category");
@@ -197,13 +210,17 @@ export const updateCategory = createServerFn({ method: "POST" })
 			});
 
 			if (!category) {
-				throw new Error("Category not found");
+				throw new RemoteError("Category not found");
 			}
 
 			return { category };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to update category");
@@ -230,13 +247,17 @@ export const deleteCategory = createServerFn({ method: "POST" })
 			});
 
 			if (!category) {
-				throw new Error("Category not found");
+				throw new RemoteError("Category not found");
 			}
 
 			return { category };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to delete category");

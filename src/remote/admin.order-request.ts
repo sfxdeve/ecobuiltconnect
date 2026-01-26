@@ -14,6 +14,7 @@ import {
 	userProfileSelector,
 } from "@/prisma/selectors";
 import { getAdminProfile } from "@/remote/admin.profile";
+import { RemoteError } from "@/remote/error";
 
 export const getOrderRequests = createServerFn({ method: "GET" })
 	.inputValidator(
@@ -137,6 +138,10 @@ export const getOrderRequests = createServerFn({ method: "GET" })
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch order requests");
 		}
 	});
@@ -178,13 +183,17 @@ export const getOrderRequest = createServerFn({ method: "GET" })
 			});
 
 			if (!orderRequest) {
-				throw new Error("Order request not found");
+				throw new RemoteError("Order request not found");
 			}
 
 			return { orderRequest };
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to fetch order request");

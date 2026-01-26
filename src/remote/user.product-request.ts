@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/prisma";
 import type { ProductRequestWhereInput } from "@/prisma/generated/models";
 import { categorySelector, productRequestSelector } from "@/prisma/selectors";
+import { RemoteError } from "@/remote/error";
 import { getUserProfile } from "@/remote/user.profile";
 
 export const getProductRequests = createServerFn({
@@ -113,6 +114,10 @@ export const getProductRequests = createServerFn({
 				console.error(error.message);
 			}
 
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
 			throw new Error("Failed to fetch product requests");
 		}
 	});
@@ -152,7 +157,7 @@ export const createProductRequest = createServerFn({ method: "POST" })
 			});
 
 			if (!category) {
-				throw new Error("Category not found");
+				throw new RemoteError("Category not found");
 			}
 
 			const productRequest = await prisma.productRequest.create({
@@ -167,6 +172,10 @@ export const createProductRequest = createServerFn({ method: "POST" })
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
 			}
 
 			throw new Error("Failed to create product request");
