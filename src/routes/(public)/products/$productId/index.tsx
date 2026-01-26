@@ -158,6 +158,7 @@ function ProductDetailsPage() {
 										setQuantity(event.target.valueAsNumber);
 									}
 								}}
+								disabled={product.stock < 1}
 								className="w-20 text-center"
 							/>
 							<Button
@@ -177,10 +178,11 @@ function ProductDetailsPage() {
 							size="lg"
 							className="w-full"
 							onClick={() =>
-								cartActions.addItem({ productId: product.id, quantity })
+								cartActions.addItem({ productId: product.id, quantity: quantity })
 							}
+							disabled={quantity > product.stock}
 						>
-							Add to Cart
+							{quantity > product.stock ? "Out of stock" : "Add to Cart"}
 						</Button>
 					</div>
 				</div>
