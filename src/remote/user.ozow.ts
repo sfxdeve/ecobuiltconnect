@@ -51,7 +51,9 @@ export const initiateOrderRequestPayment = createServerFn({
 			if (!response.ok) {
 				const errorText = await response.text();
 
-				throw new RemoteError(`Ozow API error: ${response.status} - ${errorText}`);
+				throw new RemoteError(
+					`Ozow API error: ${response.status} - ${errorText}`,
+				);
 			}
 
 			const { url } = (await response.json()) as { url: string };
