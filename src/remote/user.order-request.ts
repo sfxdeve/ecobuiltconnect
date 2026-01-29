@@ -327,3 +327,49 @@ export const createOrderRequest = createServerFn({
 			throw new Error("Failed to create order request");
 		}
 	});
+
+export const updateOrderRequest = createServerFn({
+	method: "POST",
+})
+	.inputValidator(
+		z.object({
+			orderRequestId: z.uuid("Order request id must be valid UUID"),
+			status: z.enum(
+				[OrderStatus.PROCESSING, OrderStatus.READY, OrderStatus.COMPLETED],
+				`Status must be either '${OrderStatus.PROCESSING}', '${OrderStatus.READY}', or '${OrderStatus.COMPLETED}'`,
+			),
+		}),
+	)
+	.handler(async ({ data }) => {
+		try {
+			const { userProfile } = await getUserProfile();
+
+			const { orderRequestId, ...orderRequestData } = data;
+
+			const orderRequest = await prisma.orderRequest.update({
+				where: {
+					id: orderRequestId,
+					status: OrderStatus.PAID,
+					userProfileId: userProfile.id,
+				},
+				data: {
+					...orderRequestData,
+				},
+				select: orderRequestSelector,
+			});
+
+			return {
+				orderRequest,
+			};
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error(error.message);
+			}
+
+			if (error instanceof RemoteError) {
+				throw error;
+			}
+
+			throw new Error("Failed to update order request");
+		}
+	});
