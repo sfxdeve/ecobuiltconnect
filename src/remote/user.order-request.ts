@@ -236,11 +236,22 @@ export const createOrderRequest = createServerFn({
 					category: { status: "APPROVED", isDeleted: false },
 					vendorProfile: { status: "APPROVED" },
 				},
-				select: productSelector,
+				select: {
+					...productSelector,
+					vendorProfileId: true,
+				},
 			});
 
 			if (products.length !== productIds.length) {
 				throw new RemoteError("Some products not found");
+			}
+
+			const uniqueVendorProfileIds = new Set(
+				products.map((product) => product.vendorProfileId),
+			);
+
+			if (uniqueVendorProfileIds.size > 1) {
+				throw new RemoteError("Cart items must be from a single vendor");
 			}
 
 			const stockIssues: {

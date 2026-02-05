@@ -17,6 +17,8 @@ import {
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -42,7 +44,7 @@ import { composeS3URL } from "@/lib/s3.shared";
 import { cn } from "@/lib/utils";
 import { ProductCondition } from "@/prisma/generated/enums";
 import { getProducts } from "@/remote/public.product";
-import { cartActions, cartStore } from "@/stores/cart";
+import { type CartItem, cartActions, cartStore } from "@/stores/cart";
 
 export const Route = createFileRoute("/(public)/products/")({
 	validateSearch: z.object({
@@ -114,6 +116,11 @@ export const Route = createFileRoute("/(public)/products/")({
 
 function ProductsPage() {
 	const loaderData = Route.useLoaderData();
+	const [vendorConflict, setVendorConflict] = useState<{
+		currVendorName: string;
+		newVendorName: string;
+		newItem: CartItem;
+	} | null>(null);
 
 	const quantites = useStore(cartStore, ({ items }) =>
 		items.reduce<Record<string, number>>((acc, item) => {
@@ -126,6 +133,46 @@ function ProductsPage() {
 	return (
 		<section>
 			<div className="container mx-auto py-12 px-4 pt-28 space-y-6">
+				<Dialog
+					open={vendorConflict !== null}
+					onOpenChange={(open) => {
+						if (!open) {
+							setVendorConflict(null);
+						}
+					}}
+				>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Replace cart items?</DialogTitle>
+							<DialogDescription>
+								{vendorConflict == null
+									? "Your cart can only contain items from one vendor."
+									: `Your cart has items from ${vendorConflict.currVendorName}. Replace cart with items from ${vendorConflict.newVendorName}?`}
+							</DialogDescription>
+						</DialogHeader>
+						<DialogFooter>
+							<Button
+								variant="outline"
+								onClick={() => {
+									setVendorConflict(null);
+								}}
+							>
+								Keep current cart
+							</Button>
+							<Button
+								onClick={() => {
+									if (vendorConflict != null) {
+										cartActions.replaceWithItem(vendorConflict.newItem);
+									}
+
+									setVendorConflict(null);
+								}}
+							>
+								Replace cart
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
 				<ProductsPageSearch />
 				{loaderData.products.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -185,9 +232,25 @@ function ProductsPage() {
 														return;
 													}
 
-													cartActions.addItem({
+													const newItem = {
 														productId: product.id,
 														quantity: 1,
+														vendor: {
+															id: product.vendorProfile.id,
+															name: product.vendorProfile.name,
+														},
+													};
+
+													const addResult = cartActions.addItem(newItem);
+
+													if (addResult.status !== "conflict") {
+														return;
+													}
+
+													setVendorConflict({
+														currVendorName: addResult.currVendorName,
+														newVendorName: addResult.newVendorName,
+														newItem,
 													});
 												}}
 											>

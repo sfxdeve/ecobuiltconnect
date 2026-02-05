@@ -13,12 +13,20 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { formatMoneyFromCents } from "@/lib/formatters";
 import { composeS3URL } from "@/lib/s3.shared";
 import { getProduct } from "@/remote/public.product";
-import { cartActions, cartStore } from "@/stores/cart";
+import { type CartItem, cartActions, cartStore } from "@/stores/cart";
 
 export const Route = createFileRoute("/(public)/products/$productId/")({
 	loader: ({ params }) => getProduct({ data: { productId: params.productId } }),
@@ -39,6 +47,11 @@ export const Route = createFileRoute("/(public)/products/$productId/")({
 
 function ProductDetailsPage() {
 	const { product } = Route.useLoaderData();
+	const [vendorConflict, setVendorConflict] = useState<{
+		currVendorName: string;
+		newVendorName: string;
+		newItem: CartItem;
+	} | null>(null);
 
 	const quantites = useStore(cartStore, ({ items }) =>
 		items.reduce<Record<string, number>>((acc, item) => {
@@ -53,6 +66,46 @@ function ProductDetailsPage() {
 	return (
 		<section>
 			<div className="container mx-auto py-12 px-4 pt-28 flex gap-12 flex-col lg:flex-row">
+				<Dialog
+					open={vendorConflict !== null}
+					onOpenChange={(open) => {
+						if (!open) {
+							setVendorConflict(null);
+						}
+					}}
+				>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Replace cart items?</DialogTitle>
+							<DialogDescription>
+								{vendorConflict == null
+									? "Your cart can only contain items from one vendor."
+									: `Your cart has items from ${vendorConflict.currVendorName}. Replace cart with items from ${vendorConflict.newVendorName}?`}
+							</DialogDescription>
+						</DialogHeader>
+						<DialogFooter>
+							<Button
+								variant="outline"
+								onClick={() => {
+									setVendorConflict(null);
+								}}
+							>
+								Keep current cart
+							</Button>
+							<Button
+								onClick={() => {
+									if (vendorConflict != null) {
+										cartActions.replaceWithItem(vendorConflict.newItem);
+									}
+
+									setVendorConflict(null);
+								}}
+							>
+								Replace cart
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
 				<Card className="w-full lg:w-1/2">
 					<CardContent className="flex flex-col items-center justify-center">
 						<Carousel className="w-full">
@@ -191,12 +244,28 @@ function ProductDetailsPage() {
 						<Button
 							size="lg"
 							className="w-full"
-							onClick={() =>
-								cartActions.addItem({
+							onClick={() => {
+								const newItem = {
 									productId: product.id,
-									quantity: currQuantity,
-								})
-							}
+									quantity: 1,
+									vendor: {
+										id: product.vendorProfile.id,
+										name: product.vendorProfile.name,
+									},
+								};
+
+								const addResult = cartActions.addItem(newItem);
+
+								if (addResult.status !== "conflict") {
+									return;
+								}
+
+								setVendorConflict({
+									currVendorName: addResult.currVendorName,
+									newVendorName: addResult.newVendorName,
+									newItem,
+								});
+							}}
 							disabled={
 								currQuantity + (quantites[product.id] ?? 0) > product.stock
 							}

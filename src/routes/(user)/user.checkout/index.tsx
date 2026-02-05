@@ -274,6 +274,16 @@ function CheckoutPage() {
 							<CardFooter>
 								<Button
 									onClick={() => {
+										const uniqueVendorProfileIds = new Set(
+											cartState.items.map((item) => item.vendor.id),
+										);
+
+										if (uniqueVendorProfileIds.size > 1) {
+											toast.error("Cart items must be from a single vendor.");
+
+											return;
+										}
+
 										createUserOrderMutation.mutate(cartState.items);
 									}}
 									disabled={
