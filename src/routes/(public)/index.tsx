@@ -101,13 +101,14 @@ function HomePage() {
 				<div className="container mx-auto py-12 px-4 pt-28 flex gap-12 flex-col-reverse md:flex-row items-center">
 					<div className="flex-1 space-y-12">
 						<div className="space-y-8">
-							<h2 className="text-3xl md:text-6xl font-medium">
-								<span>Cost-effective solutions for the</span>{" "}
-								<span className="text-primary">construction sector.</span>
+							<h2 className="text-3xl md:text-5xl font-medium">
+								<span>Buy quality used construction materials.</span>{" "}
+								<span className="text-primary">
+									Save 20-40% on every project.
+								</span>
 							</h2>
 							<p className="text-lg">
-								Save costs. Build sustainably. Buy or sell used or surplus
-								construction materials with our trusted marketplace.
+								We help you turn surplus into revenue while reducing waste.
 							</p>
 						</div>
 						<div className="flex gap-2 items-center">
